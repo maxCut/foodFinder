@@ -1,0 +1,22 @@
+{
+  "name": "FoodFinder",
+  "description": "getting some grub",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts":
+  [
+      {
+        "matches": ["*://github.com/*"],
+        "js" : ["content-script.js"]
+      }
+  ],
+  "externally_connectable": {
+    "ids": ["*"],
+    "matches": ["http://my.localhost/*"]
+  },
+  "permissions": ["alarms","storage"]
+}

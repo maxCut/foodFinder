@@ -1,0 +1,15 @@
+<html>
+    <h1>Pick a Meal</h1>
+    <button onclick="processData()">send data to ext</button>
+    <script>
+        function processData()
+        {
+            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
+            //chrome.runtime.sendMessage(extID,"test");
+            var event = document.createEvent('Event')
+            event.initEvent('hello')
+            document.dispatchEvent(event)
+        }
+    </script>
+
+</html>
