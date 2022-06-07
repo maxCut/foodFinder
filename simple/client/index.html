@@ -1,15 +1,124 @@
 <html>
-    <h1>Pick a Meal</h1>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link
+        rel="stylesheet"
+        href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
+      />
+    </head>
+    <body>
     <button onclick="processData()">send data to ext</button>
+    <button onclick="loadData()">get data from ext</button>
+    
+    <h1 class = "text-center">Step 1: Pick a Meal</h1>
+    <div class = "swiper mySwiper">
+
+        <div id = "Meals" class="swiper-wrapper justify-content-center">
+        </div>
+        
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+    </div>
+
     <script>
+        loadMeals();
+        function loadMeals()
+        {
+            fetch("../../shared/meals.json")
+            .then(response => {
+                return response.json();
+            })
+            .then(jsondata=>
+            {
+                jsondata.forEach(element => {
+                    addMeal(element.Name,element.Image,element.Id)
+                });
+            })
+        }
+        function addMeal(mealName,img,mealId)
+        {
+            const newMeal = document.createElement("div");
+            newMeal.className = "card card-primary swiper-slide";
+            const panelHeader = document.createElement("div");
+            panelHeader.className = "card-heading";
+            panelHeader.style = "padding:5px;"
+            const panelTitle = document.createElement("h3");
+            panelTitle.innerText = mealName;
+            panelHeader.appendChild(panelTitle);
+            const panelBody = document.createElement("div");
+            panelBody.className = "card-body card-project";
+            panelBody.style = "background-image: url("+ img + ");"+
+            "background-repeat: no-repeat;"+
+            "background-size: 100% 500px;";
+            const panelFooter = document.createElement("div");
+            panelFooter.className = "card-footer"
+            panelFooter.innerText = getNumberInCart(mealId)
+            newMeal.appendChild(panelHeader)
+            newMeal.appendChild(panelBody)
+            newMeal.appendChild(panelFooter)
+            document.getElementById("Meals").appendChild(newMeal)
+        }
+        
+        function getNumberInCart(mealId)
+        {
+            return 0;
+        }
+
         function processData()
         {
             //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
             //chrome.runtime.sendMessage(extID,"test");
-            var event = document.createEvent('Event')
-            event.initEvent('hello')
+            var event = new CustomEvent("set",{detail:"test"})
+            document.dispatchEvent(event)
+        }
+        
+        function loadData()
+        {
+            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
+            //chrome.runtime.sendMessage(extID,"test");
+            var event = new CustomEvent("get")
             document.dispatchEvent(event)
         }
     </script>
+    <style>
+        h1
+        {
+            color: rgb(230, 230, 230);
+        }
+        h3
+        {
+            color: rgb(230, 230, 230);
+        }
+        .card-primary
+        {
+            background-color: #7a2626;
+            opacity: 70%;
+            width: 25rem; 
+            height: 25rem; 
+            margin:10px;
+            border: 0px;
+        }
+        body
+        {
+            background-image: url("../assets/heat-248231.jpg");
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+        .swiper-button-prev
+        {
+            color: rgb(230,230,230);
+            
+        }
+        .swiper-button-next
+        {
+            color: rgb(230,230,230);
+            
+        }
+    </style>
+
+    </body>
+    
 
 </html>

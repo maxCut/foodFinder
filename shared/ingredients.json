@@ -1,0 +1,203 @@
+[{
+    "Key":"f1",
+    "Name":"Vegetables (celery, white onion, and carrots)",
+    "Options":[
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "0.625",
+            "Unit_Price": "1.29",
+            "Link":"https://amzn.to/3GOCPTr"}
+    ]
+},
+{
+    "Key":"f2",
+    "Name":"Chicken Drumsticks",
+    "Options": [
+        {
+            "Unit" : "Units",
+            "Unit_Size": "5.0",
+            "Unit_Price": "4.29",
+            "Link":"https://amzn.to/3meOPnE"}
+    ]
+},
+{
+    "Key":"f3",
+    "Name":"Potatos and Onions",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "1.125",
+            "Unit_Price": "4.29",
+            "Link":"https://amzn.to/3aIpaBp"}
+    ]
+},
+{
+    "Key":"f4",
+    "Name":"Sweet Potato",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "3.0",
+            "Unit_Price": "3.49",
+            "Link":"https://amzn.to/3NRc82E",
+            "Requires" : ["s3"]
+        }
+    ]
+},
+{
+    "Key":"f5",
+    "Name":"Onions",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "0.625",
+            "Unit_Price": "3.29",
+            "Link":"https://amzn.to/3x5FRyg"
+        }
+    ]
+},
+{
+    "Key":"f6",
+    "Name":"Eggs",
+    "Options": [
+        {
+            "Unit" : "Unit",
+            "Unit_Size": "12",
+            "Unit_Price": "2.69",
+            "Link":"https://amzn.to/3xkArk6"
+        },
+        {
+            "Unit" : "Unit",
+            "Unit_Size": "12",
+            "Unit_Price": "2.69",
+            "Link":"https://amzn.to/3xkArk6"
+        }
+    ]
+},
+
+{
+    "Key":"p1",
+    "Name":"Balsamic Vinegar",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "1.125",
+            "Unit_Price": "4.29",
+            "Link":"https://amzn.to/3mkjrnT"}
+    ]
+},
+{
+    "Key":"p2",
+    "Name":"Salt",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "1.1",
+            "Unit_Price": "2.79",
+            "Link":"https://amzn.to/3zfnCJi"}
+    ]
+},
+{
+    "Key":"p3",
+    "Name":"Pepper",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": ".0625",
+            "Unit_Price": "2.49",
+            "Link":"https://amzn.to/3NkQFPW"}
+    ]
+},
+{
+    "Key":"p4",
+    "Name":"Parsley",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": ".054375",
+            "Unit_Price": "4.05",
+            "Link":"https://amzn.to/3MjQcMC"}
+    ]
+},
+{
+    "Key":"p5",
+    "Name":"Garlic",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": ".25",
+            "Unit_Price": "1.59",
+            "Link":"https://amzn.to/3apy8Dl"}
+    ]
+},
+{
+    "Key":"p6",
+    "Name":"Olive Oil",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": "1.00",
+            "Unit_Price": "5.79",
+            "Link":"https://amzn.to/3apy8Dl"}
+    ]
+},
+{
+    "Key":"p7",
+    "Name":"Thyme",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": ".05",
+            "Unit_Price": "4.99",
+            "Link":"https://amzn.to/3NoGDx1"}
+    ]
+},
+{
+    "Key":"p8",
+    "Name":"Rosemary",
+    "Options": [
+        {
+            "Unit" : "lbs",
+            "Unit_Size": ".08",
+            "Unit_Price": "4.79",
+            "Link":"https://amzn.to/3mzQ2Gx"}
+    ]
+},
+{
+    "Key":"s1",
+    "Name": "Deep Pan",
+    "Options":[
+        {
+
+            "Unit_Price" : "9.29",
+            "Link": "https://amzn.to/3GTkLaF"
+        }
+    ]
+
+},
+
+{
+    "Key":"s2",
+    "Name": "Tin Foil",
+    "Options":[
+        {
+            "Unit_Price" : "4.99",
+            "Link": "https://amzn.to/3MkZaJr"
+        }
+    ]
+
+},
+
+{
+    "Key":"s3",
+    "Name": "Knife",
+    "Options":[
+        {
+            "Unit_Price" : "5.40",
+            "Link": "https://amzn.to/3MkZaJr"
+        }
+    ]
+
+}
+
+]
