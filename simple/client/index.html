@@ -7,23 +7,43 @@
         rel="stylesheet"
         href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
       />
+      <link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+/>
     </head>
     <body>
     <button onclick="processData()">send data to ext</button>
     <button onclick="loadData()">get data from ext</button>
     
-    <h1 class = "text-center">Step 1: Pick a Meal</h1>
-    <div class = "swiper mySwiper">
+    <h1 class = "text-center">Step 1: Pick Your Meals</h1>
+    <div>
 
-        <div id = "Meals" class="swiper-wrapper justify-content-center">
+        <div id = "Meals" class="grid justify-content-center">
         </div>
         
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-button-next"></div>
     </div>
+    <div id = "scrolldown" class = "hidden-xs">
+        <a href="#step2">
+            <i class="material-icons">expand_more</i>
+    
+        </a>
+       </div>
+       <div id = "step2">
 
+
+   <h1 class = "text-center">Step 2: Select ALL Spices and Equipment you don't have </h1>
+    <div>
+
+        <div id = "OneTimes" class="grid justify-content-center">
+        </div>
+        
+    </div>
+    
+</div>
     <script>
         loadMeals();
+        var meals = {};
         function loadMeals()
         {
             fetch("../../shared/meals.json")
@@ -33,6 +53,8 @@
             .then(jsondata=>
             {
                 jsondata.forEach(element => {
+                    console.log(element)
+                    meals[element.Id] = element;
                     addMeal(element.Name,element.Image,element.Id)
                 });
             })
@@ -40,10 +62,9 @@
         function addMeal(mealName,img,mealId)
         {
             const newMeal = document.createElement("div");
-            newMeal.className = "card card-primary swiper-slide";
+            newMeal.className = "card card-primary swiper-slide meal";
             const panelHeader = document.createElement("div");
             panelHeader.className = "card-heading";
-            panelHeader.style = "padding:5px;"
             const panelTitle = document.createElement("h3");
             panelTitle.innerText = mealName;
             panelHeader.appendChild(panelTitle);
@@ -53,12 +74,110 @@
             "background-repeat: no-repeat;"+
             "background-size: 100% 500px;";
             const panelFooter = document.createElement("div");
-            panelFooter.className = "card-footer"
-            panelFooter.innerText = getNumberInCart(mealId)
+            panelFooter.className = "card-footer text-center"
+            panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"mealRemovedEvent(\'"+mealId+"\'); this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
+                "<input class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
+                +"<button onclick=\"mealAddedEvent(\'"+ mealId+"\'); this.parentNode.querySelector('input[type=number]').stepUp()\" class=\"plus\"></button></div>"
+            const unitsInCart = document.createElement("input")
+            unitsInCart.type = "number";
+            unitsInCart.class = "form-control"
+            unitsInCart.id = mealId;
+            unitsInCart.placeholder = 0;
+            //panelFooter.appendChild(unitsInCart)
             newMeal.appendChild(panelHeader)
             newMeal.appendChild(panelBody)
             newMeal.appendChild(panelFooter)
             document.getElementById("Meals").appendChild(newMeal)
+        }
+
+        function mealAddedEvent(id)
+        {
+            meals[id].OneTimes.forEach(oneTimeId =>
+            {
+                var oneTimeIngredient = ingredients[oneTimeId]
+                addOneTime(oneTimeIngredient.Name,oneTimeIngredient.Options[0].Img,oneTimeId)
+            })
+
+        }
+        function mealRemovedEvent(id)
+        {
+            meals[id].OneTimes.forEach(oneTimeId =>
+            {
+                var oneTimeIngredient = ingredients[oneTimeId]
+                removeOneTime(oneTimeId)
+            })
+        }
+        
+        function loadIngredients()
+        {
+            fetch("../../shared/ingredients.json")
+            .then(response => {
+                return response.json();
+            })
+            .then(jsondata=>
+            {
+                jsondata.forEach(element => {
+                    ingredients[element.Key] = element
+                });
+            })
+        }
+
+        var ingredients = {};
+        loadIngredients()
+
+        var oneTimeEdges = {}
+
+        function addOneTime(oneTimeName,img,id)
+        {
+            if(oneTimeEdges[id])
+            {
+                oneTimeEdges[id] = oneTimeEdges[id]+1
+                return;
+            }
+            oneTimeEdges[id] = 1
+            const newMeal = document.createElement("div");
+            newMeal.id = id+"_card"
+            newMeal.className = "card card-primary swiper-slide meal";
+            const panelHeader = document.createElement("div");
+            panelHeader.className = "card-heading";
+            const panelTitle = document.createElement("h3");
+            panelTitle.innerText = oneTimeName;
+            panelHeader.appendChild(panelTitle);
+            const panelBody = document.createElement("div");
+            panelBody.className = "card-body card-project";
+            panelBody.style = "background-image: url("+ img + ");"+
+            "background-repeat: no-repeat;"+
+            "background-size: 100% 500px;";
+            const panelFooter = document.createElement("div");
+            panelFooter.className = "card-footer text-center"
+            panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
+                "<input class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
+                +"<button onclick=\"this.parentNode.querySelector('input[type=number]').stepUp()\" class=\"plus\"></button></div>"
+            const unitsInCart = document.createElement("input")
+            unitsInCart.type = "number";
+            unitsInCart.class = "form-control"
+            unitsInCart.id = id;
+            unitsInCart.placeholder = 0;
+            //panelFooter.appendChild(unitsInCart)
+            newMeal.appendChild(panelHeader)
+            newMeal.appendChild(panelBody)
+            newMeal.appendChild(panelFooter)
+            document.getElementById("OneTimes").appendChild(newMeal)
+        }
+        
+        function removeOneTime(id)
+        {
+            if(!oneTimeEdges[id])
+            {
+                return;
+            }
+            oneTimeEdges[id] = oneTimeEdges[id]-1
+            if(oneTimeEdges[id]>0)
+            {
+                return
+            }
+            var element = document.getElementById(id+"_card");
+            element.parentNode.removeChild(element);
         }
         
         function getNumberInCart(mealId)
@@ -85,37 +204,164 @@
     <style>
         h1
         {
+            padding: 9.5rem 0 2.5rem 0;
             color: rgb(230, 230, 230);
         }
         h3
         {
             color: rgb(230, 230, 230);
         }
+        .card-heading
+        {
+            padding:10px;
+        }
         .card-primary
         {
-            background-color: #7a2626;
-            opacity: 70%;
-            width: 25rem; 
+            background-color: #7a2626b7;
+            width: 28rem; 
             height: 25rem; 
             margin:10px;
             border: 0px;
+        }
+        .card-body
+        {
+
+        }
+        .card-footer
+        {
+            color: rgb(230, 230, 230);
+        }
+        html
+        {
+            scroll-behavior: smooth;
         }
         body
         {
             background-image: url("../assets/heat-248231.jpg");
             background-repeat: no-repeat;
-            background-size: 100%;
-        }
-        .swiper-button-prev
-        {
-            color: rgb(230,230,230);
+            background-size: cover;
             
+  background-position: center;
+  background-attachment: fixed;
         }
-        .swiper-button-next
-        {
-            color: rgb(230,230,230);
-            
-        }
+
+
+        input[type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.number-input {
+  border: 0;
+  display: inline-flex;
+}
+
+.number-input,
+.number-input * {
+  box-sizing: border-box;
+}
+
+.number-input button {
+  outline:none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  
+  border: none;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  box-shadow: 0px 0px 1px #474747;
+    border-radius: 50%;
+}
+
+.number-input button:before,
+.number-input button:after {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  width: 1rem;
+  height: 2px;
+  background-color: #212121;
+  transform: translate(-50%, -50%);
+}
+.number-input button.plus:after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.number-input input[type=number] {
+  font-family: sans-serif;
+  max-width: 5rem;
+  padding: .5rem;
+  border: none;
+  border-width: 0 2px;
+  font-size: 2rem;
+  height: 3rem;
+  font-weight: bold;
+  text-align: center;
+            color: rgb(230, 230, 230);
+  
+}
+    
+.number-input input[type=number], textarea {
+    background-color:  rgba(255, 255, 255, 0);
+}    
+#scrolldown {
+    position: fixed;
+    z-index: 1 !important;
+    bottom: 5px;
+    color: #FAFAFA;
+    width: 200px;
+    text-align: center;
+    font-size: 1.25rem;
+    right: 50%;
+    margin-right: -100px;
+    transition: opacity 1s ease;
+}
+#scrolldown a{
+    color:#FAFAFA;
+}
+#scrolldown a i{
+    font-size: 50px;
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+#step2
+{
+    
+  scroll-behavior: smooth;
+}
+.grid
+{
+    
+  display: grid;
+  grid-template-areas: "a a a";
+  gap: 10px;
+  grid-auto-rows: 500px;
+}
     </style>
 
     </body>
