@@ -13,9 +13,9 @@
 />
     </head>
     <body>
-    <button onclick="processData()">send data to ext</button>
-    <button onclick="loadData()">get data from ext</button>
-    
+    <img id = "background-img" src="../assets/heat-248231.jpg"/>
+    <div class = "sub-page">
+        
     <h1 class = "text-center">Step 1: Pick Your Meals</h1>
     <div>
 
@@ -23,26 +23,57 @@
         </div>
         
     </div>
-    <div id = "scrolldown" class = "hidden-xs">
+    <div class = "scrolldown">
         <a href="#step2">
             <i class="material-icons">expand_more</i>
     
         </a>
-       </div>
-       <div id = "step2">
+    </div>
+    
+</div>
+    <div id = "step2" class="sub-page">
 
 
-   <h1 class = "text-center">Step 2: Select ALL Spices and Equipment you don't have </h1>
+    <h1 class = "text-center">Step 2: Select ALL Spices and Equipment you don't have </h1>
     <div>
 
         <div id = "OneTimes" class="grid justify-content-center">
         </div>
         
     </div>
+
+    <div class = "scrolldown">
+        <a href="#step3">
+            <i class="material-icons">expand_more</i>
+    
+        </a>
+    </div>
+    <div id = "step3" class="sub-page">
+        
+    <h1 class = "text-center">Step 3: Checkout with ...</h1>
+
+    <div id = "checkout-login-required" class="alert alert-danger text-center" role="alert">
+        <p>Oops. Were having trouble loading items into your amazon cart. <a href="https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20" target="_blank">Log into amazon fresh</a> on another page then try again.</p>
+    </div>
+    <div id = "checkout-container">
+        <button id = "amazon-checkout" onclick="checkoutAmazon()"/>
+    </div>
+    <div id = "checkout-request-spinner" class="loader"/>
     
 </div>
     <script>
         loadMeals();
+        
+        document.getElementById("checkout-request-spinner").style.display = "none";
+        document.getElementById("checkout-login-required").style.display = "none";
+        
+    document.addEventListener("purchaseRequestSuccess", function (event) {
+        onCheckoutAmazonSuccess()
+        });
+    document.addEventListener("purchaseRequestFailed", function (event) {
+        console.log("here")
+        onNeedToLogInToAmazon()
+        });
         var meals = {};
         function loadMeals()
         {
@@ -62,7 +93,7 @@
         function addMeal(mealName,img,mealId)
         {
             const newMeal = document.createElement("div");
-            newMeal.className = "card card-primary swiper-slide meal";
+            newMeal.className = "card card-primary meal";
             const panelHeader = document.createElement("div");
             panelHeader.className = "card-heading";
             const panelTitle = document.createElement("h3");
@@ -76,7 +107,7 @@
             const panelFooter = document.createElement("div");
             panelFooter.className = "card-footer text-center"
             panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"mealRemovedEvent(\'"+mealId+"\'); this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
-                "<input class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
+                "<input id = " + mealId + " class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
                 +"<button onclick=\"mealAddedEvent(\'"+ mealId+"\'); this.parentNode.querySelector('input[type=number]').stepUp()\" class=\"plus\"></button></div>"
             const unitsInCart = document.createElement("input")
             unitsInCart.type = "number";
@@ -137,7 +168,7 @@
             oneTimeEdges[id] = 1
             const newMeal = document.createElement("div");
             newMeal.id = id+"_card"
-            newMeal.className = "card card-primary swiper-slide meal";
+            newMeal.className = "card card-primary oneTime";
             const panelHeader = document.createElement("div");
             panelHeader.className = "card-heading";
             const panelTitle = document.createElement("h3");
@@ -147,18 +178,15 @@
             panelBody.className = "card-body card-project";
             panelBody.style = "background-image: url("+ img + ");"+
             "background-repeat: no-repeat;"+
-            "background-size: 100% 500px;";
+            "background-size: contain;"+
+            " background-position: center;";
             const panelFooter = document.createElement("div");
             panelFooter.className = "card-footer text-center"
-            panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
-                "<input class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
-                +"<button onclick=\"this.parentNode.querySelector('input[type=number]').stepUp()\" class=\"plus\"></button></div>"
             const unitsInCart = document.createElement("input")
-            unitsInCart.type = "number";
-            unitsInCart.class = "form-control"
+            unitsInCart.type = "checkbox";
+            unitsInCart.className = "form-control option-input checkbox";
             unitsInCart.id = id;
-            unitsInCart.placeholder = 0;
-            //panelFooter.appendChild(unitsInCart)
+            panelFooter.appendChild(unitsInCart)
             newMeal.appendChild(panelHeader)
             newMeal.appendChild(panelBody)
             newMeal.appendChild(panelFooter)
@@ -179,26 +207,129 @@
             var element = document.getElementById(id+"_card");
             element.parentNode.removeChild(element);
         }
-        
-        function getNumberInCart(mealId)
+
+        let addingToCart = false;
+        function setAddingToCart(value)
         {
-            return 0;
+            addingToCart = value;
+            if(!value)
+            {
+                document.getElementById("checkout-container").style.display = "block";
+                document.getElementById("checkout-request-spinner").style.display = "none";
+            }
+            else
+            {
+                document.getElementById("checkout-container").style.display = "none";
+                document.getElementById("checkout-login-required").style.display = "none";
+                document.getElementById("checkout-request-spinner").style.display = "block";
+
+            }
+
+        }
+        function checkoutAmazon()
+        {
+            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
+            //chrome.runtime.sendMessage(extID,"test");
+            var cart = getCart()
+            var event = new CustomEvent("purchaseRequest",{detail:cart})
+            document.dispatchEvent(event)
+            setAddingToCart(true)
+        }
+        
+        function onCheckoutAmazonSuccess()
+        {
+            if(addingToCart)
+            {
+                window.open("https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20", '_blank'); 
+            }
+            setAddingToCart(false)
+           
+        }
+        
+        function onNeedToLogInToAmazon()
+        {
+            setAddingToCart(false)
+            document.getElementById("checkout-login-required").style.display = "block";  
         }
 
-        function processData()
+        function getCart()
         {
-            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
-            //chrome.runtime.sendMessage(extID,"test");
-            var event = new CustomEvent("set",{detail:"test"})
-            document.dispatchEvent(event)
+            precart = Object.assign({},getOneTimeForPurchase(),getIngredientsForPurchase())
+            cart =[]
+            Object.keys(precart).forEach(
+            asinElement=>
+            {
+                cart.push({asin:asinElement,quantity:precart[asinElement]})
+            })
+            return cart
         }
-        
-        function loadData()
+
+        function getOneTimeForPurchase()
         {
-            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
-            //chrome.runtime.sendMessage(extID,"test");
-            var event = new CustomEvent("get")
-            document.dispatchEvent(event)
+            ingredientPurchaseMap = {}
+            selectedOneTimes = getOneTimeIngredients()
+            selectedOneTimes.forEach(onetime=>
+            {
+                ingredientPurchaseMap[ingredients[onetime].Options[0].ASIN] = 1
+            })
+            return ingredientPurchaseMap
+        }
+        function getOneTimeIngredients()
+        {
+            selectedOneTimes = new Set()
+            Object.keys(oneTimeEdges).forEach(onetime =>
+            {
+                if(document.getElementById(onetime).checked>=1)
+                {
+                    selectedOneTimes.add(onetime)
+                }
+            });
+            return selectedOneTimes
+        }
+
+        function getIngredientsForPurchase()
+        {
+            neededTotalIngredientsMap = getNeededIngredientsFromMeals()
+            ingredientPurchaseMap = {}
+            Object.keys(neededTotalIngredientsMap).forEach(
+                ingredient =>
+                {
+                    neededAmount = neededTotalIngredientsMap[ingredient]
+                    ingredientData = ingredients[ingredient].Options[0]
+                    //for now just use option 0 but in future use best price.
+                    ingredientPurchaseMap[ingredientData.ASIN] = Math.ceil(neededAmount/ingredientData.Unit_Size)
+
+                }
+            )
+            return ingredientPurchaseMap
+        }
+
+        function getNeededIngredientsFromMeals()
+        {
+            neededTotalIngredientsMap = {}
+            Object.keys(meals).forEach(meal => {
+                mealData = meals[meal]
+                var amount  = document.getElementById(meal).value
+                if(amount>0)
+                {
+                    mealData.Ingredients.forEach(
+                        ingredient =>
+                        {
+                            ingredientKey = ingredient[0]
+                            ingredientQuantity = ingredient[1]*amount
+                            if(neededTotalIngredientsMap[ingredientKey])
+                            {
+                                neededTotalIngredientsMap[ingredientKey] += ingredientQuantity
+                            }
+                            else
+                            {
+                                neededTotalIngredientsMap[ingredientKey] = ingredientQuantity
+                            }
+                        }
+                    )
+                }
+            });
+            return neededTotalIngredientsMap
         }
     </script>
     <style>
@@ -218,33 +349,60 @@
         .card-primary
         {
             background-color: #7a2626b7;
-            width: 28rem; 
-            height: 25rem; 
             margin:10px;
             border: 0px;
+            
         }
         .card-body
         {
+            background-color: #fff;
 
         }
         .card-footer
         {
             color: rgb(230, 230, 230);
         }
+        .oneTime
+        {
+            
+            width: 18rem; 
+            height: 20rem; 
+            
+        }
+        
+        .meal
+        {
+            
+            width: 28rem; 
+            height: 25rem; 
+
+        }
         html
         {
             scroll-behavior: smooth;
         }
+        
         body
         {
-            background-image: url("../assets/heat-248231.jpg");
+            background-color: #000;
             background-repeat: no-repeat;
             background-size: cover;
             
   background-position: center;
   background-attachment: fixed;
         }
-
+        #background-img
+        {
+            z-index: -5;
+            width: 100%;
+            height: 100%;
+            opacity: .5;
+            position: fixed;
+        }
+        .sub-page
+        {
+            height: 100%;
+        }
 
         input[type="number"] {
   -webkit-appearance: textfield;
@@ -316,22 +474,88 @@ input[type=number]::-webkit-outer-spin-button {
 .number-input input[type=number], textarea {
     background-color:  rgba(255, 255, 255, 0);
 }    
-#scrolldown {
-    position: fixed;
-    z-index: 1 !important;
-    bottom: 5px;
-    color: #FAFAFA;
+
+.checkbox
+{
+    margin:0 0 15px 0;
+}
+
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 13.33333px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  width: 40px;
+  transition: all 0.15s ease-out 0s;
+  background: #cbd1d8;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+  position: relative;
+  z-index: 1000;
+}
+
+.option-input:hover {
+  background: #9faab7;
+}
+.option-input:checked {
+  background: #FAFAFA;
+}
+.option-input:checked::before {
+  width: 40px;
+  height: 40px;
+  display:flex;
+  content: '\2713';
+  font-size: 25px;
+  font-weight:bold;
+  position: absolute;
+  align-items:center;
+  justify-content:center;
+}
+.option-input:checked::after {
+  -webkit-animation: click-wave 0.65s;
+  -moz-animation: click-wave 0.65s;
+  animation: click-wave 0.65s;
+  background: #FAFAFA;
+  content: '';
+  display: block;
+  position: relative;
+  z-index: 100;
+}
+@keyframes click-wave {
+  0% {
+    height: 40px;
+    width: 40px;
+    opacity: 0.35;
+    position: relative;
+  }
+  100% {
+    height: 200px;
     width: 200px;
+    margin-left: -80px;
+    margin-top: -80px;
+    opacity: 0;
+  }
+}
+.scrolldown {
+    color: #FAFAFA;
+    width: 100%;
     text-align: center;
     font-size: 1.25rem;
-    right: 50%;
-    margin-right: -100px;
-    transition: opacity 1s ease;
 }
-#scrolldown a{
+.scrolldown a{
+    margin: 0 auto;
     color:#FAFAFA;
 }
-#scrolldown a i{
+.scrolldown a i{
     font-size: 50px;
 }
 .material-icons {
@@ -361,6 +585,36 @@ input[type=number]::-webkit-outer-spin-button {
   grid-template-areas: "a a a";
   gap: 10px;
   grid-auto-rows: 500px;
+}
+#amazon-checkout
+{
+    margin: 0 auto;
+    text-align: center;
+    border-width: 0;
+    width: 152px;
+    height: 64px;
+    background: url('https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gold_152x64.png') no-repeat ;
+}
+#checkout-container
+{
+    width: 100%;
+    text-align: center;
+}
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  
+  margin: 0 auto;
+    text-align: center;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
     </style>
 

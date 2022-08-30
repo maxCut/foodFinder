@@ -1,20 +1,20 @@
 {
-  "name": "FoodFinder",
-  "description": "getting some grub",
-  "version": "1.1",
-  "manifest_version": 3,
-  "content_scripts":
-  [
-      {
-        "matches": [
-          "http://*/*",
-          "https://*/*"],
-        "js" : ["content-script.js"]
-      }
-  ],
-  "externally_connectable": {
-    "ids": ["*"],
-    "matches": ["http://my.localhost/*"]
-  },
-  "permissions": ["alarms","storage"]
+    "name": "FoodFinder",
+    "description": "getting some grub",
+    "version": "1.1",
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js": ["content-script.js"]
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "externally_connectable": {
+        "ids": ["*"],
+        "matches": ["http://my.localhost/*"]
+    },
+    "permissions": ["alarms", "storage"]
 }
