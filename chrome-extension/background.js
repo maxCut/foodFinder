@@ -35,7 +35,7 @@ async function checkIfAmazonLoggedIn() {
     if (!signOn) {
         return false;
     }
-    return signOn.data-nav-ref != "nav_ya_signin";
+    return signOn.getAttribute("data-nav-ref") != "nav_ya_signin";
 }
 
 async function fetchOffer(element, storeUrl) {
