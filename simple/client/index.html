@@ -86,11 +86,11 @@
                 jsondata.forEach(element => {
                     console.log(element)
                     meals[element.Id] = element;
-                    addMeal(element.Name,element.Image,element.Id)
+                    addMeal(element.Name,element.Image,element.Id,element.Recipe)
                 });
             })
         }
-        function addMeal(mealName,img,mealId)
+        function addMeal(mealName,img,mealId,mealURL)
         {
             const newMeal = document.createElement("div");
             newMeal.className = "card card-primary meal";
@@ -104,6 +104,9 @@
             panelBody.style = "background-image: url("+ img + ");"+
             "background-repeat: no-repeat;"+
             "background-size: 100% 500px;";
+            const moreInfoButton = document.createElement("div");
+            moreInfoButton.innerHTML = `<button class = "info" onclick = "window.open('${mealURL}','_blank')"><em>i</em></button>`
+            panelBody.appendChild(moreInfoButton)
             const panelFooter = document.createElement("div");
             panelFooter.className = "card-footer text-center"
             panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"mealRemovedEvent(\'"+mealId+"\'); this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
@@ -362,6 +365,25 @@
         {
             color: rgb(230, 230, 230);
         }
+        
+
+.info {
+  color: black;
+  border: 2px;
+  padding: 2px;
+  font-size: 31px;
+  height: 50px;
+  width: 50px;
+  box-shadow: 0 2px 4px darkslategray;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 70%;
+  position:absolute;
+  right:1pc;
+  bottom:4pc;
+  opacity: .75;
+
+}
         .oneTime
         {
             
