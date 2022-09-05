@@ -109,9 +109,9 @@
             panelBody.appendChild(moreInfoButton)
             const panelFooter = document.createElement("div");
             panelFooter.className = "card-footer text-center"
-            panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"mealRemovedEvent(\'"+mealId+"\'); this.parentNode.querySelector('input[type=number]').stepDown()\" ></button>"+
+            panelFooter.innerHTML = "<div class=\"number-input\"><button onclick=\"mealRemovedEvent(\'"+mealId+"\'); this.parentNode.querySelector('input[type=number]').stepDown("+meals[mealId].IncrementAmount+")\" ></button>"+
                 "<input id = " + mealId + " class=\"quantity\" min=\"0\" name=\"quantity\" value=\"0\" type=\"number\">"
-                +"<button onclick=\"mealAddedEvent(\'"+ mealId+"\'); this.parentNode.querySelector('input[type=number]').stepUp()\" class=\"plus\"></button></div>"
+                +"<button onclick=\"mealAddedEvent(\'"+ mealId+"\'); this.parentNode.querySelector('input[type=number]').stepUp("+ meals[mealId].IncrementAmount +")\" class=\"plus\"></button></div>"
             const unitsInCart = document.createElement("input")
             unitsInCart.type = "number";
             unitsInCart.class = "form-control"
@@ -129,7 +129,7 @@
             meals[id].OneTimes.forEach(oneTimeId =>
             {
                 var oneTimeIngredient = ingredients[oneTimeId]
-                addOneTime(oneTimeIngredient.Name,oneTimeIngredient.Options[0].Img,oneTimeId)
+                addOneTime(oneTimeIngredient.Name,oneTimeIngredient.Options[0].Img,oneTimeId, meals[id].IncrementAmount)
             })
 
         }
@@ -138,7 +138,7 @@
             meals[id].OneTimes.forEach(oneTimeId =>
             {
                 var oneTimeIngredient = ingredients[oneTimeId]
-                removeOneTime(oneTimeId)
+                removeOneTime(oneTimeId,meals[id].IncrementAmount)
             })
         }
         
@@ -161,14 +161,14 @@
 
         var oneTimeEdges = {}
 
-        function addOneTime(oneTimeName,img,id)
+        function addOneTime(oneTimeName,img,id,edges)
         {
             if(oneTimeEdges[id])
             {
-                oneTimeEdges[id] = oneTimeEdges[id]+1
+                oneTimeEdges[id] = oneTimeEdges[id]+edges
                 return;
             }
-            oneTimeEdges[id] = 1
+            oneTimeEdges[id] = edges
             const newMeal = document.createElement("div");
             newMeal.id = id+"_card"
             newMeal.className = "card card-primary oneTime";
@@ -196,13 +196,13 @@
             document.getElementById("OneTimes").appendChild(newMeal)
         }
         
-        function removeOneTime(id)
+        function removeOneTime(id,edges)
         {
             if(!oneTimeEdges[id])
             {
                 return;
             }
-            oneTimeEdges[id] = oneTimeEdges[id]-1
+            oneTimeEdges[id] = oneTimeEdges[id]-edges
             if(oneTimeEdges[id]>0)
             {
                 return
@@ -260,9 +260,10 @@
             precart = Object.assign({},getOneTimeForPurchase(),getIngredientsForPurchase())
             cart =[]
             Object.keys(precart).forEach(
-            asinElement=>
+            ingredientKey=>
             {
-                cart.push({asin:asinElement,quantity:precart[asinElement]})
+                //cart.push({asin:asinElement,quantity:precart[asinElement]})
+                cart.push(precart[ingredientKey])
             })
             return cart
         }
@@ -273,7 +274,11 @@
             selectedOneTimes = getOneTimeIngredients()
             selectedOneTimes.forEach(onetime=>
             {
-                ingredientPurchaseMap[ingredients[onetime].Options[0].ASIN] = 1
+                ingredientOptions = []
+                ingredients[onetime].Options.forEach(option => {
+                    ingredientOptions.push({asin:option.ASIN, quantity:1})
+                });
+                ingredientPurchaseMap[onetime] = ingredientOptions
             })
             return ingredientPurchaseMap
         }
@@ -289,7 +294,18 @@
             });
             return selectedOneTimes
         }
-
+        function getOptionQuantity(neededAmount,ingredientData)
+        {
+            return {asin:ingredientData.ASIN,quantity:Math.ceil(neededAmount/ingredientData.Unit_Size)}
+        }
+        function getOptionQuantities(neededAmount,ingredientDatas)
+        {
+            optionArray = []
+            ingredientDatas.forEach(ingredientData => {
+                optionArray.push(getOptionQuantity(neededAmount, ingredientData))
+            });
+            return optionArray
+        }
         function getIngredientsForPurchase()
         {
             neededTotalIngredientsMap = getNeededIngredientsFromMeals()
@@ -299,9 +315,8 @@
                 {
                     neededAmount = neededTotalIngredientsMap[ingredient]
                     ingredientData = ingredients[ingredient].Options[0]
-                    //for now just use option 0 but in future use best price.
-                    ingredientPurchaseMap[ingredientData.ASIN] = Math.ceil(neededAmount/ingredientData.Unit_Size)
-
+                    
+                    ingredientPurchaseMap[ingredient] = getOptionQuantities(neededAmount,ingredients[ingredient].Options)
                 }
             )
             return ingredientPurchaseMap
@@ -423,7 +438,7 @@
         }
         .sub-page
         {
-            height: 100%;
+            min-height: 100%;
         }
 
         input[type="number"] {

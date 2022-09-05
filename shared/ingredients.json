@@ -50,9 +50,8 @@
         "Name": "Sweet Potato",
         "Options": [
             {
-                "Unit": "lbs",
-                "Unit_Size": "3.0",
-                "Unit_Price": "3.49",
+                "Unit": "Units",
+                "Unit_Size": "9.0",
                 "Link": "https://amzn.to/3NRc82E",
                 "ASIN": "B079M54HW4",
                 "Requires": ["s3"]
@@ -79,20 +78,71 @@
             {
                 "Unit": "Unit",
                 "Unit_Size": "12",
-                "Unit_Price": "2.69",
                 "Link": "https://amzn.to/3xkArk6",
                 "ASIN": "B07GBM7TZJ"
             },
             {
                 "Unit": "Unit",
                 "Unit_Size": "6",
-                "Unit_Price": "2.19",
                 "Link": "https://amzn.to/3yGbZdN",
                 "ASIN": "B07ZS7FJ9Y"
+            },
+            {
+                "Unit": "Unit",
+                "Unit_Size": "12",
+                "Link": "https://amzn.to/3AQo148",
+                "ASIN": "B074H5J381"
+            },
+            {
+                "Unit": "Unit",
+                "Unit_Size": "18",
+                "Link": "https://amzn.to/3RE8Npo",
+                "ASIN": "B074QX4K49"
             }
         ]
     },
-
+    {
+        "Key": "f7",
+        "Name": "Burgers",
+        "Options": [
+            {
+                "Unit": "Unit",
+                "Unit_Size": "2",
+                "Link": "https://amzn.to/3RouY3y",
+                "ASIN": "B06XVVZP5D"
+            },
+            {
+                "Unit": "Unit",
+                "Unit_Size": "8",
+                "Link": "https://amzn.to/3qaN78R",
+                "ASIN": "B08KT5Y736"
+            }
+        ]
+    },
+    {
+        "Key": "f8",
+        "Name": "Buns",
+        "Options": [
+            {
+                "Unit": "Unit",
+                "Unit_Size": "8",
+                "Link": "https://amzn.to/3epjpdF",
+                "ASIN": "B083XVLQT3"
+            }
+        ]
+    },
+    {
+        "Key": "f9",
+        "Name": "Cheese Slices",
+        "Options": [
+            {
+                "Unit": "Unit",
+                "Unit_Size": "10",
+                "Link": "https://amzn.to/3RysAXs",
+                "ASIN": "B075Y8WCVH"
+            }
+        ]
+    },
     {
         "Key": "p1",
         "Name": "Balsamic Vinegar",

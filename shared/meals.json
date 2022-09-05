@@ -1,20 +1,40 @@
-[{
-    "Id":"m1",
-    "Name":"Chicken and Vegetables",
-    "Recipe":"http://wishfulchef.com/chicken-roasted-on-a-bed-of-vegetables/",
-    "Image":"https://wishfulchef.com/wp-content/uploads/2012/03/BakedChickenVegetables_1.jpg",
-    "Ingredients" :[
-        ["f2",3.0],
-        ["f1",0.30]],
-    "OneTimes" : ["p1","p2","p3","p4"] 
-},{
-    "Id":"m2",
-    "Name":"Baked Eggs over Sweet Potato",
-    "Recipe":"https://naturallyella.com/sweet-potatoes-baked-eggs/",
-    "Image":"https://32lxcujgg9-flywheel.netdna-ssl.com/wp-content/uploads/2012/11/sweet_potato_baked_eggs.jpg",
-    "Ingredients" :[
-        ["f4",1.0],
-        ["f5",0.25],
-        ["f6",2.0]],
-    "OneTimes" : ["p2","p3","p6","p7","p8"] 
-}]
+[
+    {
+        "Id": "m1",
+        "Name": "Chicken and Vegetables",
+        "Recipe": "http://wishfulchef.com/chicken-roasted-on-a-bed-of-vegetables/",
+        "Image": "https://wishfulchef.com/wp-content/uploads/2012/03/BakedChickenVegetables_1.jpg",
+        "Ingredients": [
+            ["f2", 2.0],
+            ["f1", 0.3]
+        ],
+        "OneTimes": ["p1", "p2", "p3", "p4"],
+        "IncrementAmount": 2
+    },
+    {
+        "Id": "m2",
+        "Name": "Baked Eggs over Sweet Potato",
+        "Recipe": "https://naturallyella.com/sweet-potatoes-baked-eggs/",
+        "Image": "https://32lxcujgg9-flywheel.netdna-ssl.com/wp-content/uploads/2012/11/sweet_potato_baked_eggs.jpg",
+        "Ingredients": [
+            ["f4", 1.0],
+            ["f5", 0.25],
+            ["f6", 2.0]
+        ],
+        "OneTimes": ["p2", "p3", "p6", "p7", "p8"],
+        "IncrementAmount": 2
+    },
+    {
+        "Id": "m3",
+        "Name": "Burger",
+        "Recipe": "https://bakeitwithlove.com/frozen-hamburgers-in-the-oven/?msclkid=cadb3c92ac9411ec93b9a180196c1f87",
+        "Image": "https://bakeitwithlove.com/wp-content/uploads/2021/10/Frozen-Hamburgers-In-The-Oven-sq.jpg",
+        "Ingredients": [
+            ["f7", 1.0],
+            ["f8", 1.0],
+            ["f9", 1.0]
+        ],
+        "OneTimes": ["p2", "p3", "p5"],
+        "IncrementAmount": 2
+    }
+]

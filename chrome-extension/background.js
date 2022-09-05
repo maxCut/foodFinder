@@ -81,24 +81,30 @@ async function addItemsToFreshCart(asin_set) {
     addAPI = "https://www.amazon.com/alm/addtofreshcart";
 
     for (const element of asin_set) {
-        [offer, token] = await fetchOffer(element, storeUrl);
+        for (const option of element) {
+            try {
+                [offer, token] = await fetchOffer(option, storeUrl);
+            } catch {}
+            if (offer) {
+                let body = {
+                    asin: option.asin,
+                    brandId: "QW1hem9uIEZyZXNo",
+                    clientID: "fresh-nereid",
+                    offerListingID: offer,
+                    quantity: option.quantity,
+                    csrfToken: token,
+                };
 
-        let body = {
-            asin: element.asin,
-            brandId: "QW1hem9uIEZyZXNo",
-            clientID: "fresh-nereid",
-            offerListingID: offer,
-            quantity: element.quantity,
-            csrfToken: token,
-        };
-
-        await fetch(addAPI, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-            },
-            body: JSON.stringify(body),
-        });
+                await fetch(addAPI, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body: JSON.stringify(body),
+                });
+                break;
+            }
+        }
     }
 
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
