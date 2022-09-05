@@ -74,7 +74,6 @@
         onCheckoutAmazonSuccess()
         });
     document.addEventListener("purchaseRequestFailed", function (event) {
-        console.log("here")
         onNeedToLogInToAmazon()
         });
         var meals = {};
@@ -87,7 +86,6 @@
             .then(jsondata=>
             {
                 jsondata.forEach(element => {
-                    console.log(element)
                     meals[element.Id] = element;
                     addMeal(element.Name,element.Image,element.Id,element.Recipe)
                 });

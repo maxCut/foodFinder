@@ -76,25 +76,19 @@ async function addFirstListedItemToCart(element) {
             };
 
             try {
-                const response = await fetch(
-                    "https://www.amazon.com/alm/addtofreshcart",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json; charset=utf-8",
-                        },
-                        body: JSON.stringify(body),
-                    }
-                );
+                await fetch("https://www.amazon.com/alm/addtofreshcart", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body: JSON.stringify(body),
+                });
             } catch {
-                console.log(`error getting store item ${option.asin}`);
                 continue;
             }
-            console.log(option);
             return;
         }
     }
-    console.log("failed to find a valid option for this ingredient");
 }
 
 async function addItemsToFreshCart(asin_set) {

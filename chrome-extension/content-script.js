@@ -1,12 +1,9 @@
-console.log("content script");
 document.addEventListener("purchaseRequest", function (event) {
-    console.log(event.detail);
     //chrome.storage.local.set({ "message": event.detail }, function () { })
     sendMessageToBackground(event.detail);
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log(request);
     if (request == "notifyLoadCartCompleted") {
         var event = new CustomEvent("purchaseRequestSuccess", {
             detail: "success",
