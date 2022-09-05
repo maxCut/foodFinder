@@ -1,11 +1,16 @@
 {
-    "name": "FoodFinder",
-    "description": "getting some grub",
+    "name": "Chefbop",
+    "description": "Make shopping for groceries simple",
     "version": "1.1",
     "manifest_version": 2,
     "content_scripts": [
         {
-            "matches": ["http://*/*", "https://*/*"],
+            "matches": [
+                "http://www.chefbop.com/*",
+                "https://www.chefbop.com/*",
+                "https://www.amazon.com/*",
+                "http://www.amazon.com/*"
+            ],
             "js": ["content-script.js"]
         }
     ],
@@ -14,7 +19,11 @@
     },
     "externally_connectable": {
         "ids": ["*"],
-        "matches": ["http://my.localhost/*"]
-    },
-    "permissions": ["alarms", "storage"]
+        "matches": [
+            "http://www.chefbop.com/*",
+            "https://www.chefbop.com/*",
+            "https://www.amazon.com/*",
+            "http://www.amazon.com/*"
+        ]
+    }
 }

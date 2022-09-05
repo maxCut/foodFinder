@@ -6,14 +6,14 @@
         <link
         rel="stylesheet"
         href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
-      />
+      ></head>
       <link
   rel="stylesheet"
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
-/>
+></link>
     </head>
     <body>
-    <img id = "background-img" src="./assets/heat-248231.jpg"/>
+    <img id = "background-img" src="./assets/heat-248231.jpg"></img>
     <div class = "sub-page">
         
     <h1 class = "text-center">Step 1: Pick Your Meals</h1>
@@ -56,10 +56,13 @@
         <p>Oops. Were having trouble loading items into your amazon cart. <a href="https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20" target="_blank">Log into amazon fresh</a> on another page then try again.</p>
     </div>
     <div id = "checkout-container">
-        <button id = "amazon-checkout" onclick="checkoutAmazon()"/>
+        <button id = "amazon-checkout" onclick="checkoutAmazon()"></button>
     </div>
-    <div id = "checkout-request-spinner" class="loader"/>
-    
+    <div id = "checkout-request-spinner" class="loader"></div>
+    <div id = "feedback-button">
+        <a href="https://forms.gle/AssZKH6fEdyBhP1z6" class="btn btn-success" role="button">Provide Feedback</a>
+    </div>
+
 </div>
     <script>
         loadMeals();
@@ -652,6 +655,12 @@ input[type=number]::-webkit-outer-spin-button {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+#feedback-button
+{
+    position: fixed;
+    bottom: 10;
+    right: 10;
 }
     </style>
 

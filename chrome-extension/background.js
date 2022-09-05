@@ -1,8 +1,3 @@
-chrome.runtime.onInstalled.addListener(() => {
-    console.log("onInstalled...");
-});
-
-window.perfWatch = {};
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type == "foodFinderMessage") {
         if (request.subtype == "ASIN_addToCart_request") {
@@ -18,10 +13,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 async function checkIfAmazonLoggedIn() {
-    storeUrl = "https://www.amazon.com";
-
     var signOn;
-    await fetch(`${storeUrl}/alm/storefront?almBrandId=QW1hem9uIEZyZXNo`)
+    await fetch(
+        `https://www.amazon.com/alm/storefront?almBrandId=QW1hem9uIEZyZXNo`
+    )
         .then((response) => {
             return response.text();
         })
@@ -38,9 +33,9 @@ async function checkIfAmazonLoggedIn() {
     return signOn.getAttribute("data-nav-ref") != "nav_ya_signin";
 }
 
-async function fetchOffer(element, storeUrl) {
+async function fetchOffer(element) {
     return await fetch(
-        `${storeUrl}/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=foodfinder00-20`
+        `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=foodfinder00-20`
     )
         .then((response) => {
             return response.text();
@@ -48,19 +43,58 @@ async function fetchOffer(element, storeUrl) {
         .then((html) => {
             let parser = new DOMParser();
             let doc = parser.parseFromString(html, "text/html");
-            let els = doc.querySelectorAll("[data-fresh-add-to-cart]");
+            let tags = doc.querySelectorAll("[data-fresh-add-to-cart]");
 
-            for (let i = 0; i < els.length; i++) {
-                let el = els[i];
-                let a2c = JSON.parse(el.dataset["freshAddToCart"]);
+            for (let i = 0; i < tags.length; i++) {
+                let tag = tags[i];
+                let addToCart = JSON.parse(tag.dataset["freshAddToCart"]);
 
-                if (a2c.asin == element.asin) {
-                    token = a2c.csrfToken;
-                    offer = a2c.offerListingID;
+                if (addToCart.asin == element.asin) {
+                    token = addToCart.csrfToken;
+                    offer = addToCart.offerListingID;
                     return [offer, token];
                 }
             }
         });
+}
+
+async function addFirstListedItemToCart(element) {
+    for (const option of element) {
+        try {
+            [offer, token] = await fetchOffer(option);
+        } catch {
+            continue;
+        }
+        if (offer) {
+            let body = {
+                asin: option.asin,
+                brandId: "QW1hem9uIEZyZXNo",
+                clientID: "fresh-nereid",
+                offerListingID: offer,
+                quantity: option.quantity,
+                csrfToken: token,
+            };
+
+            try {
+                const response = await fetch(
+                    "https://www.amazon.com/alm/addtofreshcart",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8",
+                        },
+                        body: JSON.stringify(body),
+                    }
+                );
+            } catch {
+                console.log(`error getting store item ${option.asin}`);
+                continue;
+            }
+            console.log(option);
+            return;
+        }
+    }
+    console.log("failed to find a valid option for this ingredient");
 }
 
 async function addItemsToFreshCart(asin_set) {
@@ -77,35 +111,12 @@ async function addItemsToFreshCart(asin_set) {
         );
         return;
     }
-    storeUrl = "https://www.amazon.com";
-    addAPI = "https://www.amazon.com/alm/addtofreshcart";
 
+    const promises = [];
     for (const element of asin_set) {
-        for (const option of element) {
-            try {
-                [offer, token] = await fetchOffer(option, storeUrl);
-            } catch {}
-            if (offer) {
-                let body = {
-                    asin: option.asin,
-                    brandId: "QW1hem9uIEZyZXNo",
-                    clientID: "fresh-nereid",
-                    offerListingID: offer,
-                    quantity: option.quantity,
-                    csrfToken: token,
-                };
-
-                await fetch(addAPI, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    body: JSON.stringify(body),
-                });
-                break;
-            }
-        }
+        promises.push(addFirstListedItemToCart(element));
     }
+    await Promise.all(promises);
 
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(
