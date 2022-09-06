@@ -2,7 +2,7 @@
     "name": "Chefbop",
     "description": "Make groceries easy",
     "version": "1.1",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "content_scripts": [
         {
             "matches": [
@@ -15,8 +15,9 @@
         }
     ],
     "background": {
-        "scripts": ["background.js"]
+        "service_worker": "background.js"
     },
+    "host_permissions": ["https://www.amazon.com/*", "http://www.amazon.com/*"],
     "externally_connectable": {
         "ids": ["*"],
         "matches": [

@@ -12,6 +12,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse("unknown request");
 });
 
+function getFirstGreaterThanTarget(target, arr) {
+    lowerBound = 0;
+    upperBound = arr.length;
+    if (arr[lowerBound] > target) {
+        return arr[lowerBound];
+    }
+    while (lowerBound < upperBound) {
+        pivot = Math.floor((lowerBound + upperBound) / 2);
+        if (arr[pivot] == target) {
+            return arr[pivot + 1];
+        } else if (arr[pivot] < target) {
+            lowerBound = pivot;
+        } else {
+            upperBound = pivot;
+        }
+        if (upperBound == lowerBound) {
+            return arr[upperBound + 1];
+        }
+        if (upperBound - lowerBound == 1) {
+            return arr[upperBound];
+        }
+    }
+}
+function parseHtmlForTagsThatContainSubString(html, searchword) {
+    allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
+        (a) => a.index
+    );
+    searchwordTags = [
+        ...html.matchAll(new RegExp("<[^<>]*" + searchword + "[^<>]*>", "gi")),
+    ].map((a) => a.index);
+    retTags = [];
+    searchwordTags.forEach((index) => {
+        closeIndex = getFirstGreaterThanTarget(index, allTags);
+        retTags.push(html.substring(index, closeIndex));
+    });
+    return retTags;
+}
+
 async function checkIfAmazonLoggedIn() {
     var signOn;
     await fetch(
@@ -21,16 +59,20 @@ async function checkIfAmazonLoggedIn() {
             return response.text();
         })
         .then((html) => {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(html, "text/html");
-            signOn = doc.getElementById("nav-link-accountList");
+            tags = parseHtmlForTagsThatContainSubString(
+                html,
+                "nav-link-accountList"
+            );
+            if (tags.length > 0) {
+                signOn = tags[0];
+            }
         })
         .catch((err) => {});
 
     if (!signOn) {
         return false;
     }
-    return signOn.getAttribute("data-nav-ref") != "nav_ya_signin";
+    return signOn.includes('data-nav-ref="nav_youraccount_btn"');
 }
 
 async function fetchOffer(element) {
@@ -41,13 +83,21 @@ async function fetchOffer(element) {
             return response.text();
         })
         .then((html) => {
-            let parser = new DOMParser();
-            let doc = parser.parseFromString(html, "text/html");
-            let tags = doc.querySelectorAll("[data-fresh-add-to-cart]");
+            let tags = parseHtmlForTagsThatContainSubString(
+                html,
+                "data-fresh-add-to-cart"
+            );
 
             for (let i = 0; i < tags.length; i++) {
                 let tag = tags[i];
-                let addToCart = JSON.parse(tag.dataset["freshAddToCart"]);
+                let addToCartStartIndex = tag.search("{&quot;");
+                let addToCartStopIndex = tag.search("&quot;}") + 7;
+                let unformatedString = tag.substring(
+                    addToCartStartIndex,
+                    addToCartStopIndex
+                );
+                let formatedString = unformatedString.replaceAll("&quot;", '"');
+                let addToCart = JSON.parse(formatedString);
 
                 if (addToCart.asin == element.asin) {
                     token = addToCart.csrfToken;
