@@ -11,8 +11,13 @@
   rel="stylesheet"
   href="https://fonts.googleapis.com/icon?family=Material+Icons"
 ></link>
+    <div id="notification-box">
+        <div class="alert alert-danger">
+            <div id = "notification-message"></div>
+        </div>
+    </div>
     </head>
-    <body>
+    <body onload="onPageLoad()">
     <img id = "background-img" src="./assets/heat-248231.jpg"></img>
     <div class = "sub-page">
         
@@ -69,6 +74,10 @@
         
         document.getElementById("checkout-request-spinner").style.display = "none";
         document.getElementById("checkout-login-required").style.display = "none";
+        containsPropperChromeExtension = false;
+        document.addEventListener("chefBopInformation", function (event) {
+            containsPropperChromeExtension = true //event.detail.message == "1.2"
+});
         
     document.addEventListener("purchaseRequestSuccess", function (event) {
         onCheckoutAmazonSuccess()
@@ -77,6 +86,15 @@
         onNeedToLogInToAmazon()
         });
         var meals = {};
+        function onPageLoad()
+        {
+            setTimeout(()=>{
+                if(!containsPropperChromeExtension)
+                {
+                    setNeedChromeExtension()
+                }
+            }, 1000)
+        }
         function loadMeals()
         {
             fetch("./shared/meals.json")
@@ -123,6 +141,28 @@
             newMeal.appendChild(panelBody)
             newMeal.appendChild(panelFooter)
             document.getElementById("Meals").appendChild(newMeal)
+        }
+
+        function setNotificationMessage(msg)
+        {
+            const notificationBox = document.getElementById("notification-box")
+            notificationBox.style.display = "block"
+            const notificationMessage = document.getElementById("notification-message")
+            notificationMessage.innerHTML = msg
+        }
+        function clearNotificatinoMessage()
+        {
+            const notificationBox = document.getElementById("notification-box")
+            notificationBox.style.display = "none"
+            const notificationMessage = document.getElementById("notification-message")
+            notificationMessage.innerHTML = ""
+
+        }
+        
+        clearNotificatinoMessage()
+        function setNeedChromeExtension()
+        {
+            setNotificationMessage("Please install the chefbop chrome extension <a href = 'https://chrome.google.com/webstore/detail/chefbop/dhllfmoknkadgllhkgimkclkfdidomep' target='_blank'>here</a>")
         }
 
         function mealAddedEvent(id)
@@ -414,6 +454,14 @@
             width: 28rem; 
             height: 25rem; 
 
+        }
+        #notification-box
+        {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            width: 100%;
         }
         html
         {

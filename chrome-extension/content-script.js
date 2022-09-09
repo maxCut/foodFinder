@@ -3,6 +3,17 @@ document.addEventListener("purchaseRequest", function (event) {
     sendMessageToBackground(event.detail);
 });
 
+let currentVersion = chrome.runtime.getManifest().version;
+document.dispatchEvent(
+    new CustomEvent("chefBopInformation", {
+        detail: {
+            sender: "chef-bop",
+            message_name: "version",
+            message: currentVersion,
+        },
+    })
+);
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request == "notifyLoadCartCompleted") {
         var event = new CustomEvent("purchaseRequestSuccess", {

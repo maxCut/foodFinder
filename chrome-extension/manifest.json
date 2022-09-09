@@ -1,7 +1,7 @@
 {
     "name": "Chefbop",
     "description": "Make groceries easy",
-    "version": "1.2",
+    "version": "1.3",
     "manifest_version": 3,
     "content_scripts": [
         {
