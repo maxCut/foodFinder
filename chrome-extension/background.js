@@ -146,11 +146,13 @@ async function addItemsToFreshCart(asin_set) {
         chrome.tabs.query(
             { active: true, currentWindow: true },
             function (tabs) {
-                chrome.tabs.sendMessage(
-                    tabs[0].id,
-                    "notifyLoadCartFailed",
-                    function (response) {}
-                );
+                try {
+                    chrome.tabs.sendMessage(
+                        tabs[0].id,
+                        "notifyLoadCartFailed",
+                        function (response) {}
+                    );
+                } catch {}
             }
         );
         return;
@@ -163,10 +165,12 @@ async function addItemsToFreshCart(asin_set) {
     await Promise.all(promises);
 
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(
-            tabs[0].id,
-            "notifyLoadCartCompleted",
-            function (response) {}
-        );
+        try {
+            chrome.tabs.sendMessage(
+                tabs[0].id,
+                "notifyLoadCartCompleted",
+                function (response) {}
+            );
+        } catch {}
     });
 }
