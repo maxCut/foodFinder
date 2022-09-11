@@ -1,5 +1,45 @@
 [
     {
+        "Id": "m2",
+        "Name": "Baked Eggs over Sweet Potato",
+        "Recipe": "https://naturallyella.com/sweet-potatoes-baked-eggs/",
+        "Image": "https://32lxcujgg9-flywheel.netdna-ssl.com/wp-content/uploads/2012/11/sweet_potato_baked_eggs.jpg",
+        "Ingredients": [
+            ["f4", 1.0],
+            ["f5", 0.25],
+            ["f6", 2.0],
+            ["f16", 2.0]
+        ],
+        "OneTimes": ["p2", "p3", "p6", "p7", "p8"],
+        "IncrementAmount": 2
+    },
+    {
+        "Id": "m4",
+        "Name": "Yogurt Parfait",
+        "Recipe": "https://www.simplysissom.com/simpleyogurtparfaits/",
+        "Image": "https://i0.wp.com/www.simplysissom.com/wp-content/uploads/2017/01/parfaityogurt-copy.jpg?w=680&ssl=1",
+        "Ingredients": [
+            ["f13", 2.5],
+            ["f14", 2.5],
+            ["f15", 8.0]
+        ],
+        "OneTimes": ["p9"],
+        "IncrementAmount": 4
+    },
+    {
+        "Id": "m5",
+        "Name": "Baked Eggs With Avacado and Feta",
+        "Recipe": "https://kalynskitchen.com/low-carb-baked-eggs-with-avocado-feta/",
+        "Image": "https://d1yfn1dfres2va.cloudfront.net/005/18/ee/18eeb14d30ed57ac996ef1079f9dee73_640m.jpg",
+        "Ingredients": [
+            ["f6", 4.0],
+            ["f17", 1.0],
+            ["f16", 2.0]
+        ],
+        "OneTimes": ["p2", "p3"],
+        "IncrementAmount": 1
+    },
+    {
         "Id": "m1",
         "Name": "Chicken and Vegetables",
         "Recipe": "http://wishfulchef.com/chicken-roasted-on-a-bed-of-vegetables/",
@@ -9,19 +49,6 @@
             ["f1", 0.3]
         ],
         "OneTimes": ["p1", "p2", "p3", "p4"],
-        "IncrementAmount": 2
-    },
-    {
-        "Id": "m2",
-        "Name": "Baked Eggs over Sweet Potato",
-        "Recipe": "https://naturallyella.com/sweet-potatoes-baked-eggs/",
-        "Image": "https://32lxcujgg9-flywheel.netdna-ssl.com/wp-content/uploads/2012/11/sweet_potato_baked_eggs.jpg",
-        "Ingredients": [
-            ["f4", 1.0],
-            ["f5", 0.25],
-            ["f6", 2.0]
-        ],
-        "OneTimes": ["p2", "p3", "p6", "p7", "p8"],
         "IncrementAmount": 2
     },
     {
@@ -36,5 +63,20 @@
         ],
         "OneTimes": ["p2", "p3", "p5"],
         "IncrementAmount": 2
+    },
+    {
+        "Id": "m6",
+        "Name": "Spanakopita",
+        "Recipe": "https://feelgoodfoodie.net/recipe/spanakopita-triangles/",
+        "Image": "https://feelgoodfoodie.net/wp-content/uploads/2020/11/Spanakopita-Triangles-12.jpg",
+        "Ingredients": [
+            ["f5", 0.025],
+            ["f16", 0.1],
+            ["f18", 1.0],
+            ["f21", 0.1875],
+            ["f19", 1.0]
+        ],
+        "OneTimes": ["p2", "p3", "p6", "p5", "p10"],
+        "IncrementAmount": 16
     }
 ]
