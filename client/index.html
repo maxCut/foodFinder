@@ -63,7 +63,10 @@
     <div id = "checkout-container">
         <button id = "amazon-checkout" onclick="checkoutAmazon()"></button>
     </div>
-    <div id = "checkout-request-spinner" class="loader"></div>
+    <div id = "checkout-request-spinner">
+        <div class="loader"></div>
+        <div id = "checkout-load-percent"></div>
+    </div>
     <div id = "feedback-button">
         <a href="https://forms.gle/AssZKH6fEdyBhP1z6" class="btn btn-success" role="button">Provide Feedback</a>
     </div>
@@ -260,6 +263,8 @@
             {
                 document.getElementById("checkout-container").style.display = "block";
                 document.getElementById("checkout-request-spinner").style.display = "none";
+                numActiveChunks = 0;
+                chungProgress = 0;
             }
             else
             {
@@ -270,24 +275,57 @@
             }
 
         }
+        
+        const chunkSize = 1;
+        const requestDelayInMilliseconds = 550;
+        var numActiveChunks = 0;
+        var chunkProgress = 0;
         function checkoutAmazon()
         {
-            //var extID = "hlccgpmmonpoinnjdmjgpdmalhbibdpa"
-            //chrome.runtime.sendMessage(extID,"test");
+            if(addingToCart)
+            {
+                return;
+            }
             var cart = getCart()
-            var event = new CustomEvent("purchaseRequest",{detail:cart})
-            document.dispatchEvent(event)
+            var numChunks = Math.ceil(cart.length/chunkSize);
+            chunkProgress = numChunks;
+            numActiveChunks = numChunks;
+            updateLoadPercent();
+            for(let i = 0; i<numChunks;i++)
+            {
+                setTimeout(function(){
+                    sendCartChunkToAmazon(cart.slice(i*chunkSize,Math.min(cart.length,(i+1)*chunkSize)))
+                },requestDelayInMilliseconds*i)
+            }
             setAddingToCart(true)
         }
-        
+        function sendCartChunkToAmazon(chunk)
+        {            
+            var event = new CustomEvent("purchaseRequest",{detail:chunk})
+            document.dispatchEvent(event)
+        }
+        function updateLoadPercent()
+        {
+            document.getElementById("checkout-load-percent").innerHTML = Math.floor(((chunkProgress-numActiveChunks)/chunkProgress)*100) + "%"
+        }
         function onCheckoutAmazonSuccess()
         {
             if(addingToCart)
             {
-                window.open("https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20", '_blank'); 
+                numActiveChunks--;
+                updateLoadPercent();
+                if(numActiveChunks<=0)
+                {
+                    window.open("https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20", '_blank'); 
+                    setAddingToCart(false)
+                }
             }
-            setAddingToCart(false)
            
+        }
+
+        function onAmazonRequestTimeout()
+        {
+            setAddingToCart(false)
         }
         
         function onNeedToLogInToAmazon()
@@ -328,7 +366,8 @@
             selectedOneTimes = new Set()
             Object.keys(oneTimeEdges).forEach(onetime =>
             {
-                if(document.getElementById(onetime).checked>=1)
+                let oneTimeDiv = document.getElementById(onetime);
+                if(oneTimeDiv!=null && oneTimeDiv.checked>=1)
                 {
                     selectedOneTimes.add(onetime)
                 }
@@ -697,6 +736,12 @@ input[type=number]::-webkit-outer-spin-button {
     text-align: center;
   animation: spin 1s linear infinite;
 }
+#checkout-load-percent
+{
+    text-align: center;
+    font-size: large;
+    color: #3498db;
+}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -708,6 +753,7 @@ input[type=number]::-webkit-outer-spin-button {
     bottom: 10;
     right: 10;
 }
+
     </style>
 
     </body>
