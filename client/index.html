@@ -263,8 +263,6 @@
             {
                 document.getElementById("checkout-container").style.display = "block";
                 document.getElementById("checkout-request-spinner").style.display = "none";
-                numActiveChunks = 0;
-                chungProgress = 0;
             }
             else
             {
@@ -277,11 +275,15 @@
         }
         
         const chunkSize = 1;
-        const requestDelayInMilliseconds = 550;
+        const requestDelayInMilliseconds = 600;
         var numActiveChunks = 0;
         var chunkProgress = 0;
         function checkoutAmazon()
         {
+            if(!containsPropperChromeExtension)
+            {
+                return
+            }
             if(addingToCart)
             {
                 return;
@@ -297,6 +299,7 @@
                     sendCartChunkToAmazon(cart.slice(i*chunkSize,Math.min(cart.length,(i+1)*chunkSize)))
                 },requestDelayInMilliseconds*i)
             }
+            setTimeout(onAmazonRequestTimeout(),numChunks*requestDelayInMilliseconds + 10000)
             setAddingToCart(true)
         }
         function sendCartChunkToAmazon(chunk)
@@ -316,8 +319,10 @@
                 updateLoadPercent();
                 if(numActiveChunks<=0)
                 {
-                    window.open("https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20", '_blank'); 
+                    setTimeout(function(){
                     setAddingToCart(false)
+                    window.open("https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20", '_blank');   
+                    },1500)
                 }
             }
            
