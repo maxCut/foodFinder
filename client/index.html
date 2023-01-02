@@ -100,7 +100,7 @@
         }
         function loadMeals()
         {
-            fetch("./shared/meals.json")
+            fetch("../shared/meals.json")
             .then(response => {
                 return response.json();
             })
@@ -188,7 +188,7 @@
         
         function loadIngredients()
         {
-            fetch("../../shared/ingredients.json")
+            fetch("../shared/ingredients.json")
             .then(response => {
                 return response.json();
             })
