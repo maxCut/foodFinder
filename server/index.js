@@ -11,8 +11,6 @@ app.use(express.static(dir));
 app.listen(port, function () {
     console.log("Listening on http://localhost:" + port + "/");
 });
-/*
 app.get("*", (req, res) => {
     res.sendFile(path.resolve(`${__dirname}/../client/index.html`));
 });
-*/
