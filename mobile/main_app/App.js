@@ -183,27 +183,6 @@ const App: () => Node = () => {
               title="Checkout"
               onPress={async () => {
                 setPageState('Web');
-                /*
-                const isAvailable = await InAppBrowser.isAvailable();
-                const url = 'https://www.amazon.com';
-                if (isAvailable) {
-                  InAppBrowser.open(url, {
-                    // iOS Properties
-                    dismissButtonStyle: 'cancel',
-                    preferredBarTintColor: 'gray',
-                    preferredControlTintColor: 'white',
-                    // Android Properties
-                    showTitle: true,
-                    toolbarColor: '#6200EE',
-                    secondaryToolbarColor: 'black',
-                    enableUrlBarHiding: true,
-                    enableDefaultShare: true,
-                    forceCloseOnRedirection: true,
-                  }).then(result => {
-                    console.log(JSON.stringify(result));
-                  });
-                } else Linking.openURL(url);
-                */
               }}
             />
             <Section title="Select any spices you don't have">
@@ -228,7 +207,20 @@ const App: () => Node = () => {
     //parsed.getElementsByAttribute('class', 'b');
     //});
 
-    return <WebView source={{uri: loginUrl}} style={{marginTop: 20}} />;
+    return (
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <Button
+          title="Back"
+          onPress={async () => {
+            setPageState('Main');
+          }}
+        />
+        <WebView source={{uri: loginUrl}} style={{marginTop: 20}} />
+      </View>
+    );
   }
 };
 
