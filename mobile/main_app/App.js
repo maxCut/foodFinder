@@ -35,6 +35,10 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {wrap} from 'module';
 
+const webPages = {
+  checkout:
+    'https://www.amazon.com/cart/localmarket?ref_=ewc_gtc&almBrandId=QW1hem9uIEZyZXNo',
+};
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 const Section = ({children, title}): Node => {
@@ -93,7 +97,7 @@ const App: () => Node = () => {
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [html, setHtml] = useState('<html>Loading</html>');
-  const [loginUrl, setLoginUrl] = useState('https://amazon.com');
+  const [pageUrl, setPageUrl] = useState('');
   function mealAddedEvent(id) {
     meals[id].OneTimes.forEach(oneTimeId => {
       var oneTimeIngredient = ingredientVals[oneTimeId];
@@ -117,14 +121,53 @@ const App: () => Node = () => {
     setOneTimes([...oneTimes, oneTime]);
   }
 
+  async function checkLoggedIn() {
+    try {
+      const response = await fetch('https://www.amazon.com');
+      const html2 = await response.text();
+      const parser = new DOMParser.DOMParser({
+        errorHandler: {
+          warning: function (w) {},
+          error: function (e) {},
+          fatalError: function (e) {
+            console.error(e);
+          },
+        },
+      });
+
+      const parsed = parser.parseFromString(html2);
+      return parsed
+        .getElementById('nav-link-accountList')
+        .toString()
+        .includes('nav_youraccount_btn');
+    } catch {}
+    return false;
+  }
+
+  var webPageState = null;
+  async function updateWebPage() {
+    var loggedIn = await checkLoggedIn();
+    if (loggedIn) {
+      if (webPageState === 'Checkout') {
+        return;
+      }
+      webPageState = 'Checkout';
+      setPageUrl(webPages.checkout);
+    } else {
+      if (webPageState === 'Login') {
+        return;
+      }
+      webPageState = 'Login';
+      await loadLoginPrompt();
+    }
+  }
+
   async function loadLoginPrompt() {
     LogBox.ignoreAllLogs();
+    var loggedIn = await checkLoggedIn();
     try {
-      console.log('here');
       const response = await fetch('https://www.amazon.com');
-      console.log('here 2');
       const html2 = await response.text();
-      console.log('here 3');
       const parser = new DOMParser.DOMParser({
         errorHandler: {
           warning: function (w) {},
@@ -135,22 +178,16 @@ const App: () => Node = () => {
         },
       });
       const parsed = parser.parseFromString(html2);
-      console.log('here 4');
-      //console.log(html2);
       const loginURL = parsed.getElementById('nav-flyout-ya-signin').firstChild
         .attributes[0].nodeValue;
-      //.getElementByClassName('nav-action-button');
-      //.getAttribute('href');
-      console.log(loginURL);
-      console.log('here 5');
-      setLoginUrl(loginURL);
+      setPageUrl(loginURL);
     } catch {}
   }
 
   useEffect(() => {
     //setMeals(mealVals);
     setMeals(mealVals);
-    loadLoginPrompt();
+    updateWebPage();
   }, []);
 
   //setMeals([{id: 2, name: 'foo'}]);
@@ -218,7 +255,13 @@ const App: () => Node = () => {
             setPageState('Main');
           }}
         />
-        <WebView source={{uri: loginUrl}} style={{marginTop: 20}} />
+        <WebView
+          source={{uri: pageUrl}}
+          style={{marginTop: 20}}
+          onNavigationStateChange={({url, _}) => {
+            updateWebPage();
+          }}
+        />
       </View>
     );
   }
