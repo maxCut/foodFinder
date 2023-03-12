@@ -7,21 +7,35 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { ThemeProvider } from "@mui/material"
+import { CssBaseline} from '@mui/material'
+import theme from './theme.js'
 import Root from './Routes/root';
 import ErrorPage from './errorPage';
+import LandingPage from './Routes/landingPage';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
+    ],
   },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+              <ThemeProvider theme={theme}>
+
+<CssBaseline />
     <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

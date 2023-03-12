@@ -1,0 +1,10 @@
+.Header-bar {
+    border-bottom: 1px solid #fff;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 10px;
+}
+
+.Header-button {
+    margin: 10px 10px 10px 10px;
+}
