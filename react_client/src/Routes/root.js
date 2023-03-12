@@ -1,6 +1,4 @@
 import React from 'react'
-import LandingPage from './landingPage'
-import HeaderBar from '../Containers/headerBar'
 import { Outlet, Link } from 'react-router-dom'
 import { Button, Typography } from '@mui/material'
 import {ShoppingCart} from '@mui/icons-material'
@@ -49,7 +47,7 @@ const Root = () => {
         sx={{...styles.button}}
         startIcon={<ShoppingCart />}
         component={Link} to={`/cart`}>
-          Cart
+          Cart - 0
         </Button>
         <Button 
         variant='outlined'

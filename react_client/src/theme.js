@@ -16,7 +16,14 @@ let theme = createTheme({
   },
   typography: {
     fontFamily: 'Roboto',
-    color: '#ffffff'
+    color: '#ffffff',
+    h5: {
+        // fontFamily: 'Archivo'
+        fontWeight: '700'
+    },
+    h2: {
+        fontFamily: 'Archivo'
+    }
   },
 
   components: {

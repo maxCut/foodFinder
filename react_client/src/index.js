@@ -12,7 +12,7 @@ import { CssBaseline} from '@mui/material'
 import theme from './theme.js'
 import Root from './Routes/root';
 import ErrorPage from './errorPage';
-import LandingPage from './Routes/landingPage';
+import RecipeLanding from './Routes/recipeLanding';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <LandingPage />,
+        element: <RecipeLanding />,
       },
     ],
   },
