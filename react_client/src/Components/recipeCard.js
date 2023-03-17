@@ -12,6 +12,7 @@ const RecipeCard = (props) => {
   return (
     <Card 
     elevation={0}
+    onClick={() => props.onClick(props.recipe.Id)}
     sx={{ 
         backgroundColor: '#34383F', 
         width: '100%', 

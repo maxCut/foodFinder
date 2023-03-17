@@ -1,17 +1,31 @@
-import React, { useEffect } from 'react'
-import { Box, Button, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, Button, Typography, Grid } from '@mui/material'
 import RecipeCard from '../Components/recipeCard'
+import ingredientsCopy from '../ingredientsCopy.json'
+import mealsCopy from '../mealsCopy.json'
+import { useNavigate } from 'react-router-dom'
 
 const RecipeLanding = () => {
+  const [meals, setMeals] = useState([])
+  const [ingredients, setIngredients] = useState([])
+  useEffect(() => {
+    async function handleAsync() {
+      setMeals(mealsCopy)
+      setIngredients(ingredientsCopy)
+    }
+    handleAsync()
+  }, [])
   // useEffect(() => {
   //   async function handleAsync() {
-  //     fetch('.../shared/meals.json')
+  //     fetch('../shared/meals.json')
   //     .then((response) => {
   //       return response.json()
   //     })
   //     .then((jsondata) => {
   //       console.log(jsondata)
+  //       setMeals(jsondata)
   //       // jsondata.forEach(element => {
+
   //       //     meals[element.Id] = element;
   //       //     addMeal(element.Name,element.Image,element.Id,element.Recipe)
   //       // });
@@ -26,38 +40,12 @@ const RecipeLanding = () => {
     { name: 'Pasta' }
   ]
 
-  const TEMP_RECIPES = [
-    {
-      Id: 'm2',
-      Name: 'Baked Eggs over Sweet Potato',
-      Recipe: 'https://naturallyella.com/sweet-potatoes-baked-eggs/',
-      Image:'http://t2.gstatic.com/licensed-image?q=tbn:ANd9GcQQufw1pZI2sGqRfdnWLyw9RT2HhpwTqvsBlEv0UA3HFwTS8GNde_cIqbs1hEFtFSmLa9HFiPve4cm2Sxk',
-      Ingredients: [
-        ['f4', 1.0],
-        ['f5', 0.25],
-        ['f6', 2.0],
-        ['f16', 2.0]
-      ],
-      OneTimes: ['p2', 'p3', 'p6', 'p7', 'p8'],
-      IncrementAmount: 2
-    },
-    {
-      Id: 'm4',
-      Name: 'Yogurt Parfait',
-      Recipe: 'https://www.simplysissom.com/simpleyogurtparfaits/',
-      Image:
-        'https://i0.wp.com/www.simplysissom.com/wp-content/uploads/2017/01/parfaityogurt-copy.jpg?w=680&ssl=1',
-      Ingredients: [
-        ['f14', 2.5],
-        ['f10', 1.0],
-        ['f11', 1.0],
-        ['f12', 1.0],
-        ['f15', 8.0]
-      ],
-      OneTimes: ['p9'],
-      IncrementAmount: 4
-    }
-  ]
+  let tmpMealsCopy = [...meals]
+
+  const navigate = useNavigate()
+  const navigateToRecipe = (recipeID) => {
+    navigate({ pathname: 'recipe', search: `?recipeID=${recipeID}` })
+  }
   return (
     <Box>
       <Box sx={{ borderBottom: '1px solid #fff', padding: '20px 10px' }}>
@@ -75,13 +63,32 @@ const RecipeLanding = () => {
           )
         })}
       </Box>
-      <Typography variant='h2'>Category Name</Typography>
-      <Box sx={{display: 'flex', padding: '20px 20px'}}>
-        {TEMP_RECIPES.map((recipe) => {
-          console.log(recipe)
-          return <RecipeCard recipe={recipe} />
-        })}
-      </Box>
+      {CATEGORIES.map((category, index) => {
+        let categoryMeals = tmpMealsCopy.splice(0, 2)
+        return (
+          <>
+            <Typography variant='h2'>{category.name}</Typography>
+            <Box
+              sx={{
+                display: 'grid',
+                gridGap: '10px',
+                gridTemplateColumns:
+                  categoryMeals.length > 2 ? '33% 33% 33%' : '50% 50%',
+                padding: '20px 20px'
+              }}
+            >
+              {categoryMeals.map((recipe) => {
+                console.log(recipe)
+                return (
+                  <>
+                    <RecipeCard onClick={navigateToRecipe} recipe={recipe} />
+                  </>
+                )
+              })}
+            </Box>
+          </>
+        )
+      })}
     </Box>
   )
 }

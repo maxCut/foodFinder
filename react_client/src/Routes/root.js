@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Outlet, Link } from 'react-router-dom'
 import { Button, Typography } from '@mui/material'
 import {ShoppingCart} from '@mui/icons-material'
 import '../Styles/Root.css'
 
 const Root = () => {
+  const [cartMeals, setCartMeals] = useState([]);
     const styles = {
         button: {
             margin: 'auto 10px'
@@ -47,7 +48,7 @@ const Root = () => {
         sx={{...styles.button}}
         startIcon={<ShoppingCart />}
         component={Link} to={`/cart`}>
-          Cart - 0
+          Cart - {cartMeals.length}
         </Button>
         <Button 
         variant='outlined'
@@ -57,7 +58,7 @@ const Root = () => {
         </Button>
       </div>
 
-      <Outlet />
+      <Outlet setCartMeals={setCartMeals} />
     </div>
   )
 }
