@@ -4,6 +4,7 @@ let theme = createTheme({
   palette: {
     primary: {
       main: '#E56A25',
+      dark: '#C64C26',
       contrastText: '#fff'
     },
     secondary: {
@@ -35,6 +36,9 @@ let theme = createTheme({
       }
     },
     MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
       variants: [
         {
           props: { variant: 'text' },

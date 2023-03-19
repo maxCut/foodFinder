@@ -11,35 +11,17 @@ import {
 import { ThemeProvider } from '@mui/material'
 import { CssBaseline } from '@mui/material'
 import theme from './theme.js'
-import Root from './Routes/root'
-import ErrorPage from './errorPage'
-import RecipeLanding from './Routes/recipeLanding'
-import Cart from './Routes/cart'
-import RecipePage from './Components/recipePage'
+
 // import mealsCopy from '../mealsCopy.json'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Root />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '/',
-        element: <RecipeLanding />
-      },
-      { path: '/cart', element: <Cart /> },
-      {path: '/recipe', element: <RecipePage />}
-    ]
-  }
-])
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <RouterProvider router={router} />
+  <App />
     </ThemeProvider>
   </React.StrictMode>
 )

@@ -9,28 +9,35 @@ import {
 import AddToCartButton from './addToCartButton'
 
 const RecipeCard = (props) => {
+  // let test = props.addToCartButton
   return (
-    <Card 
-    elevation={0}
-    onClick={() => props.onClick(props.recipe.Id)}
-    sx={{ 
-        backgroundColor: '#34383F', 
-        width: '100%', 
-        margin: '10px 10px',
+    <Card
+      elevation={0}
+      // onClick={() => props.onClick(props.recipe.Id)}
+      sx={{
+        backgroundColor: '#34383F',
+        width: '100%',
+        // margin: '10px 10px',
         '&:hover': {
-            cursor: 'pointer'
-        } }}>
-        <CardMedia 
-        sx={{height: '200px'}}
-        image={props.recipe.Image}
-        />
+          cursor: 'pointer'
+        }
+      }}
+    >
+      <CardMedia sx={{ height: '200px' }} image={props.recipe.Image} />
       <CardContent>
-        <Typography variant='h5'>{props.recipe.Name || 'Recipe name'}</Typography>
+        <Typography variant='h5'>
+          {props.recipe.Name || 'Recipe name'}
+        </Typography>
         <Typography>Description</Typography>
         <Typography>15 min | 2 servings</Typography>
       </CardContent>
       <CardActions>
-<AddToCartButton />
+        <AddToCartButton
+          handleCartMeals={props.handleCartMeals}
+          meal={props.recipe}
+          cartMeals={props.cartMeals}
+        />
+        {/* {test()} */}
       </CardActions>
     </Card>
   )
