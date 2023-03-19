@@ -47,6 +47,8 @@ const Cart = (props) => {
   }
 
   return (
+    <>
+    {props.cartMeals.size > 0 ?
     <Box>
       <Box sx={{ borderBottom: '1px solid #fff' }}>
         <Typography variant='h2'>Cart</Typography>
@@ -64,7 +66,11 @@ const Cart = (props) => {
           </Card>
       </Box>
       {/* Cart content */}
-    </Box>
+    </Box> :
+    <Box sx={{width: '50%', margin: 'auto auto', backgroundColor: '#34383F', textAlign: 'center', padding: '20px 20px'}}>
+    Your cart is empty!
+    </Box>}
+    </>
   )
 }
 

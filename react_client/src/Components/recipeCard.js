@@ -13,19 +13,21 @@ const RecipeCard = (props) => {
   return (
     <Card
       elevation={0}
-      // onClick={() => props.onClick(props.recipe.Id)}
+      onClick={() => props.onClick(props.recipe.Id)}
       sx={{
         backgroundColor: '#34383F',
         width: '100%',
         // margin: '10px 10px',
         '&:hover': {
           cursor: 'pointer'
-        }
+        },
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
       <CardMedia sx={{ height: '200px' }} image={props.recipe.Image} />
-      <CardContent>
-        <Typography variant='h5'>
+      <CardContent sx={{flexGrow: 1}}>
+        <Typography variant='h3'>
           {props.recipe.Name || 'Recipe name'}
         </Typography>
         <Typography>Description</Typography>

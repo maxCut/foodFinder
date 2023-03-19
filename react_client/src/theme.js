@@ -18,12 +18,20 @@ let theme = createTheme({
   typography: {
     fontFamily: 'Roboto',
     color: '#ffffff',
-    h5: {
-        // fontFamily: 'Archivo'
-        fontWeight: '700'
-    },
     h2: {
-        fontFamily: 'Archivo'
+        fontFamily: 'Archivo',
+        fontWeight: '700',
+        fontSize: '2.8rem'
+    },
+    h3: {
+        fontFamily: 'Archivo',
+        fontWeight: '700',
+        fontSize: '1.8rem'
+    },
+    h4: {
+      fontFamily: 'Roboto',
+      fontWeight: '700',
+      fontSize: '1.5rem'
     }
   },
 

@@ -5,6 +5,7 @@ import ingredientsCopy from '../ingredientsCopy.json'
 import mealsCopy from '../mealsCopy.json'
 import { useNavigate } from 'react-router-dom'
 import AddToCartButton from '../Components/addToCartButton'
+import SecondaryNav from '../Components/secondaryNav'
 
 const RecipeLanding = (props) => {
   const [meals, setMeals] = useState([])
@@ -76,9 +77,9 @@ const RecipeLanding = (props) => {
   // }
 
   const CATEGORIES = [
-    { name: 'Protein' },
+    { name: 'Breakfast' },
     { name: 'Veggie' },
-    { name: 'Pasta' }
+    { name: 'Savory' }
   ]
 
   let tmpMealsCopy = [...meals]
@@ -89,12 +90,17 @@ const RecipeLanding = (props) => {
   }
   return (
     <Box>
-      <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}>
+      <SecondaryNav >
+      {/* <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}> */}
         {CATEGORIES.map((category) => {
+          let buttonVariant = 'outlined'
+          if (category.name == 'Breakfast') {
+            buttonVariant = 'contained'
+          }
           return (
             <>
               <Button
-                variant='outlined'
+                variant={buttonVariant}
                 key={category.name}
                 sx={{ margin: 'auto 10px' }}
               >
@@ -103,13 +109,14 @@ const RecipeLanding = (props) => {
             </>
           )
         })}
-      </Box>
+        </SecondaryNav>
+      {/* </Box> */}
       <Box sx={{width: '90%', margin: 'auto auto'}}>
         {CATEGORIES.map((category, index) => {
           let categoryMeals = tmpMealsCopy.splice(0, 2)
           return (
             <>
-              <Typography variant='h2'>{category.name}</Typography>
+              <Typography variant='h2' sx={{margin: '40px 0px 10px 0px'}}>{category.name}</Typography>
               <Box
                 sx={{
                   display: 'grid',
