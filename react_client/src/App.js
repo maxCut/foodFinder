@@ -10,7 +10,9 @@ import RecipePage from './Components/recipePage'
 function App() {
   let emptyCart = new Map()
   const [cartMeals, setCartMeals] = useState(emptyCart)
-  const [searchBar, setSearchBar] = useState('');
+  const [searchBar, setSearchBar] = useState('')
+
+  const [oneTimes, setOneTimes] = useState([])
 
   const handleCartMeals = (event, meal, value) => {
     event.stopPropagation()
@@ -36,10 +38,30 @@ function App() {
     }
   }
 
+  const handleOneTimes = (key, value) => {
+    console.log(key)
+    if (oneTimes.includes(key)) {
+      let tmp = oneTimes
+      tmp.splice(tmp.indexOf(key), 1)
+      setOneTimes(Array.from(tmp))
+    } else {
+      setOneTimes((prev) => {
+        prev.push(key)
+        return Array.from(prev)
+      })
+    }
+  }
+
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Root cartMeals={cartMeals} searchBar={searchBar} setSearchBar={setSearchBar} />,
+      element: (
+        <Root
+          cartMeals={cartMeals}
+          searchBar={searchBar}
+          setSearchBar={setSearchBar}
+        />
+      ),
       errorElement: <ErrorPage />,
       children: [
         {
@@ -51,7 +73,18 @@ function App() {
             />
           )
         },
-        { path: '/cart', element: <Cart cartMeals={cartMeals} handleCartMeals={handleCartMeals} /> },
+        {
+          path: '/cart',
+          element: (
+            <Cart
+              cartMeals={cartMeals}
+              handleCartMeals={handleCartMeals}
+              oneTimes={oneTimes}
+              handleOneTimes={handleOneTimes}
+
+            />
+          )
+        },
         { path: '/recipe', element: <RecipePage /> }
       ]
     }

@@ -22,8 +22,8 @@ const Root = (props) => {
   const searchBar = () => {
     return (
       <>
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', backgroundColor: 'secondary.main', borderRadius: '40px' }}>
-          <InputBase
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', /*backgroundColor: 'secondary.main',*/ borderRadius: '40px' }}>
+          {/* <InputBase
             value={props.searchBar}
             onChange={(e) => props.setSearchBar(e.target.value)}
             sx={{ ml: 2, flex: 1 }}
@@ -33,7 +33,7 @@ const Root = (props) => {
           />
           <IconButton type='button' sx={{ p: '10px', color: '#fff' }} aria-label='search'>
             <Tune />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </>
     )

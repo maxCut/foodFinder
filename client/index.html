@@ -299,7 +299,7 @@
                     sendCartChunkToAmazon(cart.slice(i*chunkSize,Math.min(cart.length,(i+1)*chunkSize)))
                 },requestDelayInMilliseconds*i)
             }
-            setTimeout(onAmazonRequestTimeout(),numChunks*requestDelayInMilliseconds + 10000)
+            setTimeout(onAmazonRequestTimeout(),numChunks*requestDelayInMilliseconds + 10000) //change to random number so amazon likes it better
             setAddingToCart(true)
         }
         function sendCartChunkToAmazon(chunk)
