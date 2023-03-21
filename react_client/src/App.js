@@ -8,6 +8,11 @@ import Cart from './Routes/cart'
 import RecipePage from './Components/recipePage'
 
 function App() {
+  const [containsProperChromeExtension, setContainsProperChromeExtension] = useState(false);
+  document.addEventListener('chefBopInformation', function (event) {
+    setContainsProperChromeExtension = true //event.detail.message == "1.2"
+  }) //I don't know if this needs to be a state change
+
   let emptyCart = new Map()
   const [cartMeals, setCartMeals] = useState(emptyCart)
   const [searchBar, setSearchBar] = useState('')
@@ -60,6 +65,7 @@ function App() {
           cartMeals={cartMeals}
           searchBar={searchBar}
           setSearchBar={setSearchBar}
+          containsProperChromeExtension={containsProperChromeExtension}
         />
       ),
       errorElement: <ErrorPage />,
@@ -81,7 +87,6 @@ function App() {
               handleCartMeals={handleCartMeals}
               oneTimes={oneTimes}
               handleOneTimes={handleOneTimes}
-
             />
           )
         },

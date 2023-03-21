@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -31,28 +31,30 @@ const Cart = (props) => {
     return ingredientsTmp
   }
 
-  const getOneTimes = (recipe) => {
-    let oneTimesTmp = new Map()
-    recipe.OneTimes.forEach((key) => {
-      let oneTimeDetails = ingredientsCopy.filter(ingredient => ingredient.Key == key)[0]
-      oneTimesTmp.set(oneTimeDetails, false)
-    })
-    return oneTimesTmp
-  }
+  // const getOneTimes = (recipe) => {
+  //   let oneTimesTmp = new Map()
+  //   recipe.OneTimes.forEach((key) => {
+  //     let oneTimeDetails = ingredientsCopy.filter(ingredient => ingredient.Key == key)[0]
+  //     oneTimesTmp.set(oneTimeDetails, false)
+  //   })
+  //   return oneTimesTmp
+  // }
 
-  const addOneTime = (key, value) => {
-    
-    return (
-      <>
-      <Button variant='outlined'>
-        {value ? '-' : '+'}
-      </Button>
-      </>
-    )
-  }
+  // const addOneTime = (key, value) => {
+
+  //   return (
+  //     <>
+  //     <Button variant='outlined'>
+  //       {value ? '-' : '+'}
+  //     </Button>
+  //     </>
+  //   )
+  // }
 
   const getOneTime = (key) => {
-    let oneTimeDetails = ingredientsCopy.filter(ingredient => ingredient.Key == key)[0]
+    let oneTimeDetails = ingredientsCopy.filter(
+      (ingredient) => ingredient.Key == key
+    )[0]
     return oneTimeDetails
   }
 
@@ -60,14 +62,135 @@ const Cart = (props) => {
     let value = props.oneTimes.includes(key)
     return (
       <>
-      <Button variant='outlined' onClick={() => props.handleOneTimes(key)}>
-        {value ? '-' : '+'}
-      </Button>
+        <Button variant='outlined' onClick={() => props.handleOneTimes(key)}>
+          {value ? '-' : '+'}
+        </Button>
       </>
     )
   }
+  document.addEventListener('purchaseRequestSuccess', function (event) {
+    onCheckoutAmazonSuccess()
+  })
+  document.addEventListener('purchaseRequestFailed', function (event) {
+    onNeedToLogInToAmazon()
+  })
 
+  const [addingToCart, setAddingToCart] = useState(false)
+  const [loadPercent, setLoadPercent] = useState('0%')
   
+
+  const getCart = () => {
+    let tmpCart = []
+    props.cartMeals.forEach((value, key) => {
+      key.Ingredients.forEach((ingredient) => {
+        let tmpOptions = []
+        let details = ingredientsCopy.filter(
+          (obj) => obj.Key == ingredient[0]
+        )[0]
+        details.Options.forEach((item) => {
+          tmpOptions.push({ asin: item.ASIN, quantity: value })
+        })
+        tmpCart.push(tmpOptions)
+      })
+    })
+    props.oneTimes.forEach((key) => {
+      let tmpOptions = []
+      let details = ingredientsCopy.filter((obj) => obj.Key == key)[0]
+      details.Options.forEach((item) => {
+        tmpOptions.push({ asin: item.ASIN, quantity: 1 })
+      })
+      tmpCart.push(tmpOptions)
+    })
+    return tmpCart
+  }
+
+  const chunkSize = 1
+  const requestDelayInMilliseconds = 600
+  var numActiveChunks = 0
+  var chunkProgress = 0
+  function checkoutAmazon() {
+    //fires on button click
+    // if (!containsProperChromeExtension) {
+    //   //check for chrome extension
+    //   return
+    // }
+    console.log('checkout')
+    if (addingToCart) {
+      return
+    }
+    var cart = getCart() //returns array of arrays of object options [[{asin, quantity}]]
+    console.log(cart)
+    var numChunks = Math.ceil(cart.length / chunkSize)
+    chunkProgress = numChunks
+    numActiveChunks = numChunks
+    updateLoadPercent()
+    for (let i = 0; i < numChunks; i++) {
+      setTimeout(function () {
+        console.log('going')
+        sendCartChunkToAmazon(
+          cart.slice(i * chunkSize, Math.min(cart.length, (i + 1) * chunkSize))
+        )
+      }, requestDelayInMilliseconds * i)
+    }
+    setTimeout(
+      onAmazonRequestTimeout(),
+      numChunks * requestDelayInMilliseconds + 10000
+    ) //change to random number so amazon likes it better
+    setAddingToCart(true)
+  }
+  function sendCartChunkToAmazon(chunk) {
+    console.log('yay')
+    var event = new CustomEvent('purchaseRequest', { detail: chunk })
+    document.dispatchEvent(event)
+  }
+  function updateLoadPercent() {
+    setLoadPercent(
+      Math.floor(((chunkProgress - numActiveChunks) / chunkProgress) * 100) +
+        '%'
+    )
+    console.log(loadPercent)
+  }
+  function onCheckoutAmazonSuccess() {
+    if (addingToCart) {
+      numActiveChunks--
+      updateLoadPercent()
+      if (numActiveChunks <= 0) {
+        //once the chunks are all sent, open the amazon cart window
+        setTimeout(function () {
+          setAddingToCart(false)
+          window.open(
+            'https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20',
+            '_blank'
+          )
+        }, 3500)
+      }
+    }
+  }
+
+  function onAmazonRequestTimeout() {
+    setAddingToCart(false) //stop the spinner
+  }
+
+  function onNeedToLogInToAmazon() {
+    //show warning if you are not logged into amazon
+    setAddingToCart(false)
+    document.getElementById('checkout-login-required').style.display = 'block'
+  }
+
+  // function getCart() {
+  //   precart = Object.assign(
+  //     {},
+  //     getOneTimeForPurchase(),
+  //     getIngredientsForPurchase()
+  //   )
+  //   cart = []
+  //   Object.keys(precart).forEach((ingredientKey) => {
+  //     //cart.push({asin:asinElement,quantity:precart[asinElement]})
+  //     cart.push(precart[ingredientKey])
+  //   })
+  //   return cart
+  // }
+
   const cartCard = (recipe) => {
     return (
       <>
@@ -121,12 +244,14 @@ const Cart = (props) => {
                 return (
                   <li>
                     <Box sx={{ display: 'flex' }}>
-                                        <Typography sx={{ flexGrow: 1 }}>{oneTimeDetails.Name}</Typography>
-                                        {oneTimeButton(key)}
+                      <Typography sx={{ flexGrow: 1 }}>
+                        {oneTimeDetails.Name}
+                      </Typography>
+                      {oneTimeButton(key)}
                       {/* <Typography>
                         {addOneTime(key, value)}
                       </Typography> */}
-                      </Box>
+                    </Box>
                   </li>
                 )
               })}
@@ -175,7 +300,8 @@ const Cart = (props) => {
             </Box>
 
             <Card sx={{ backgroundColor: '#34383F', height: '100px' }}>
-              <Button variant='contained'>Proceed to Checkout</Button>
+              {loadPercent}
+              <Button variant='contained' onClick={() => checkoutAmazon()}>Proceed to Checkout</Button>
             </Card>
           </Box>
           {/* Cart content */}

@@ -41,6 +41,7 @@ const Root = (props) => {
 
   return (
     <div>
+      {props.containsProperChromeExtension ? <div></div> : <div>Missing Chrome Extension</div>}
       <div
         className='Header-bar'
         style={{position: 'sticky', top: '0px', backgroundColor: '#1B2428', zIndex: 10}}

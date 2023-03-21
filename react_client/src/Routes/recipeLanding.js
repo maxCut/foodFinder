@@ -41,7 +41,7 @@ const RecipeLanding = (props) => {
   //   if (props.cartMeals.has(meal)) {
   //     inCart = true
   //   }
-    
+
   //   return (
   //     <Box sx={{height: '70px', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
   //       {inCart ? (
@@ -90,8 +90,8 @@ const RecipeLanding = (props) => {
   }
   return (
     <Box>
-      <SecondaryNav >
-      {/* <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}> */}
+      <SecondaryNav>
+        {/* <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}> */}
         {CATEGORIES.map((category) => {
           let buttonVariant = 'outlined'
           if (category.name == 'Breakfast') {
@@ -109,20 +109,24 @@ const RecipeLanding = (props) => {
             </>
           )
         })}
-        </SecondaryNav>
+      </SecondaryNav>
       {/* </Box> */}
-      <Box sx={{width: '90%', margin: 'auto auto'}}>
+      <Box sx={{ width: '90%', margin: 'auto auto' }}>
         {CATEGORIES.map((category, index) => {
           let categoryMeals = tmpMealsCopy.splice(0, 2)
           return (
-            <>
-              <Typography variant='h2' sx={{margin: '40px 0px 10px 0px'}}>{category.name}</Typography>
+            <React.Fragment key={category.name}>
+              <Typography variant='h2' sx={{ margin: '40px 0px 10px 0px' }}>
+                {category.name}
+              </Typography>
               <Box
                 sx={{
                   display: 'grid',
                   gridGap: '20px',
                   gridTemplateColumns:
-                    categoryMeals.length > 2 ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
+                    categoryMeals.length > 2
+                      ? 'repeat(3, minmax(0, 1fr))'
+                      : 'repeat(2, minmax(0, 1fr))'
                   // padding: '20px 20px'
                 }}
               >
@@ -130,7 +134,9 @@ const RecipeLanding = (props) => {
                   return (
                     <>
                       <RecipeCard
-                        onClick={navigateToRecipe} recipe={recipe}
+                        key={recipe.Id}
+                        onClick={navigateToRecipe}
+                        recipe={recipe}
                         handleCartMeals={props.handleCartMeals}
                         cartMeals={props.cartMeals}
                       />
@@ -138,7 +144,7 @@ const RecipeLanding = (props) => {
                   )
                 })}
               </Box>
-            </>
+            </React.Fragment>
           )
         })}
       </Box>

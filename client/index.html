@@ -288,7 +288,7 @@
             {
                 return;
             }
-            var cart = getCart() //returns array of objects
+            var cart = getCart() //returns array of arrays of object options [[{asin, quantity}]]
             var numChunks = Math.ceil(cart.length/chunkSize);
             chunkProgress = numChunks;
             numActiveChunks = numChunks;
