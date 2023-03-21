@@ -256,16 +256,16 @@
         }
 
         let addingToCart = false;
-        function setAddingToCart(value)
+        function setAddingToCart(value) //toggle spinner
         {
             addingToCart = value;
-            if(!value)
-            {
-                document.getElementById("checkout-container").style.display = "block";
+            if(!value) //if value is NOT true (ie value == false) then show the button
+            { 
+                document.getElementById("checkout-container").style.display = "block"; 
                 document.getElementById("checkout-request-spinner").style.display = "none";
             }
             else
-            {
+            { //if value is true show the spinner
                 document.getElementById("checkout-container").style.display = "none";
                 document.getElementById("checkout-login-required").style.display = "none";
                 document.getElementById("checkout-request-spinner").style.display = "block";
@@ -278,9 +278,9 @@
         const requestDelayInMilliseconds = 600;
         var numActiveChunks = 0;
         var chunkProgress = 0;
-        function checkoutAmazon()
+        function checkoutAmazon() //fires on button click
         {
-            if(!containsPropperChromeExtension)
+            if(!containsPropperChromeExtension) //check for chrome extension
             {
                 return
             }
@@ -288,7 +288,7 @@
             {
                 return;
             }
-            var cart = getCart()
+            var cart = getCart() //returns array of arrays of object options [[{asin, quantity}]]
             var numChunks = Math.ceil(cart.length/chunkSize);
             chunkProgress = numChunks;
             numActiveChunks = numChunks;
@@ -299,7 +299,7 @@
                     sendCartChunkToAmazon(cart.slice(i*chunkSize,Math.min(cart.length,(i+1)*chunkSize)))
                 },requestDelayInMilliseconds*i)
             }
-            setTimeout(onAmazonRequestTimeout(),numChunks*requestDelayInMilliseconds + 10000)
+            setTimeout(onAmazonRequestTimeout(),numChunks*requestDelayInMilliseconds + 10000) //change to random number so amazon likes it better
             setAddingToCart(true)
         }
         function sendCartChunkToAmazon(chunk)
@@ -317,7 +317,7 @@
             {
                 numActiveChunks--;
                 updateLoadPercent();
-                if(numActiveChunks<=0)
+                if(numActiveChunks<=0) //once the chunks are all sent, open the amazon cart window
                 {
                     setTimeout(function(){
                     setAddingToCart(false)
@@ -330,10 +330,10 @@
 
         function onAmazonRequestTimeout()
         {
-            setAddingToCart(false)
+            setAddingToCart(false) //stop the spinner
         }
         
-        function onNeedToLogInToAmazon()
+        function onNeedToLogInToAmazon() //show warning if you are not logged into amazon
         {
             setAddingToCart(false)
             document.getElementById("checkout-login-required").style.display = "block";  
