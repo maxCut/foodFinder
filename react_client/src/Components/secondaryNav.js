@@ -8,7 +8,7 @@ const SecondaryNav = (props) => {
         borderBottom: '1px solid #fff',
         padding: '10px 10px',
         position: 'sticky',
-        top: '65px',
+        top: props.containsProperChromeExtension ? '65px' : '114px',
         backgroundColor: '#1B2428',
         zIndex: 9
       }}

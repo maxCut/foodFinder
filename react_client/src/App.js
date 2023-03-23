@@ -76,6 +76,7 @@ function App() {
             <RecipeLanding
               handleCartMeals={handleCartMeals}
               cartMeals={cartMeals}
+              containsProperChromeExtension={containsProperChromeExtension}
             />
           )
         },

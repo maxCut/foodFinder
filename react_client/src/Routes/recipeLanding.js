@@ -76,13 +76,7 @@ const RecipeLanding = (props) => {
   //   )
   // }
 
-  const CATEGORIES = [
-    { name: 'Breakfast' },
-    { name: 'Veggie' },
-    { name: 'Savory' }
-  ]
-
-  let tmpMealsCopy = [...meals]
+  let CATEGORIES = ['Quick and Easy', 'Sheet Pan', 'Cooking Mastery']
 
   const navigate = useNavigate()
   const navigateToRecipe = (recipeID) => {
@@ -90,21 +84,21 @@ const RecipeLanding = (props) => {
   }
   return (
     <Box>
-      <SecondaryNav>
+      <SecondaryNav containsProperChromeExtension={props.containsProperChromeExtension}>
         {/* <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}> */}
         {CATEGORIES.map((category) => {
           let buttonVariant = 'outlined'
-          if (category.name == 'Breakfast') {
+          if (category == 'Breakfast') {
             buttonVariant = 'contained'
           }
           return (
             <>
               <Button
                 variant={buttonVariant}
-                key={category.name}
+                key={category}
                 sx={{ margin: 'auto 10px' }}
               >
-                {category.name}
+                {category}
               </Button>
             </>
           )
@@ -113,20 +107,18 @@ const RecipeLanding = (props) => {
       {/* </Box> */}
       <Box sx={{ width: '90%', margin: 'auto auto' }}>
         {CATEGORIES.map((category, index) => {
-          let categoryMeals = tmpMealsCopy.splice(0, 2)
+          let categoryMeals = meals.filter((meal) => meal.category == category)
           return (
-            <React.Fragment key={category.name}>
+            <React.Fragment key={category}>
               <Typography variant='h2' sx={{ margin: '40px 0px 10px 0px' }}>
-                {category.name}
+                {category}
               </Typography>
               <Box
                 sx={{
                   display: 'grid',
                   gridGap: '20px',
                   gridTemplateColumns:
-                    categoryMeals.length > 2
-                      ? 'repeat(3, minmax(0, 1fr))'
-                      : 'repeat(2, minmax(0, 1fr))'
+                  {xs:'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))'}
                   // padding: '20px 20px'
                 }}
               >
