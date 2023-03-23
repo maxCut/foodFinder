@@ -76,7 +76,7 @@ const Root = (props) => {
           <></>
         ) : (
           <Alert severity='error'>
-            Please install the chefbop chrome extension{' '}
+            Please install the Chefbop Chrome Extension{' '}
             <a
               href='https://chrome.google.com/webstore/detail/chefbop/dhllfmoknkadgllhkgimkclkfdidomep'
               target='_blank'
