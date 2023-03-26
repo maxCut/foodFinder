@@ -11,7 +11,9 @@ const SecondaryNav = forwardRef((props, ref) => {
         position: 'sticky',
         top: props.containsProperChromeExtension ? '65px' : '114px',
         backgroundColor: '#1B2428',
-        zIndex: 9
+        zIndex: 9,
+        // width: '1000px',
+        // overflowX: 'scroll'
       }}
     >
         {props.children}

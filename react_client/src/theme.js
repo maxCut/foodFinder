@@ -32,6 +32,9 @@ let theme = createTheme({
       fontFamily: 'Roboto',
       fontWeight: '700',
       fontSize: '1.5rem'
+    },
+    h5: {
+      fontSize: '1.2rem'
     }
   },
 

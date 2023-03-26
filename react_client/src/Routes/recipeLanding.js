@@ -149,7 +149,7 @@ const RecipeLanding = (props) => {
             <>
               <Button
                 variant={buttonVariant}
-                key={category.name}
+                key={`${category.name} button`}
                 sx={{ margin: 'auto 10px' }}
                 onClick={() => {
                   scrollTo(category.ref.current)
@@ -162,14 +162,14 @@ const RecipeLanding = (props) => {
         })}
       </SecondaryNav>
       {/* </Box> */}
-      <Box sx={{ width: '90%', margin: 'auto auto 100px auto' }}>
+      <Box sx={{ width: '90%', maxWidth: '1000px', margin: 'auto auto 100px auto' }}>
         {CATEGORIES.map((category, index) => {
           let categoryMeals = meals.filter(
             (meal) => meal.category == category.name
           )
           return (
             <Box
-            id={category.name+ ' section'}
+            id={`${category.name} section`}
               ref={category.ref}
               sx={{ paddingTop: '40px' }}
               key={category.name}
@@ -182,7 +182,8 @@ const RecipeLanding = (props) => {
                   display: 'grid',
                   gridGap: '20px',
                   gridTemplateColumns: {
-                    xs: 'repeat(2, minmax(0, 1fr))',
+                    xs: 'repeat(1, minmax(0, 1fr))',
+                    sm: 'repeat(2, minmax(0, 1fr))',
                     md: 'repeat(3, minmax(0, 1fr))'
                   }
                   // padding: '20px 20px'

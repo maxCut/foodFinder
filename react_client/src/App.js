@@ -8,7 +8,8 @@ import Cart from './Routes/cart'
 import RecipePage from './Components/recipePage'
 
 function App() {
-  const [containsProperChromeExtension, setContainsProperChromeExtension] = useState(false);
+  const [containsProperChromeExtension, setContainsProperChromeExtension] =
+    useState(false)
   document.addEventListener('chefBopInformation', function (event) {
     setContainsProperChromeExtension = true //event.detail.message == "1.2"
   }) //I don't know if this needs to be a state change
@@ -91,7 +92,15 @@ function App() {
             />
           )
         },
-        { path: '/recipe', element: <RecipePage /> }
+        {
+          path: '/recipe',
+          element: (
+            <RecipePage
+              cartMeals={cartMeals}
+              handleCartMeals={handleCartMeals}
+            />
+          )
+        }
       ]
     }
   ])

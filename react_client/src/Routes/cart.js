@@ -5,7 +5,9 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Typography
+  Typography,
+  Checkbox,
+  useMediaQuery
 } from '@mui/material'
 import AddToCartButton from '../Components/addToCartButton'
 import ingredientsCopy from '../ingredientsCopy.json'
@@ -19,7 +21,8 @@ const Cart = (props) => {
     cartQuantity = 0
   }
   // const [ingredients, setIngredients] = useState(emptyIngredients)
-  console.log(props.oneTimes)
+
+  let mobile = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   const getIngredients = (recipe) => {
     let ingredientsTmp = new Map()
@@ -59,14 +62,24 @@ const Cart = (props) => {
     return oneTimeDetails
   }
 
+  const [hover, setHover] = useState(false)
   const oneTimeButton = (key) => {
     let value = props.oneTimes.includes(key)
     return (
       <>
         {value ? (
           <>
-            <Box sx={{ display: 'flex', width: '100%' }}>
-              <Button
+            {/* <Box sx={{ display: 'flex', width: '100%' }}> */}
+            <Button
+              variant='outlined'
+              sx={{ minWidth: '150px' }}
+              onClick={(event) => props.handleOneTimes(key)}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+            >
+              {hover ? 'Remove?' : '1 in your cart'}
+            </Button>
+            {/* <Button
                 variant='contained'
                 onClick={(event) => props.handleOneTimes(key)}
               >
@@ -85,8 +98,8 @@ const Cart = (props) => {
                 onClick={(event) => props.handleOneTimes(key)}
               >
                 +
-              </Button>
-            </Box>
+              </Button> */}
+            {/* </Box> */}
           </>
         ) : (
           <>
@@ -230,13 +243,17 @@ const Cart = (props) => {
           <Box
             sx={{
               display: 'flex',
-              maxHeight: '200px',
+              maxHeight: { xs: '150px', md: '200px' },
               borderBottom: '1px solid #fff'
             }}
           >
             <Box
               component='img'
-              sx={{ maxWidth: '200px', maxHeight: '100%', objectFit: 'cover' }}
+              sx={{
+                maxWidth: { xs: '100px', md: '200px' },
+                maxHeight: '100%',
+                objectFit: 'cover'
+              }}
               src={recipe.Image}
             />
             <Box
@@ -249,7 +266,9 @@ const Cart = (props) => {
             >
               <Box sx={{ flexGrow: 1 }}>
                 <Typography variant='h3'>{recipe.Name}</Typography>
-                <Typography>{recipe.description}</Typography>
+                {mobile ? null : (
+                  <Typography>{recipe.description}</Typography>
+                )}{' '}
                 <Typography>
                   {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)}
                 </Typography>
@@ -261,9 +280,9 @@ const Cart = (props) => {
               />
             </Box>
           </Box>
-          <CardContent>
+          <CardContent sx={{ padding: '30px 30px' }}>
             <Typography variant='h4'>Ingredients</Typography>
-            <ul style={{ listStyle: 'none' }}>
+            <ul style={{ /*listStyle: 'none'*/ width: '90%' }}>
               {Array.from(getIngredients(recipe)).map(([key, value]) => {
                 return (
                   <li style={{ padding: '5px 0px' }}>
@@ -281,12 +300,12 @@ const Cart = (props) => {
             <Typography variant='body2'>
               Ingredients you might already have
             </Typography>
-            <ul style={{ listStyle: 'none' }}>
+            <ul style={{ /*listStyle: 'none'*/ width: '95%' }}>
               {recipe.OneTimes.map((key) => {
                 let oneTimeDetails = getOneTime(key)
                 return (
                   <li>
-                    <Box sx={{ display: 'flex' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography sx={{ flexGrow: 1 }}>
                         {oneTimeDetails.Name}
                       </Typography>
@@ -329,10 +348,10 @@ const Cart = (props) => {
           </Box>
           <Box
             sx={{
-              width: '80%',
+              width: { xs: '100%', md: '80%' },
               margin: 'auto auto',
               display: 'grid',
-              gridTemplateColumns: 'auto 40%',
+              gridTemplateColumns: { xs: '100%', md: 'auto 40%' },
               gridGap: 10
             }}
           >

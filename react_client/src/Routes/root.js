@@ -7,9 +7,10 @@ import {
   InputBase,
   IconButton,
   InputAdornment,
-  Alert
+  Alert, 
+  useMediaQuery
 } from '@mui/material'
-import { ShoppingCart, Tune, Search } from '@mui/icons-material'
+import { ShoppingCart, Tune, Search, LocalFireDepartment } from '@mui/icons-material'
 import '../Styles/Root.css'
 
 const Root = (props) => {
@@ -19,6 +20,8 @@ const Root = (props) => {
       margin: 'auto 10px'
     }
   }
+
+  let mobile = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   let cartQuantity = 0
   if (props.cartMeals.size > 0) {
@@ -104,7 +107,7 @@ const Root = (props) => {
               fontSize: '30px'
             }}
           >
-            Chef Bop
+            {mobile ? <LocalFireDepartment /> : 'Chef Bop'}
           </Typography>
           <Button
             variant='text'
@@ -122,7 +125,7 @@ const Root = (props) => {
             component={Link}
             to={`/cart`}
           >
-            Cart - {cartQuantity}
+            {mobile ? null : 'Cart - '}{cartQuantity}
           </Button>
           {/* <Button
             variant='outlined'
