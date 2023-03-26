@@ -1,7 +1,16 @@
 import React, { useState } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Button, Typography, Box, InputBase, IconButton, InputAdornment } from '@mui/material'
-import { ShoppingCart, Tune, Search } from '@mui/icons-material'
+import {
+  Button,
+  Typography,
+  Box,
+  InputBase,
+  IconButton,
+  InputAdornment,
+  Alert, 
+  useMediaQuery
+} from '@mui/material'
+import { ShoppingCart, Tune, Search, LocalFireDepartment } from '@mui/icons-material'
 import '../Styles/Root.css'
 
 const Root = (props) => {
@@ -11,6 +20,8 @@ const Root = (props) => {
       margin: 'auto 10px'
     }
   }
+
+  let mobile = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   let cartQuantity = 0
   if (props.cartMeals.size > 0) {
@@ -22,7 +33,14 @@ const Root = (props) => {
   const searchBar = () => {
     return (
       <>
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', /*backgroundColor: 'secondary.main',*/ borderRadius: '40px' }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            /*backgroundColor: 'secondary.main',*/ borderRadius: '40px'
+          }}
+        >
           {/* <InputBase
             value={props.searchBar}
             onChange={(e) => props.setSearchBar(e.target.value)}
@@ -41,55 +59,83 @@ const Root = (props) => {
 
   return (
     <div>
-      {props.containsProperChromeExtension ? <div></div> : <div>Missing Chrome Extension</div>}
       <div
-        className='Header-bar'
-        style={{position: 'sticky', top: '0px', backgroundColor: '#1B2428', zIndex: 10}}
+        // className='Header-bar'
+        style={{
+          position: 'sticky',
+          top: '0px',
+          backgroundColor: '#1B2428',
+          zIndex: 10,
+         
+          borderBottom: '1px solid #fff'
+        }}
         // style={{
         //   display: 'flex',
         //   justifyContent: 'space-evenly',
         //   borderBottom: '1px solid #fff'
         // }}
       >
-        <Typography
-          component={Link}
-          to={`/`}
+        {props.containsProperChromeExtension ? (
+          <></>
+        ) : (
+          <Alert severity='error'>
+            Please install the Chefbop Chrome Extension{' '}
+            <a
+              href='https://chrome.google.com/webstore/detail/chefbop/dhllfmoknkadgllhkgimkclkfdidomep'
+              target='_blank'
+            >
+              here
+            </a>
+          </Alert>
+        )}
+        <Box
+          id='header-content'
           sx={{
-            textDecoration: 'none',
-            fontFamily: 'Archivo',
-            color: '#fff',
-            fontWeight: 'bold',
-            fontSize: '30px'
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            padding: '10px 10px',
           }}
         >
-          Chef Bop
-        </Typography>
-        <Button
-          variant='text'
-          sx={{ ...styles.button }}
-          component={Link}
-          to={`/`}
-        >
-          Cook Book
-        </Button>
-        {searchBar()}
-        <Button
-          variant='contained'
-          sx={{ ...styles.button }}
-          startIcon={<ShoppingCart />}
-          component={Link}
-          to={`/cart`}
-        >
-          Cart - {cartQuantity}
-        </Button>
-        <Button
-          variant='outlined'
-          sx={{ ...styles.button, paddingLeft: '40px', paddingRight: '40px' }}
-          component={Link}
-          to={`/log-in`}
-        >
-          Log In
-        </Button>
+          <Typography
+            component={Link}
+            to={`/`}
+            sx={{
+              textDecoration: 'none',
+              fontFamily: 'Archivo',
+              color: '#fff',
+              fontWeight: 'bold',
+              fontSize: '30px'
+            }}
+          >
+            {mobile ? <LocalFireDepartment /> : 'Chef Bop'}
+          </Typography>
+          <Button
+            variant='text'
+            sx={{ ...styles.button }}
+            component={Link}
+            to={`/`}
+          >
+            Cook Book
+          </Button>
+          {searchBar()}
+          <Button
+            variant='contained'
+            sx={{ ...styles.button }}
+            startIcon={<ShoppingCart />}
+            component={Link}
+            to={`/cart`}
+          >
+            {mobile ? null : 'Cart - '}{cartQuantity}
+          </Button>
+          {/* <Button
+            variant='outlined'
+            sx={{ ...styles.button, paddingLeft: '40px', paddingRight: '40px' }}
+            component={Link}
+            to={`/log-in`}
+          >
+            Log In
+          </Button> */}
+        </Box>
       </div>
 
       <Outlet />

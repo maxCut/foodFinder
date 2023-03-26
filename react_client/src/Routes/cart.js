@@ -5,10 +5,13 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Typography
+  Typography,
+  Checkbox,
+  useMediaQuery
 } from '@mui/material'
 import AddToCartButton from '../Components/addToCartButton'
 import ingredientsCopy from '../ingredientsCopy.json'
+import timeHandler from '../utils/timeHandler'
 
 const Cart = (props) => {
   let cartQuantity
@@ -18,7 +21,8 @@ const Cart = (props) => {
     cartQuantity = 0
   }
   // const [ingredients, setIngredients] = useState(emptyIngredients)
-  console.log(props.oneTimes)
+
+  let mobile = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   const getIngredients = (recipe) => {
     let ingredientsTmp = new Map()
@@ -58,13 +62,55 @@ const Cart = (props) => {
     return oneTimeDetails
   }
 
+  const [hover, setHover] = useState(false)
   const oneTimeButton = (key) => {
     let value = props.oneTimes.includes(key)
     return (
       <>
-        <Button variant='outlined' onClick={() => props.handleOneTimes(key)}>
-          {value ? '-' : '+'}
-        </Button>
+        {value ? (
+          <>
+            {/* <Box sx={{ display: 'flex', width: '100%' }}> */}
+            <Button
+              variant='outlined'
+              sx={{ minWidth: '150px' }}
+              onClick={(event) => props.handleOneTimes(key)}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+            >
+              {hover ? 'Remove?' : '1 in your cart'}
+            </Button>
+            {/* <Button
+                variant='contained'
+                onClick={(event) => props.handleOneTimes(key)}
+              >
+                -
+              </Button>
+              <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
+                <Typography fontWeight='bold'>
+                   in your cart
+                </Typography>
+                <Typography>
+                   servings
+                </Typography>
+              </Box>
+              <Button
+                variant='contained'
+                onClick={(event) => props.handleOneTimes(key)}
+              >
+                +
+              </Button> */}
+            {/* </Box> */}
+          </>
+        ) : (
+          <>
+            <Button
+              variant='outlined'
+              onClick={() => props.handleOneTimes(key)}
+            >
+              {value ? '-' : '+'}
+            </Button>
+          </>
+        )}
       </>
     )
   }
@@ -77,7 +123,6 @@ const Cart = (props) => {
 
   const [addingToCart, setAddingToCart] = useState(false)
   const [loadPercent, setLoadPercent] = useState('0%')
-  
 
   const getCart = () => {
     let tmpCart = []
@@ -195,24 +240,38 @@ const Cart = (props) => {
     return (
       <>
         <Card sx={{ backgroundColor: '#34383F', marginTop: '20px' }}>
-          <Box sx={{ display: 'flex', borderBottom: '1px solid #fff' }}>
-            <CardMedia
+          <Box
+            sx={{
+              display: 'flex',
+              maxHeight: { xs: '150px', md: '200px' },
+              borderBottom: '1px solid #fff'
+            }}
+          >
+            <Box
               component='img'
-              sx={{ width: '200px', height: '200px', objectFit: 'cover' }}
-              image={recipe.Image}
+              sx={{
+                maxWidth: { xs: '100px', md: '200px' },
+                maxHeight: '100%',
+                objectFit: 'cover'
+              }}
+              src={recipe.Image}
             />
             <Box
               sx={{
                 width: '100%',
-                padding: '10px 10px',
+                padding: '15px 15px',
                 display: 'flex',
                 flexDirection: 'column'
               }}
             >
               <Box sx={{ flexGrow: 1 }}>
-                <Typography variant='h5'>{recipe.Name}</Typography>
-                <Typography>Description</Typography>
-                <Typography>15 min</Typography>
+                <Typography variant='h3'>{recipe.Name}</Typography>
+                {mobile ? null : (
+                  <Typography>{recipe.description}</Typography>
+                )}{' '}
+                <Typography>
+                  {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)}
+                </Typography>
               </Box>
               <AddToCartButton
                 handleCartMeals={props.handleCartMeals}
@@ -221,12 +280,12 @@ const Cart = (props) => {
               />
             </Box>
           </Box>
-          <CardContent>
+          <CardContent sx={{ padding: '30px 30px' }}>
             <Typography variant='h4'>Ingredients</Typography>
-            <ul>
+            <ul style={{ /*listStyle: 'none'*/ width: '90%' }}>
               {Array.from(getIngredients(recipe)).map(([key, value]) => {
                 return (
-                  <li>
+                  <li style={{ padding: '5px 0px' }}>
                     <Box sx={{ display: 'flex' }}>
                       <Typography sx={{ flexGrow: 1 }}>{key.Name}</Typography>
                       <Typography>
@@ -238,12 +297,15 @@ const Cart = (props) => {
               })}
             </ul>
             <Typography variant='h4'>Pantry Ingredients</Typography>
-            <ul>
+            <Typography variant='body2'>
+              Ingredients you might already have
+            </Typography>
+            <ul style={{ /*listStyle: 'none'*/ width: '95%' }}>
               {recipe.OneTimes.map((key) => {
                 let oneTimeDetails = getOneTime(key)
                 return (
                   <li>
-                    <Box sx={{ display: 'flex' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography sx={{ flexGrow: 1 }}>
                         {oneTimeDetails.Name}
                       </Typography>
@@ -280,16 +342,16 @@ const Cart = (props) => {
     <>
       {props.cartMeals.size > 0 ? (
         <Box>
-          <Box sx={{ borderBottom: '1px solid #fff' }}>
+          <Box sx={{ borderBottom: '1px solid #fff', padding: '20px 20px' }}>
             <Typography variant='h2'>Cart</Typography>
             <Typography>{cartQuantity} recipes selected</Typography>
           </Box>
           <Box
             sx={{
-              width: '90%',
+              width: { xs: '100%', md: '80%' },
               margin: 'auto auto',
               display: 'grid',
-              gridTemplateColumns: 'auto 30%',
+              gridTemplateColumns: { xs: '100%', md: 'auto 40%' },
               gridGap: 10
             }}
           >
@@ -299,25 +361,40 @@ const Cart = (props) => {
               })}
             </Box>
 
-            <Card sx={{ backgroundColor: '#34383F', height: '100px' }}>
-              {loadPercent}
-              <Button variant='contained' onClick={() => checkoutAmazon()}>Proceed to Checkout</Button>
+            <Card
+              sx={{
+                backgroundColor: '#34383F',
+                height: '100px',
+                marginTop: '20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              {/* {loadPercent} */}
+              <Button
+                size='large'
+                variant='contained'
+                onClick={() => checkoutAmazon()}
+              >
+                Proceed to Checkout
+              </Button>
             </Card>
           </Box>
           {/* Cart content */}
         </Box>
       ) : (
-        <Box
+        <Card
           sx={{
             width: '50%',
-            margin: 'auto auto',
+            margin: '10px auto auto auto',
             backgroundColor: '#34383F',
             textAlign: 'center',
             padding: '20px 20px'
           }}
         >
           Your cart is empty!
-        </Box>
+        </Card>
       )}
     </>
   )

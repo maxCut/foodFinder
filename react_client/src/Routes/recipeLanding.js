@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Box, Button, Typography, Grid } from '@mui/material'
 import RecipeCard from '../Components/recipeCard'
 import ingredientsCopy from '../ingredientsCopy.json'
@@ -75,34 +75,85 @@ const RecipeLanding = (props) => {
   //     </Box>
   //   )
   // }
-
-  const CATEGORIES = [
-    { name: 'Breakfast' },
-    { name: 'Veggie' },
-    { name: 'Savory' }
-  ]
-
-  let tmpMealsCopy = [...meals]
-
   const navigate = useNavigate()
   const navigateToRecipe = (recipeID) => {
     navigate({ pathname: 'recipe', search: `?recipeID=${recipeID}` })
   }
+
+  const getDimensions = (ele) => {
+    const { height } = ele.getBoundingClientRect()
+    const offsetTop = ele.offsetTop
+    const offsetBottom = offsetTop + height
+
+    return {
+      height,
+      offsetTop,
+      offsetBottom
+    }
+  }
+
+  const scrollTo = (element) => {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const [visibleSection, setVisibleSection] = useState('Quick and Easy')
+  const headerRef = useRef(null)
+
+  let quickAndEasyRef = useRef(null)
+  let sheetPanRef = useRef(null)
+  let cookingMasteryRef = useRef(null)
+
+  let CATEGORIES = [
+    { name: 'Quick and Easy', ref: quickAndEasyRef },
+    { name: 'Sheet Pan', ref: sheetPanRef },
+    { name: 'Cooking Mastery', ref: cookingMasteryRef }
+  ]
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const { height: headerHeight } = getDimensions(headerRef.current)
+      const scrollPosition = window.scrollY + headerHeight + 114
+
+      const selected = CATEGORIES.find(({ name, ref }) => {
+        const ele = ref.current
+        if (ele) {
+          const { offsetBottom, offsetTop } = getDimensions(ele)
+          return scrollPosition > offsetTop && scrollPosition < offsetBottom
+        }
+      })
+      if (selected && selected.name !== visibleSection) {
+        setVisibleSection(selected.name)
+      } else if (!selected && visibleSection) {
+        setVisibleSection('Quick and Easy')
+      }
+    }
+    handleScroll()
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [visibleSection])
   return (
     <Box>
-      <SecondaryNav>
+      <SecondaryNav
+        containsProperChromeExtension={props.containsProperChromeExtension}
+        ref={headerRef}
+      >
         {/* <Box sx={{ borderBottom: '1px solid #fff', padding: '10px 10px', position: 'sticky', top: '65px', backgroundColor: '#1B2428', zIndex: 9 }}> */}
         {CATEGORIES.map((category) => {
           let buttonVariant = 'outlined'
-          if (category.name == 'Breakfast') {
+          if (visibleSection == category.name) {
             buttonVariant = 'contained'
           }
           return (
             <>
               <Button
                 variant={buttonVariant}
-                key={category.name}
+                key={`${category.name} button`}
                 sx={{ margin: 'auto 10px' }}
+                onClick={() => {
+                  scrollTo(category.ref.current)
+                }}
               >
                 {category.name}
               </Button>
@@ -111,22 +162,30 @@ const RecipeLanding = (props) => {
         })}
       </SecondaryNav>
       {/* </Box> */}
-      <Box sx={{ width: '90%', margin: 'auto auto' }}>
+      <Box sx={{ width: '90%', maxWidth: '1000px', margin: 'auto auto 100px auto' }}>
         {CATEGORIES.map((category, index) => {
-          let categoryMeals = tmpMealsCopy.splice(0, 2)
+          let categoryMeals = meals.filter(
+            (meal) => meal.category == category.name
+          )
           return (
-            <React.Fragment key={category.name}>
-              <Typography variant='h2' sx={{ margin: '40px 0px 10px 0px' }}>
+            <Box
+            id={`${category.name} section`}
+              ref={category.ref}
+              sx={{ paddingTop: '40px' }}
+              key={category.name}
+            >
+              <Typography variant='h2' sx={{ margin: '0px 0px 10px 0px' }}>
                 {category.name}
               </Typography>
               <Box
                 sx={{
                   display: 'grid',
                   gridGap: '20px',
-                  gridTemplateColumns:
-                    categoryMeals.length > 2
-                      ? 'repeat(3, minmax(0, 1fr))'
-                      : 'repeat(2, minmax(0, 1fr))'
+                  gridTemplateColumns: {
+                    xs: 'repeat(1, minmax(0, 1fr))',
+                    sm: 'repeat(2, minmax(0, 1fr))',
+                    md: 'repeat(3, minmax(0, 1fr))'
+                  }
                   // padding: '20px 20px'
                 }}
               >
@@ -144,7 +203,7 @@ const RecipeLanding = (props) => {
                   )
                 })}
               </Box>
-            </React.Fragment>
+            </Box>
           )
         })}
       </Box>

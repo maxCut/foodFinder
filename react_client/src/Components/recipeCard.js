@@ -7,6 +7,7 @@ import {
   Typography
 } from '@mui/material'
 import AddToCartButton from './addToCartButton'
+import timeHandler from '../utils/timeHandler'
 
 const RecipeCard = (props) => {
   // let test = props.addToCartButton
@@ -30,8 +31,8 @@ const RecipeCard = (props) => {
         <Typography variant='h3'>
           {props.recipe.Name || 'Recipe name'}
         </Typography>
-        <Typography>Description</Typography>
-        <Typography>15 min | 2 servings</Typography>
+        <Typography>{props.recipe.description}</Typography>
+        <Typography>{timeHandler.getTotalTime(props.recipe.prepTime, props.recipe.cookTime)} | {props.recipe.IncrementAmount} servings</Typography>
       </CardContent>
       <CardActions>
         <AddToCartButton

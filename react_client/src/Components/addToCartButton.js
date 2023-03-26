@@ -12,6 +12,7 @@ const AddToCartButton = (props) => {
   return (
     <Box
       sx={{
+        ...props.style,
         height: '70px',
         width: '100%',
         display: 'flex',
