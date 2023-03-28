@@ -193,6 +193,9 @@ const App: () => Node = () => {
     return;
     await sendToCart(meals);
   }
+  function getSelectedItems() {
+    
+  }
 
   function getSelectedMeals() {
     //console.log(mealSectionRef.current);
