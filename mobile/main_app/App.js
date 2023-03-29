@@ -72,7 +72,9 @@ const Counter: () => Node = () => {
     <View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
       <Button
         onPress={() => {
-          setState(state - 1);
+          if (state > 0) {
+            setState(state - 1);
+          }
         }}
         title="-"
       />
@@ -98,6 +100,8 @@ const App: () => Node = () => {
   const [pageState, setPageState] = useState('Main');
   const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
+  const mealSectionRef = React.useRef(null);
+
   function mealAddedEvent(id) {
     meals[id].OneTimes.forEach(oneTimeId => {
       var oneTimeIngredient = ingredientVals[oneTimeId];
@@ -119,6 +123,98 @@ const App: () => Node = () => {
 
   function addOneTime(oneTime) {
     setOneTimes([...oneTimes, oneTime]);
+  }
+
+  async function fetchOffer(element) {
+    const response = await fetch(
+      `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=foodfinder00-20`,
+    );
+    const html2 = await response.text();
+    const parser = new DOMParser.DOMParser({
+      errorHandler: {
+        warning: function (w) {},
+        error: function (e) {},
+        fatalError: function (e) {
+          console.error(e);
+        },
+      },
+    });
+
+    const parsed = parser.parseFromString(html2);
+    const listingId = parsed.getElementById('offerListingID');
+    const addToCartForm = parsed.getElementById('addToCart');
+    const csfrToken = Array.from(addToCartForm.elements).filter(_element => {
+      return _element.name === 'CSRF';
+    });
+    if (csfrToken.length > 0) {
+      return [listingId, csfrToken[0].value];
+    }
+    throw Error("can't get token");
+  }
+
+  async function addFirstListedItemToCart(element) {
+    let offer = '';
+    let token = '';
+    for (const option of element) {
+      [offer, token] = fetchOffer(option);
+      if (offer === '') {
+        continue;
+      }
+      let body = {
+        asin: option.asin,
+        brandId: 'QW1hem9uIEZyZXNo',
+        clientID: 'fresh-nereid',
+        offerListingID: offer,
+        quantity: option.quantity,
+        csrfToken: token,
+      };
+      try {
+        await fetch('https://www.amazon.com/alm/addtofreshcart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          body: JSON.stringify(body),
+        });
+      } catch {
+        continue;
+      }
+      return;
+    }
+  }
+  async function sendToCart(asin_set) {
+    for (const element of asin_set) {
+      addFirstListedItemToCart(element);
+    }
+  }
+
+  async function checkout() {
+    const meals = getSelectedItems();
+    return;
+    await sendToCart(meals);
+  }
+  function getSelectedItems() {
+    
+  }
+
+  function getSelectedMeals() {
+    //console.log(mealSectionRef.current);
+    //console.log(mealSectionRef.current._children.length);
+    const mealSection = mealSectionRef.current;
+    console.log(mealSectionRef);
+    console.log(mealSection._children.length);
+    for (const meal in mealSection._children) {
+      if (meal == 0) {
+        continue;
+      }
+      console.log('child ' + meal);
+      const mealId =
+        mealSection._children[meal]._internalFiberInstanceHandleDEV._debugOwner
+          .key;
+      const count =
+        mealSection._children[meal]._children[1]._children[1]
+          ._internalFiberInstanceHandleDEV.memoizedProps.children;
+    }
   }
 
   async function checkLoggedIn() {
@@ -152,7 +248,8 @@ const App: () => Node = () => {
         return;
       }
       webPageState = 'Checkout';
-      setPageUrl(webPages.checkout);
+      checkout();
+      setPageUrl(webPages.checkout); //TODO this should happen after added to cart
     } else {
       if (webPageState === 'Login') {
         return;
@@ -164,7 +261,6 @@ const App: () => Node = () => {
 
   async function loadLoginPrompt() {
     LogBox.ignoreAllLogs();
-    var loggedIn = await checkLoggedIn();
     try {
       const response = await fetch('https://www.amazon.com');
       const html2 = await response.text();
@@ -205,8 +301,8 @@ const App: () => Node = () => {
             style={{
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
-            <Section title="Step One">
-              <View>
+            <Section id="meals" title="Step One">
+              <View ref={mealSectionRef}>
                 <Text>Select yoour meals</Text>
                 {meals.map(item => (
                   <View key={item.Id}>
