@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   Box,
   Button,
@@ -7,7 +7,10 @@ import {
   CardMedia,
   Typography,
   Checkbox,
-  useMediaQuery
+  useMediaQuery,
+  Snackbar,
+  Alert,
+  CircularProgress
 } from '@mui/material'
 import AddToCartButton from '../Components/addToCartButton'
 import ingredientsCopy from '../ingredientsCopy.json'
@@ -115,14 +118,18 @@ const Cart = (props) => {
     )
   }
   document.addEventListener('purchaseRequestSuccess', function (event) {
+    console.log('success')
     onCheckoutAmazonSuccess()
   })
   document.addEventListener('purchaseRequestFailed', function (event) {
+    console.log('failed')
     onNeedToLogInToAmazon()
   })
 
-  const [addingToCart, setAddingToCart] = useState(false)
+  // const [addingToCart, setAddingToCart] = useState(false)
+  const addingToCart = useRef(false)
   const [loadPercent, setLoadPercent] = useState('0%')
+  const [isLoading, setIsLoading] = useState(false);
 
   const getCart = () => {
     let tmpCart = []
@@ -151,8 +158,8 @@ const Cart = (props) => {
 
   const chunkSize = 1
   const requestDelayInMilliseconds = 600
-  var numActiveChunks = 0
-  var chunkProgress = 0
+  const chunkProgress = useRef()
+  const numActiveChunks = useRef()
   function checkoutAmazon() {
     //fires on button click
     // if (!containsProperChromeExtension) {
@@ -160,18 +167,18 @@ const Cart = (props) => {
     //   return
     // }
     console.log('checkout')
-    if (addingToCart) {
+    if (addingToCart.current) {
       return
     }
     var cart = getCart() //returns array of arrays of object options [[{asin, quantity}]]
-    console.log(cart)
     var numChunks = Math.ceil(cart.length / chunkSize)
-    chunkProgress = numChunks
-    numActiveChunks = numChunks
+    chunkProgress.current = numChunks
+    numActiveChunks.current = numChunks
     updateLoadPercent()
+    setIsLoading(true)
     for (let i = 0; i < numChunks; i++) {
       setTimeout(function () {
-        console.log('going')
+        console.log('start chunk slice')
         sendCartChunkToAmazon(
           cart.slice(i * chunkSize, Math.min(cart.length, (i + 1) * chunkSize))
         )
@@ -180,29 +187,33 @@ const Cart = (props) => {
     setTimeout(
       onAmazonRequestTimeout(),
       numChunks * requestDelayInMilliseconds + 10000
-    ) //change to random number so amazon likes it better
-    setAddingToCart(true)
+    ) //TO DO: change to random number so amazon likes it better
+    addingToCart.current = true
   }
   function sendCartChunkToAmazon(chunk) {
-    console.log('yay')
+    console.log('sending:', chunk)
     var event = new CustomEvent('purchaseRequest', { detail: chunk })
     document.dispatchEvent(event)
   }
   function updateLoadPercent() {
     setLoadPercent(
-      Math.floor(((chunkProgress - numActiveChunks) / chunkProgress) * 100) +
-        '%'
+      Math.floor(
+        ((chunkProgress.current - numActiveChunks.current) /
+          chunkProgress.current) *
+          100
+      ) + '%'
     )
     console.log(loadPercent)
   }
   function onCheckoutAmazonSuccess() {
-    if (addingToCart) {
-      numActiveChunks--
+    if (addingToCart.current) {
+      numActiveChunks.current = numActiveChunks.current - 1
       updateLoadPercent()
-      if (numActiveChunks <= 0) {
+      if (numActiveChunks.current <= 0) {
         //once the chunks are all sent, open the amazon cart window
+        addingToCart.current = false
         setTimeout(function () {
-          setAddingToCart(false)
+          setIsLoading(false)
           window.open(
             'https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20',
             '_blank'
@@ -213,13 +224,14 @@ const Cart = (props) => {
   }
 
   function onAmazonRequestTimeout() {
-    setAddingToCart(false) //stop the spinner
+    addingToCart.current = false
   }
-
+  const [openLoginRequired, setOpenLoginRequired] = useState(false)
   function onNeedToLogInToAmazon() {
     //show warning if you are not logged into amazon
-    setAddingToCart(false)
-    document.getElementById('checkout-login-required').style.display = 'block'
+    addingToCart.current = false
+    setOpenLoginRequired(true)
+    // document.getElementById('checkout-login-required').style.display = 'block'
   }
 
   // function getCart() {
@@ -371,13 +383,25 @@ const Cart = (props) => {
                 alignItems: 'center'
               }}
             >
-              {/* {loadPercent} */}
               <Button
                 size='large'
                 variant='contained'
                 onClick={() => checkoutAmazon()}
+                disabled={isLoading}
               >
                 Proceed to Checkout
+                {isLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      marginTop: '-12px',
+                      marginLeft: '-12px'
+                    }}
+                  />
+                )}
               </Button>
             </Card>
           </Box>
@@ -396,6 +420,23 @@ const Cart = (props) => {
           Your cart is empty!
         </Card>
       )}
+      <Snackbar
+        open={openLoginRequired}
+        onClose={() => setOpenLoginRequired(false)}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity='error'>
+          Oops! We're having trouble loading items into your amazon cart.{' '}
+          <a
+            href='https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20'
+            target='_blank'
+          >
+            Log into Amazon Fresh{' '}
+          </a>
+          on another page then try again.
+        </Alert>
+      </Snackbar>
     </>
   )
 }

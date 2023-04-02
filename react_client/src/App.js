@@ -11,7 +11,7 @@ function App() {
   const [containsProperChromeExtension, setContainsProperChromeExtension] =
     useState(false)
   document.addEventListener('chefBopInformation', function (event) {
-    setContainsProperChromeExtension = true //event.detail.message == "1.2"
+    setContainsProperChromeExtension(event.detail.message === '1.3') //event.detail.message == "1.2"
   }) //I don't know if this needs to be a state change
 
   let emptyCart = new Map()
