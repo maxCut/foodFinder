@@ -7,10 +7,19 @@ import {
   InputBase,
   IconButton,
   InputAdornment,
-  Alert, 
-  useMediaQuery
+  Alert,
+  useMediaQuery,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material'
-import { ShoppingCart, Tune, Search, LocalFireDepartment } from '@mui/icons-material'
+import {
+  ShoppingCart,
+  Tune,
+  Search,
+  LocalFireDepartment
+} from '@mui/icons-material'
 import '../Styles/Root.css'
 
 const Root = (props) => {
@@ -56,9 +65,51 @@ const Root = (props) => {
       </>
     )
   }
-
+const [showGettingStarted, setShowGettingStarted] = useState(true);
   return (
     <div>
+      <Dialog
+        open={showGettingStarted}
+        onClose={() => setShowGettingStarted(false)}
+        fullWidth
+        PaperProps={{ style: { backgroundColor: '#1B2428' } }}
+      >
+        <DialogTitle>Getting Started</DialogTitle>
+        <DialogContent>
+          <Typography>
+            To place an order, start by completing the following steps.
+          </Typography>
+          <ol>
+            <li>
+              <Typography>
+                Install the Google Chrome Extension{' '}
+                <a
+                style={{color: 'inherit'}}
+                  href='https://chrome.google.com/webstore/detail/chefbop/dhllfmoknkadgllhkgimkclkfdidomep'
+                  target='_blank'
+                >
+                  here
+                </a>
+              </Typography>
+            </li>
+            <li>
+              <Typography>
+                Sign in to{' '}
+                <a
+                style={{color: 'inherit'}}
+                  href='https://www.amazon.com/cart/localmarket?ref_=cart_go_cart_btn_fresh&almBrandId=QW1hem9uIEZyZXNo&tag=foodfinder00-20'
+                  target='_blank'
+                >
+                  Amazon Fresh{' '}
+                </a>
+              </Typography>
+            </li>
+          </ol>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='contained' onClick={() => setShowGettingStarted(false)}>Let's Cook!</Button>
+        </DialogActions>
+      </Dialog>
       <div
         // className='Header-bar'
         style={{
@@ -66,7 +117,7 @@ const Root = (props) => {
           top: '0px',
           backgroundColor: '#1B2428',
           zIndex: 10,
-         
+
           borderBottom: '1px solid #fff'
         }}
         // style={{
@@ -93,7 +144,7 @@ const Root = (props) => {
           sx={{
             display: 'flex',
             justifyContent: 'space-evenly',
-            padding: '10px 10px',
+            padding: '10px 10px'
           }}
         >
           <Typography
@@ -125,7 +176,8 @@ const Root = (props) => {
             component={Link}
             to={`/cart`}
           >
-            {mobile ? null : 'Cart - '}{cartQuantity}
+            {mobile ? null : 'Cart - '}
+            {cartQuantity}
           </Button>
           {/* <Button
             variant='outlined'
