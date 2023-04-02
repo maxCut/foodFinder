@@ -20,6 +20,38 @@ function App() {
 
   const [oneTimes, setOneTimes] = useState([])
 
+  const [meals, setMeals] = useState([])
+  const [ingredients, setIngredients] = useState([])
+
+  //use this one for development
+   // useEffect(() => {
+  //   async function handleAsync() {
+  //     setMeals(mealsCopy)
+  //     setIngredients(ingredientsCopy)
+  //   }
+  //   handleAsync()
+  // }, [])
+//use this one for actual json files
+  useEffect(() => {
+    async function handleAsync() {
+      fetch('../shared/mealsCopy.json')
+      .then((response) => {
+        return response.json()
+      })
+      .then((mealsData) => {
+        setMeals(mealsData)
+      })
+      fetch('../shared/ingredientsCopy.json')
+      .then((response) => {
+        return response.json()
+      })
+      .then((ingredientsData) => {
+        setIngredients(ingredientsData)
+      })
+    }
+    handleAsync()
+  }, [])
+
   const handleCartMeals = (event, meal, value) => {
     event.stopPropagation()
     console.log('handle cart meals')
@@ -75,6 +107,8 @@ function App() {
           path: '/',
           element: (
             <RecipeLanding
+            meals={meals}
+            ingredients={ingredients}
               handleCartMeals={handleCartMeals}
               cartMeals={cartMeals}
               containsProperChromeExtension={containsProperChromeExtension}
@@ -85,6 +119,7 @@ function App() {
           path: '/cart',
           element: (
             <Cart
+            ingredients={ingredients}
               cartMeals={cartMeals}
               handleCartMeals={handleCartMeals}
               oneTimes={oneTimes}
@@ -96,6 +131,8 @@ function App() {
           path: '/recipe',
           element: (
             <RecipePage
+            meals={meals}
+            ingredients={ingredients}
               cartMeals={cartMeals}
               handleCartMeals={handleCartMeals}
             />

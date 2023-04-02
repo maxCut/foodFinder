@@ -17,6 +17,7 @@ import ingredientsCopy from '../ingredientsCopy.json'
 import timeHandler from '../utils/timeHandler'
 
 const Cart = (props) => {
+  let allIngredients = props.ingredients
   let cartQuantity
   if (props.cartMeals.size > 0) {
     cartQuantity = [...props.cartMeals.values()].reduce((a, b) => a + b)
@@ -30,7 +31,7 @@ const Cart = (props) => {
   const getIngredients = (recipe) => {
     let ingredientsTmp = new Map()
     recipe.Ingredients.forEach(([key, quantity]) => {
-      let ingredientDetails = ingredientsCopy.filter(
+      let ingredientDetails = allIngredients.filter(
         (ingredient) => ingredient.Key == key
       )[0]
       ingredientsTmp.set(ingredientDetails, quantity)
@@ -59,7 +60,7 @@ const Cart = (props) => {
   // }
 
   const getOneTime = (key) => {
-    let oneTimeDetails = ingredientsCopy.filter(
+    let oneTimeDetails = allIngredients.filter(
       (ingredient) => ingredient.Key == key
     )[0]
     return oneTimeDetails
@@ -136,7 +137,7 @@ const Cart = (props) => {
     props.cartMeals.forEach((value, key) => {
       key.Ingredients.forEach((ingredient) => {
         let tmpOptions = []
-        let details = ingredientsCopy.filter(
+        let details = allIngredients.filter(
           (obj) => obj.Key == ingredient[0]
         )[0]
         details.Options.forEach((item) => {
@@ -147,7 +148,7 @@ const Cart = (props) => {
     })
     props.oneTimes.forEach((key) => {
       let tmpOptions = []
-      let details = ingredientsCopy.filter((obj) => obj.Key == key)[0]
+      let details = allIngredients.filter((obj) => obj.Key == key)[0]
       details.Options.forEach((item) => {
         tmpOptions.push({ asin: item.ASIN, quantity: 1 })
       })

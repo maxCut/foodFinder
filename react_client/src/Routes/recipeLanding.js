@@ -8,29 +8,32 @@ import AddToCartButton from '../Components/addToCartButton'
 import SecondaryNav from '../Components/secondaryNav'
 
 const RecipeLanding = (props) => {
-  const [meals, setMeals] = useState([])
-  const [ingredients, setIngredients] = useState([])
-  useEffect(() => {
-    async function handleAsync() {
-      setMeals(mealsCopy)
-      setIngredients(ingredientsCopy)
-    }
-    handleAsync()
-  }, [])
+  let meals = props.meals
+  let ingredients = props.ingredients
+  // const [meals, setMeals] = useState([])
+  // const [ingredients, setIngredients] = useState([])
   // useEffect(() => {
   //   async function handleAsync() {
-  //     fetch('../shared/meals.json')
+  //     setMeals(mealsCopy)
+  //     setIngredients(ingredientsCopy)
+  //   }
+  //   handleAsync()
+  // }, [])
+  // useEffect(() => {
+  //   async function handleAsync() {
+  //     fetch('../shared/mealsCopy.json')
   //     .then((response) => {
   //       return response.json()
   //     })
-  //     .then((jsondata) => {
-  //       console.log(jsondata)
-  //       setMeals(jsondata)
-  //       // jsondata.forEach(element => {
-
-  //       //     meals[element.Id] = element;
-  //       //     addMeal(element.Name,element.Image,element.Id,element.Recipe)
-  //       // });
+  //     .then((mealsData) => {
+  //       setMeals(mealsData)
+  //     })
+  //     fetch('../shared/ingredientsCopy.json')
+  //     .then((response) => {
+  //       return response.json()
+  //     })
+  //     .then((ingredientsData) => {
+  //       setIngredients(ingredientsData)
   //     })
   //   }
   //   handleAsync()

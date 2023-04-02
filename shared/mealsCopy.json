@@ -1,0 +1,227 @@
+[
+    {
+        "Id": "m2",
+        "Name": "Baked Eggs over Sweet Potato",
+        "description": "Easy eggs with herby, cheesy sweet potato",
+        "Recipe": "https://naturallyella.com/sweet-potatoes-baked-eggs/",
+        "Image": "https://naturallyella.com/wp-content/uploads/2012/11/sweet_potato_baked_eggs.jpg",
+        "Ingredients": [
+            [
+                "f4",
+                1.0
+            ],
+            [
+                "f5",
+                0.25
+            ],
+            [
+                "f6",
+                2.0
+            ],
+            [
+                "f16",
+                2.0
+            ]
+        ],
+        "OneTimes": [
+            "p2",
+            "p3",
+            "p6",
+            "p7",
+            "p8"
+        ],
+        "IncrementAmount": 2,
+        "prepTime": 10,
+        "cookTime": 40,
+        "category": "Sheet Pan",
+        "instructions": [
+            "Heat your oven to 425˚F and have a 8x8 (or similar-sized) baking dish ready. Give the sweet potato a good scrub and cut it into ½\" cubes. Mince a quarter of the shallot.",
+            "Place the following in the pan: sweet potato, shallot, olive oil, herbs, and salt. Toss until well combined. Place in the oven and roast for 25 to 30 minutes.",
+            "Once the sweet potatoes are mostly tender, create two wells and crack in the eggs. Return the pan to the oven and bake for another 8 to 10 minutes, until the whites are set and the yolks are to your desired doneness.",
+            "Top with cheese and crushed red pepper if desired."
+        ]
+    },
+    {
+        "Id": "m4",
+        "Name": "Yogurt Parfait",
+        "description": "Grab-n-go breakfast with fresh berries and granola",
+        "Recipe": "https://www.simplysissom.com/simpleyogurtparfaits/",
+        "Image": "https://i0.wp.com/www.simplysissom.com/wp-content/uploads/2017/01/parfaityogurt-copy.jpg?w=680&ssl=1",
+        "Ingredients": [
+            [
+                "f14",
+                2.5
+            ],
+            [
+                "f10",
+                1.0
+            ],
+            [
+                "f11",
+                1.0
+            ],
+            [
+                "f12",
+                1.0
+            ],
+            [
+                "f15",
+                8.0
+            ]
+        ],
+        "OneTimes": [
+            "p9"
+        ],
+        "IncrementAmount": 4,
+        "prepTime": 5,
+        "cookTime": 0,
+        "category": "Quick and Easy",
+        "instructions": [
+            "Add honey to the container of yogurt. Stir well.",
+            "In a mason jar, layer yogurt and berries. Top with granola."
+        ]
+    },
+    {
+        "Id": "m5",
+        "Name": "Baked Eggs With Avocado and Feta",
+        "description": "Delicious and healthy breakfast option",
+        "Recipe": "https://kalynskitchen.com/low-carb-baked-eggs-with-avocado-feta/",
+        "Image": "https://d1yfn1dfres2va.cloudfront.net/005/18/ee/18eeb14d30ed57ac996ef1079f9dee73_640m.jpg",
+        "Ingredients": [
+            [
+                "f6",
+                4.0
+            ],
+            [
+                "f17",
+                1.0
+            ],
+            [
+                "f16",
+                2.0
+            ]
+        ],
+        "OneTimes": [
+            "p2",
+            "p3"
+        ],
+        "IncrementAmount": 1,
+        "category": "Sheet Pan",
+        "prepTime": 25,
+        "cookTime": 15,
+        "instructions": [
+            "Break eggs into individual ramekins and let the eggs and avocado come to room temperature for 15 minutes.",
+            "Set the oven to 400F/200C, then put the gratin dishes on a baking sheet and heat them in the oven for 10 minutes.",
+            "After 15 minutes, peel the avocado and cut each half into 6 slices.",
+            "Remove gratin dishes from the oven and spray with olive oil or non-stick spray.",
+            "Arrange the sliced avocados in each dish and VERY CAREFULLY tip two eggs into each dish.",
+            "Sprinkle with crumbled Feta and season to taste with salt and fresh-ground black pepper. (Remember that Feta is salty; we didn’t use much salt.)",
+            "Bake 12-15 minutes or less, until the whites are set and the egg yolks are done to your liking.",
+            "Serve hot. Add tabasco sauce or serve with whole wheat toast for extra carbs."
+        ]
+    },
+    {
+        "Id": "m3",
+        "Name": "Oven Baked Burgers",
+        "description": "Fast, easy classic crowd pleaser",
+        "Recipe": "https://bakeitwithlove.com/frozen-hamburgers-in-the-oven/?msclkid=cadb3c92ac9411ec93b9a180196c1f87",
+        "Image": "https://bakeitwithlove.com/wp-content/uploads/2021/10/Frozen-Hamburgers-In-The-Oven-sq.jpg",
+        "Ingredients": [
+            [
+                "f7",
+                1.0
+            ],
+            [
+                "f8",
+                1.0
+            ],
+            [
+                "f9",
+                1.0
+            ]
+        ],
+        "OneTimes": [
+            "p2",
+            "p3",
+            "p5"
+        ],
+        "IncrementAmount": 2,
+        "category": "Sheet Pan",
+        "instructions": [
+            "Preheat your oven to 425°F (218°C) and spray or lightly grease a wire cooling rack with non-stick cooking spray. Line a rimmed baking sheet with parchment paper or aluminum foil then place the rack onto your baking sheet.",
+            "Season the upward-facing side of your patties, then place them onto your prepared wire rack with the seasoned side facing downward. Leave some space between the patties for even cooking, then season the remaining side of your burgers.",
+            "Place in the center rack of your preheated oven and cook the burgers for 25 minutes. Flipping them after the patties have cooked for 15 minutes is optional (but I like to do this).",
+            "(Optional) Top each patty with a slice of cheese and return to the oven for 1-2 minutes until melted. You can also toast the buns on a lower oven rack while melting the cheese.",
+            "Remove from the oven when done and assemble burgers with your favorite toppings and condiments."
+        ],
+        "prepTime": 5,
+        "cookTime": 25
+    },
+    {
+        "Id": "m6",
+        "Name": "Spanakopita",
+        "description": "Phyllo pastry filled with spinach and feta",
+        "Recipe": "https://feelgoodfoodie.net/recipe/spanakopita-triangles/",
+        "Image": "https://feelgoodfoodie.net/wp-content/uploads/2020/11/Spanakopita-Triangles-12.jpg",
+        "Ingredients": [
+            [
+                "f5",
+                0.025
+            ],
+            [
+                "f16",
+                0.1
+            ],
+            [
+                "f18",
+                1.0
+            ],
+            [
+                "f21",
+                0.1875
+            ],
+            [
+                "f19",
+                1.0
+            ],
+            [
+                "f20",
+                1.0
+            ]
+        ],
+        "OneTimes": [
+            "p2",
+            "p3",
+            "p6",
+            "p5",
+            "p10"
+        ],
+        "IncrementAmount": 16,
+        "category": "Cooking Mastery",
+        "prepTime": 30,
+        "cookTime": 25,
+        "instructions": [
+            {
+                "Make the filling": [
+                    "Heat olive oil in a large skillet over medium heat. Add the onions and cook, stirring regularly, until it starts to soften, about 5 minutes",
+                    "Add the garlic and dill. Cook with the onions, stirring frequently, until caramelized and soft, about 5 more minutes. Set aside and allow to cool.",
+                    "Squeeze the defrosted spinach to drain all the water possible. You should end up with around 1 cup of spinach. Transfer to the skillet on top of the onion mixture.",
+                    "Add the parsley, green onions, lemon zest, ground pepper, feta cheese to the skillet and stir to distribute mixture evenly."
+                ]
+            },
+            {
+                "Assemble the triangles": [
+                    "Preheat the oven to 375° F. Line a baking sheet with parchment.",
+                    "On a clean surface, roll out the phyllo pastry. Cut into 2 ½-3” wide strips lengthwise using a pizza cutter. Cover the pastry with a barely damp towel to prevent it from drying out.",
+                    "On a clean surface, layout 1 layer of phyllo pastry and brush it down with a small amount of butter using a pastry brush and very gentle motions.",
+                    "Place a second layer of pastry directly on top of the first and brush that with a small amount of butter.",
+                    "In one corner of the pastry layers, place 1 heaping tablespoon of filling mixture. Squish it into an approximate triangle that nearly reaches the edges.",
+                    "Fold the corner of the pasty with the filling over to reach the nearest opposite edge of the pastry. Then, roll the filling triangle towards the empty end of the pastry. Again, fold the triangle to the nearest opposite side. Repeat these last two steps until you reach the end of the pastry rectangle.",
+                    "Place the triangle on the prepared baking sheet and cover with a damp towel. Repeat the assembly with all the pastry sheets and filling. The triangles can be placed fairly close together on the baking sheet, about ½\".",
+                    "Bake for 20-25 minutes until golden brown and crisp.",
+                    "Remove from the oven and allow to cool for 10 minutes before serving."
+                ]
+            }
+        ]
+    }
+]
