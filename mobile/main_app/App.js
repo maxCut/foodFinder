@@ -66,8 +66,13 @@ const Section = ({children, title}): Node => {
     </View>
   );
 };
-const Counter: () => Node = () => {
+
+const Counter = ({mealId, mealSectionStates, setMealSectionStates}): Node => {
   const [state, setState] = useState(0);
+
+  useEffect(() => {
+    setMealSectionStates(mealSectionStates.set(mealId, state));
+  }, [mealId, mealSectionStates, setMealSectionStates, state]);
   return (
     <View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
       <Button
@@ -101,6 +106,7 @@ const App: () => Node = () => {
   const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
   const mealSectionRef = React.useRef(null);
+  const [mealSectionStates, setMealSectionStates] = useState(new Map());
 
   function mealAddedEvent(id) {
     meals[id].OneTimes.forEach(oneTimeId => {
@@ -194,29 +200,9 @@ const App: () => Node = () => {
     await sendToCart(meals);
   }
   function getSelectedItems() {
-    const meals = getSelectedMeals();
+    const meals = mealSectionStates.keys;
     let ingredients = new Map();
     for (const meal in meals) {
-    }
-  }
-
-  function getSelectedMeals() {
-    //console.log(mealSectionRef.current);
-    //console.log(mealSectionRef.current._children.length);
-    const mealSection = mealSectionRef.current;
-    let meals = [];
-    for (const meal in mealSection._children) {
-      if (meal == 0) {
-        continue;
-      }
-      const mealId =
-        mealSection._children[meal]._internalFiberInstanceHandleDEV._debugOwner
-          .key;
-      const count =
-        mealSection._children[meal]._children[1]._children[1]
-          ._internalFiberInstanceHandleDEV.memoizedProps.children;
-
-      meals.append(mealId, count);
     }
   }
 
@@ -310,7 +296,11 @@ const App: () => Node = () => {
                 {meals.map(item => (
                   <View key={item.Id}>
                     <Text>{item.Name}</Text>
-                    <Counter />
+                    <Counter
+                      mealId={item.Id}
+                      mealSectionStates={mealSectionStates}
+                      setMealSectionStates={setMealSectionStates}
+                    />
                   </View>
                 ))}
               </View>

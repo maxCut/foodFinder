@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node server/index.js",
-        "build": "cd react_client && npm install && npm run build"
+        "build": "cd react_client && npm install && npm run build",
+        "android": "cd mobile/main_app && npx react-native run-android"
     },
     "repository": {
         "type": "git",
