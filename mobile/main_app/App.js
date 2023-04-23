@@ -194,26 +194,29 @@ const App: () => Node = () => {
     await sendToCart(meals);
   }
   function getSelectedItems() {
-    
+    const meals = getSelectedMeals();
+    let ingredients = new Map();
+    for (const meal in meals) {
+    }
   }
 
   function getSelectedMeals() {
     //console.log(mealSectionRef.current);
     //console.log(mealSectionRef.current._children.length);
     const mealSection = mealSectionRef.current;
-    console.log(mealSectionRef);
-    console.log(mealSection._children.length);
+    let meals = [];
     for (const meal in mealSection._children) {
       if (meal == 0) {
         continue;
       }
-      console.log('child ' + meal);
       const mealId =
         mealSection._children[meal]._internalFiberInstanceHandleDEV._debugOwner
           .key;
       const count =
         mealSection._children[meal]._children[1]._children[1]
           ._internalFiberInstanceHandleDEV.memoizedProps.children;
+
+      meals.append(mealId, count);
     }
   }
 
