@@ -8,28 +8,29 @@ import timeHandler from '../utils/timeHandler'
 import AddToCartButton from './addToCartButton'
 
 const RecipePage = (props) => {
+  let meals = props.meals
+  let ingredients = props.ingredients
   const [searchParams] = useSearchParams()
   const recipeID = searchParams.get('recipeID')
   const [recipe, setRecipe] = useState(null)
   const [loading, setLoading] = useState(true)
 
   let emptyIngredients = new Map()
-  const [ingredients, setIngredients] = useState(emptyIngredients)
-
+  const [recipeIngredients, setRecipeIngredients] = useState(emptyIngredients)
   useEffect(() => {
     async function handleAsync() {
       //get recipe info
-      let tmp = mealsCopy.filter((meal) => meal.Id == recipeID)[0]
+      let tmp = meals.filter((meal) => meal.Id == recipeID)[0]
       setRecipe(tmp)
       //get ingredient info
       let ingredientTmp = new Map()
       tmp.Ingredients.forEach(([key, quantity]) => {
-        let ingredientDetails = ingredientsCopy.filter(
+        let ingredientDetails = ingredients.filter(
           (ingredient) => ingredient.Key == key
         )[0]
         ingredientTmp.set(ingredientDetails, quantity)
       })
-      setIngredients(new Map(ingredientTmp))
+      setRecipeIngredients(new Map(ingredientTmp))
       //get time info
 
       setLoading(false)
