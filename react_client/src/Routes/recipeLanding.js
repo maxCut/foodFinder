@@ -149,18 +149,16 @@ const RecipeLanding = (props) => {
             buttonVariant = 'contained'
           }
           return (
-            <>
               <Button
                 variant={buttonVariant}
                 key={`${category.name} button`}
-                sx={{ margin: 'auto 10px' }}
+                sx={{ margin: {xs: '10px 10px', md: 'auto 10px'} }}
                 onClick={() => {
                   scrollTo(category.ref.current)
                 }}
               >
                 {category.name}
               </Button>
-            </>
           )
         })}
       </SecondaryNav>
@@ -194,7 +192,6 @@ const RecipeLanding = (props) => {
               >
                 {categoryMeals.map((recipe) => {
                   return (
-                    <>
                       <RecipeCard
                         key={recipe.Id}
                         onClick={navigateToRecipe}
@@ -202,7 +199,6 @@ const RecipeLanding = (props) => {
                         handleCartMeals={props.handleCartMeals}
                         cartMeals={props.cartMeals}
                       />
-                    </>
                   )
                 })}
               </Box>
