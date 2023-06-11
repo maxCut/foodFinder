@@ -9,7 +9,8 @@
 import React, {useState, Component, useEffect} from 'react';
 import {Button, TouchableOpacity} from 'react-native';
 import type {Node} from 'react';
-import mealVals from './meals.json';
+// import mealVals from './meals.json';
+import mealVals from './mealsCopy.json';
 import ingredientVals from './ingredients.json';
 import {Linking, NavState} from 'react-native';
 import {WebView} from 'react-native-webview';
@@ -25,6 +26,8 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import RecipeCard from './components/recipeCard';
+import RecipeLandingScreen from './Screens/recipeLandingScreen';
 
 import {
   Colors,
@@ -288,22 +291,11 @@ const App: () => Node = () => {
           style={backgroundStyle}>
           <View
             style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              // backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              backgroundColor: '#1B2428',
             }}>
             <Section id="meals" title="Step One">
-              <View ref={mealSectionRef}>
-                <Text>Select yoour meals</Text>
-                {meals.map(item => (
-                  <View key={item.Id}>
-                    <Text>{item.Name}</Text>
-                    <Counter
-                      mealId={item.Id}
-                      mealSectionStates={mealSectionStates}
-                      setMealSectionStates={setMealSectionStates}
-                    />
-                  </View>
-                ))}
-              </View>
+                <RecipeLandingScreen ref={mealSectionRef}/>
             </Section>
             <Button
               title="Checkout"
@@ -332,7 +324,6 @@ const App: () => Node = () => {
     //parsed = parser.parseFromString(html, 'text/html');
     //parsed.getElementsByAttribute('class', 'b');
     //});
-
     return (
       <View
         style={{
