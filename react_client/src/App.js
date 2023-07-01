@@ -6,6 +6,8 @@ import ErrorPage from './errorPage'
 import RecipeLanding from './Routes/recipeLanding'
 import Cart from './Routes/cart'
 import RecipePage from './Components/recipePage'
+import mealsCopy from './mealsCopy.json'
+import ingredientsCopy from './ingredientsCopy.json'
 
 function App() {
   const [containsProperChromeExtension, setContainsProperChromeExtension] =
@@ -24,13 +26,13 @@ function App() {
   const [ingredients, setIngredients] = useState([])
 
   //use this one for development
-   // useEffect(() => {
-  //   async function handleAsync() {
-  //     setMeals(mealsCopy)
-  //     setIngredients(ingredientsCopy)
-  //   }
-  //   handleAsync()
-  // }, [])
+   useEffect(() => {
+    async function handleAsync() {
+      setMeals(mealsCopy)
+      setIngredients(ingredientsCopy)
+    }
+    handleAsync()
+  }, [])
 //use this one for actual json files
   useEffect(() => {
     async function handleAsync() {

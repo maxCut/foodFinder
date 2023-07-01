@@ -165,7 +165,7 @@ const RecipePage = (props) => {
                 <Box id='ingredients-list'>
                   <Typography variant='h4'>Ingredients</Typography>
                   <ul>
-                    {Array.from(ingredients).map(([key, value]) => {
+                    {Array.from(recipeIngredients).map(([key, value]) => {
                       return (
                         <li>
                           <Box sx={{ display: 'flex' }}>
