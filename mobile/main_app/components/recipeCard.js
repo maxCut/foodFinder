@@ -14,17 +14,52 @@ import {
 } from 'react-native';
 
 const RecipeCard = props => {
+  let meal = props.recipe;
+
+  let inCart = false;
+  if (props.cartMeals.has(meal)) {
+    inCart = true;
+  }
   const AddToCartButton = () => {
     return (
       <View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={{...styles.buttonText, fontWeight: 'bold'}}>
-            Add to Cart
-          </Text>
-          <Text style={{...styles.buttonText, fontSize: 10}}>
-            {props.recipe.IncrementAmount} servings
-          </Text>
-        </TouchableOpacity>
+        {inCart ? (
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+              style={styles.circleButton}
+              onPress={event =>
+                props.handleCartMeals(event, meal, 'decrement')
+              }>
+              <Text style={{...styles.buttonText, fontWeight: 'bold'}}>-</Text>
+            </TouchableOpacity>
+            <View style={{alignItems: 'center', flex: 1}}>
+              <Text style={styles.inCartText}>
+                {props.cartMeals.get(meal)} in your cart
+              </Text>
+              <Text style={styles.inCartText}>
+                {props.recipe.IncrementAmount} servings
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.circleButton}
+              onPress={event =>
+                props.handleCartMeals(event, meal, 'increment')
+              }>
+              <Text style={{...styles.buttonText, fontWeight: 'bold'}}>+</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={event => props.handleCartMeals(event, meal, 'increment')}>
+            <Text style={{...styles.buttonText, fontWeight: 'bold'}}>
+              Add to Cart
+            </Text>
+            <Text style={{...styles.buttonText, fontSize: 10}}>
+              {props.recipe.IncrementAmount} servings
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
@@ -47,11 +82,16 @@ const RecipeCard = props => {
       />
       <View style={{flex: 1, padding: 15}}>
         <View style={{flex: 1}}>
-            <Text style={{fontWeight: 'bold', color: '#fff'}}>{props.recipe.Name}</Text>
-            <Text style={{fontSize: 10, color: '#fff'}}>{props.recipe.description}</Text>
-            <Text style={{fontSize: 10, color: '#fff'}}>
-              {props.recipe.cookTime} min | {props.recipe.IncrementAmount} servings
-            </Text>
+          <Text style={{fontWeight: 'bold', color: '#fff'}}>
+            {props.recipe.Name}
+          </Text>
+          <Text style={{fontSize: 10, color: '#fff'}}>
+            {props.recipe.description}
+          </Text>
+          <Text style={{fontSize: 10, color: '#fff'}}>
+            {props.recipe.cookTime} min | {props.recipe.IncrementAmount}{' '}
+            servings
+          </Text>
         </View>
         <AddToCartButton />
       </View>
@@ -65,7 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#34383F',
     borderRadius: 10,
     overflow: 'hidden',
-    marginBottom: 10
+    marginBottom: 10,
+    width: 350,
   },
   button: {
     backgroundColor: '#E56A25',
@@ -73,6 +114,14 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     alignItems: 'center',
   },
+  circleButton: {
+    backgroundColor: '#E56A25',
+    padding: 5,
+    borderRadius: 40,
+    alignItems: 'center',
+    width: 28,
+  },
+  inCartText: {color: '#fff', fontSize: 10},
   image: {
     flex: 1,
   },

@@ -28,6 +28,7 @@ import {
 } from 'react-native';
 import RecipeCard from './components/recipeCard';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
+import {NavigationContainer} from '@react-navigation/native';
 
 import {
   Colors,
@@ -37,6 +38,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {wrap} from 'module';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const webPages = {
   checkout:
@@ -110,6 +112,33 @@ const App: () => Node = () => {
   const [pageUrl, setPageUrl] = useState('');
   const mealSectionRef = React.useRef(null);
   const [mealSectionStates, setMealSectionStates] = useState(new Map());
+  let emptyCart = new Map();
+  const [cartMeals, setCartMeals] = useState(emptyCart);
+
+  const handleCartMeals = (event, meal, value) => {
+    // event.stopPropagation()
+    // console.log('handle cart meals');
+    console.log(cartMeals);
+    if (cartMeals.has(meal)) {
+      if (value == 'increment') {
+        setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
+      } else {
+        setCartMeals(prev => {
+          let quantity = prev.get(meal);
+          if (quantity == 1) {
+            prev.delete(meal);
+            return new Map(prev);
+          } else {
+            return new Map(prev.set(meal, quantity - 1));
+          }
+        });
+      }
+    } else {
+      if (value == 'increment') {
+        setCartMeals(prev => new Map(prev.set(meal, 1)));
+      }
+    }
+  };
 
   function mealAddedEvent(id) {
     meals[id].OneTimes.forEach(oneTimeId => {
@@ -278,6 +307,35 @@ const App: () => Node = () => {
     updateWebPage();
   }, []);
 
+  const Tab = createBottomTabNavigator();
+
+  const HomeScreen = () => {
+    return (
+      <SafeAreaView style={{backgroundColor: '#1B2428'}}>
+        <RecipeLandingScreen
+          ref={mealSectionRef}
+          handleCartMeals={handleCartMeals}
+          cartMeals={cartMeals}
+        />
+      </SafeAreaView>
+    );
+  };
+
+  const CartScreen = () => {
+    return (
+      <Text>Hello</Text>
+    )
+  }
+
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Cart" component={CartScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
   //setMeals([{id: 2, name: 'foo'}]);
   if (pageState === 'Main') {
     return (
@@ -295,7 +353,11 @@ const App: () => Node = () => {
               backgroundColor: '#1B2428',
             }}>
             <Section id="meals" title="Step One">
-                <RecipeLandingScreen ref={mealSectionRef}/>
+              <RecipeLandingScreen
+                ref={mealSectionRef}
+                handleCartMeals={handleCartMeals}
+                cartMeals={cartMeals}
+              />
             </Section>
             <Button
               title="Checkout"
