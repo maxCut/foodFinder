@@ -117,6 +117,19 @@ const App: () => Node = () => {
   let emptyCart = new Map();
   const [cartMeals, setCartMeals] = useState(emptyCart);
 
+  const handleOneTimes = (key, value) => {
+    if (oneTimes.includes(key)) {
+      let tmp = oneTimes;
+      tmp.splice(tmp.indexOf(key), 1);
+      setOneTimes(Array.from(tmp));
+    } else {
+      setOneTimes(prev => {
+        prev.push(key);
+        return Array.from(prev);
+      });
+    }
+  };
+
   const handleCartMeals = (event, meal, value) => {
     // event.stopPropagation()
     // console.log('handle cart meals');
@@ -313,7 +326,7 @@ const App: () => Node = () => {
 
   const Body = props => {
     return (
-      <SafeAreaView style={{backgroundColor: '#1B2428', alignItems: 'center'}}>
+      <SafeAreaView style={{backgroundColor: '#1B2428', alignItems: 'center', flex: 1}}>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           {props.children}
         </ScrollView>
@@ -361,8 +374,10 @@ const App: () => Node = () => {
           children={() => (
             <Body>
               <CartScreen
-              handleCartMeals={handleCartMeals}
-              cartMeals={cartMeals}
+                handleCartMeals={handleCartMeals}
+                handleOneTimes={handleOneTimes}
+                cartMeals={cartMeals}
+                oneTimes={oneTimes}
               />
             </Body>
           )}
