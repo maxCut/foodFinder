@@ -12,57 +12,16 @@ import {
   Image,
   Button,
 } from 'react-native';
+import AddToCartButton from './addToCartButton';
 
 const RecipeCard = props => {
-  let meal = props.recipe;
+  let recipe = props.recipe;
 
   let inCart = false;
-  if (props.cartMeals.has(meal)) {
+  if (props.cartMeals.has(recipe)) {
     inCart = true;
   }
-  const AddToCartButton = () => {
-    return (
-      <View>
-        {inCart ? (
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity
-              style={styles.circleButton}
-              onPress={event =>
-                props.handleCartMeals(event, meal, 'decrement')
-              }>
-              <Text style={{...styles.buttonText, fontWeight: 'bold'}}>-</Text>
-            </TouchableOpacity>
-            <View style={{alignItems: 'center', flex: 1}}>
-              <Text style={styles.inCartText}>
-                {props.cartMeals.get(meal)} in your cart
-              </Text>
-              <Text style={styles.inCartText}>
-                {props.recipe.IncrementAmount} servings
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.circleButton}
-              onPress={event =>
-                props.handleCartMeals(event, meal, 'increment')
-              }>
-              <Text style={{...styles.buttonText, fontWeight: 'bold'}}>+</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={event => props.handleCartMeals(event, meal, 'increment')}>
-            <Text style={{...styles.buttonText, fontWeight: 'bold'}}>
-              Add to Cart
-            </Text>
-            <Text style={{...styles.buttonText, fontSize: 10}}>
-              {props.recipe.IncrementAmount} servings
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    );
-  };
+  
   return (
     // <Card
     // //   theme={{colors: {surfaceVariant: '#9EF662'}}}
@@ -93,7 +52,7 @@ const RecipeCard = props => {
             servings
           </Text>
         </View>
-        <AddToCartButton />
+        <AddToCartButton inCart={inCart} recipe={props.recipe} handleCartMeals={props.handleCartMeals} cartMeals={props.cartMeals} />
       </View>
     </View>
   );

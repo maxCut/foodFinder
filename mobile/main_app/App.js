@@ -28,7 +28,7 @@ import {
 } from 'react-native';
 import RecipeCard from './components/recipeCard';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
-// import CartScreen from './Screens/cartScreen';
+import CartScreen from './Screens/cartScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
@@ -311,26 +311,13 @@ const App: () => Node = () => {
 
   const Tab = createBottomTabNavigator();
 
-  const HomeScreen = () => {
+  const Body = props => {
     return (
       <SafeAreaView style={{backgroundColor: '#1B2428', alignItems: 'center'}}>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <RecipeLandingScreen
-            ref={mealSectionRef}
-            handleCartMeals={handleCartMeals}
-            cartMeals={cartMeals}
-          />
+          {props.children}
         </ScrollView>
       </SafeAreaView>
-    );
-  };
-
-  const CartScreen = () => {
-    return (
-      // <SafeAreaView>
-      // <CartScreen />
-      // </SafeAreaView>
-      <Text>Hello</Text>
     );
   };
 
@@ -357,8 +344,29 @@ const App: () => Node = () => {
           tabBarActiveTintColor: '#E56A25',
           tabBarInactiveTintColor: 'gray',
         })}>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Cart" component={CartScreen} />
+        <Tab.Screen
+          name="Home"
+          children={() => (
+            <Body>
+              <RecipeLandingScreen
+                // ref={mealSectionRef}
+                handleCartMeals={handleCartMeals}
+                cartMeals={cartMeals}
+              />
+            </Body>
+          )}
+        />
+        <Tab.Screen
+          name="Cart"
+          children={() => (
+            <Body>
+              <CartScreen
+              handleCartMeals={handleCartMeals}
+              cartMeals={cartMeals}
+              />
+            </Body>
+          )}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
