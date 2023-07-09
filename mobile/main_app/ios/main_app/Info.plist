@@ -161,6 +161,8 @@
 		<string>Archivo_SemiExpanded-SemiBoldItalic.ttf</string>
 		<string>Archivo_SemiExpanded-Thin.ttf</string>
 		<string>Archivo_SemiExpanded-ThinItalic.ttf</string>
+		<string>MaterialIcons.ttf</string>
+  		<string>MaterialCommunityIcons.ttf</string>
 	</array>
 </dict>
 </plist>

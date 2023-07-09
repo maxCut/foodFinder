@@ -28,7 +28,9 @@ import {
 } from 'react-native';
 import RecipeCard from './components/recipeCard';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
+// import CartScreen from './Screens/cartScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import Icons from 'react-native-vector-icons/MaterialIcons';
 
 import {
   Colors,
@@ -311,25 +313,50 @@ const App: () => Node = () => {
 
   const HomeScreen = () => {
     return (
-      <SafeAreaView style={{backgroundColor: '#1B2428'}}>
-        <RecipeLandingScreen
-          ref={mealSectionRef}
-          handleCartMeals={handleCartMeals}
-          cartMeals={cartMeals}
-        />
+      <SafeAreaView style={{backgroundColor: '#1B2428', alignItems: 'center'}}>
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
+          <RecipeLandingScreen
+            ref={mealSectionRef}
+            handleCartMeals={handleCartMeals}
+            cartMeals={cartMeals}
+          />
+        </ScrollView>
       </SafeAreaView>
     );
   };
 
   const CartScreen = () => {
     return (
+      // <SafeAreaView>
+      // <CartScreen />
+      // </SafeAreaView>
       <Text>Hello</Text>
-    )
-  }
+    );
+  };
 
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          headerShown: false,
+          tabBarStyle: {backgroundColor: '#34383F'},
+          tabBarIcon: ({focused, color, size}) => {
+            let iconName;
+            let iconColor;
+
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Cart') {
+              iconName = 'shopping-cart';
+            }
+            iconColor = focused ? '#E56A25' : '#C8D0D4';
+
+            // You can return any component that you like here!
+            return <Icons name={iconName} size={25} color={iconColor} />;
+          },
+          tabBarActiveTintColor: '#E56A25',
+          tabBarInactiveTintColor: 'gray',
+        })}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Cart" component={CartScreen} />
       </Tab.Navigator>
