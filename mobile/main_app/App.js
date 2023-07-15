@@ -361,26 +361,24 @@ const App: () => Node = () => {
         <Tab.Screen
           name="Home"
           children={() => (
-            <Body>
+            // <Body>
               <RecipeLandingScreen
                 // ref={mealSectionRef}
                 handleCartMeals={handleCartMeals}
                 cartMeals={cartMeals}
               />
-            </Body>
+            // </Body>
           )}
         />
         <Tab.Screen
           name="Cart"
           children={() => (
-            <Body>
               <CartScreen
                 handleCartMeals={handleCartMeals}
                 handleOneTimes={handleOneTimes}
                 cartMeals={cartMeals}
                 oneTimes={oneTimes}
               />
-            </Body>
           )}
         />
       </Tab.Navigator>

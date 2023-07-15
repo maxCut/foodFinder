@@ -6,7 +6,9 @@ const Typography = props => {
   if (props.variant) {
     variant = props.variant;
   }
-  return <Text style={styles[variant]}>{props.children}</Text>;
+  return (
+    <Text style={{...styles[variant], ...props.style}}>{props.children}</Text>
+  );
 };
 const styles = StyleSheet.create({
   bodyText: {
@@ -16,16 +18,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'Archivo-Bold',
     fontSize: 30,
+    alignSelf: 'flex-start'
   },
   header2: {
     color: '#fff',
     fontFamily: 'Archivo-Bold',
-    fontSize: 24,
+    fontSize: 20,
   },
   header3: {
     color: '#fff',
     fontFamily: 'Archivo-Bold',
-    fontSize: 20,
+    fontSize: 18,
   },
 });
 export default Typography;

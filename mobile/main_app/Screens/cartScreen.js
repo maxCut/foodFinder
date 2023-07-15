@@ -13,6 +13,7 @@ import mealVals from '../mealsCopy.json';
 import allIngredients from '../ingredientsCopy.json';
 import AddToCartButton from '../components/addToCartButton';
 import Typography from '../components/typography';
+import RecipeDetails from '../components/recipeDetails';
 
 const CartScreen = props => {
   let cartMeals = props.cartMeals;
@@ -37,21 +38,13 @@ const CartScreen = props => {
   };
 
   const oneTimeButton = key => {
+    console.log(oneTimes);
     let value = oneTimes.includes(key);
     return (
       <TouchableOpacity
-        style={
-          value
-            ? {
-                ...styles.circleButton,
-                backgroundColor: null,
-                borderWidth: 1,
-                borderColor: '#fff',
-              }
-            : styles.circleButton
-        }
+        style={value ? styles.oneTimeRemove : styles.oneTimeAdd}
         onPress={() => props.handleOneTimes(key)}>
-        <Typography>{value ? '-' : '+'}</Typography>
+        <Typography>{value ? '1 in your cart' : '+'}</Typography>
       </TouchableOpacity>
     );
   };
@@ -64,27 +57,13 @@ const CartScreen = props => {
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <Image
-            styles={styles.image}
-            source={{width: 150, height: 150, uri: recipe.Image}}
+          <RecipeDetails
+          isCart={true}
+            recipe={recipe}
+            key={recipe.Id}
+            handleCartMeals={props.handleCartMeals}
+            cartMeals={props.cartMeals}
           />
-          <View style={{flex: 1, padding: 15}}>
-            <View style={{flex: 1}}>
-              <Typography variant="header2">{recipe.Name}</Typography>
-              <Typography style={{fontSize: 10, color: '#fff'}}>
-                {recipe.description}
-              </Typography>
-              <Typography style={{fontSize: 10, color: '#fff'}}>
-                {recipe.cookTime} min | {recipe.IncrementAmount} servings
-              </Typography>
-            </View>
-            <AddToCartButton
-              inCart={inCart}
-              recipe={recipe}
-              handleCartMeals={props.handleCartMeals}
-              cartMeals={props.cartMeals}
-            />
-          </View>
         </View>
         <View style={styles.ingredientsList}>
           <Typography variant="header3">Ingredients</Typography>
@@ -121,6 +100,7 @@ const CartScreen = props => {
                     ...styles.listItem,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}>
                   <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
                   {oneTimeButton(item)}
@@ -133,19 +113,22 @@ const CartScreen = props => {
     );
   };
   return (
-    <>
+    <View style={{          backgroundColor: '#1B2428', flex: 1}}>
       <View style={styles.checkoutFooter}>
         <TouchableOpacity style={styles.button}>
           <Typography>Proceed to Checkout</Typography>
         </TouchableOpacity>
       </View>
       <ScrollView
+        keyboardShouldPersistTaps="always"
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: 'space-between',
+          justifyContent: 'flex-start',
+
+          padding: 10,
           flexDirection: 'column',
-          paddingBottom: 80
+          paddingBottom: 80,
         }}>
         <View style={styles.cartHeader}>
           <Typography variant="header1">Cart</Typography>
@@ -157,7 +140,7 @@ const CartScreen = props => {
           })}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 
@@ -170,7 +153,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 20,
-    width: 350,
+    width: 365,
+    alignSelf: 'center'
   },
   cardHeader: {
     borderBottomColor: '#fff',
@@ -198,6 +182,24 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',
+  },
+  oneTimeAdd: {
+    backgroundColor: '#E56A25',
+    padding: 5,
+    borderRadius: 40,
+    alignItems: 'center',
+    width: 28,
+  },
+  oneTimeRemove: {
+    // backgroundColor: '#E56A25',
+    borderWidth: 1,
+    borderColor: '#fff',
+    padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 40,
+    alignItems: 'center',
+    // width: 28,
   },
   circleButton: {
     backgroundColor: '#E56A25',
