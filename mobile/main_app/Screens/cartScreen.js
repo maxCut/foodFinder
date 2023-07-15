@@ -6,11 +6,13 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import RecipeCard from '../components/recipeCard';
 import mealVals from '../mealsCopy.json';
 import allIngredients from '../ingredientsCopy.json';
 import AddToCartButton from '../components/addToCartButton';
+import Typography from '../components/typography';
 
 const CartScreen = props => {
   let cartMeals = props.cartMeals;
@@ -49,7 +51,7 @@ const CartScreen = props => {
             : styles.circleButton
         }
         onPress={() => props.handleOneTimes(key)}>
-        <Text style={styles.buttonText}>{value ? '-' : '+'}</Text>
+        <Typography>{value ? '-' : '+'}</Typography>
       </TouchableOpacity>
     );
   };
@@ -59,7 +61,6 @@ const CartScreen = props => {
     if (cartMeals.has(recipe)) {
       inCart = true;
     }
-    console.log(Array.from(getIngredients(recipe)));
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
@@ -69,15 +70,13 @@ const CartScreen = props => {
           />
           <View style={{flex: 1, padding: 15}}>
             <View style={{flex: 1}}>
-              <Text style={{fontWeight: 'bold', color: '#fff'}}>
-                {recipe.Name}
-              </Text>
-              <Text style={{fontSize: 10, color: '#fff'}}>
+              <Typography variant="header2">{recipe.Name}</Typography>
+              <Typography style={{fontSize: 10, color: '#fff'}}>
                 {recipe.description}
-              </Text>
-              <Text style={{fontSize: 10, color: '#fff'}}>
+              </Typography>
+              <Typography style={{fontSize: 10, color: '#fff'}}>
                 {recipe.cookTime} min | {recipe.IncrementAmount} servings
-              </Text>
+              </Typography>
             </View>
             <AddToCartButton
               inCart={inCart}
@@ -87,77 +86,90 @@ const CartScreen = props => {
             />
           </View>
         </View>
-        <Text>Ingredients</Text>
-        <FlatList
-          data={Array.from(getIngredients(recipe))}
-          renderItem={({item}) => {
-            let [key, value] = item;
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text>{key.Name}</Text>
-                <Text>
-                  {value} {key.Options[0].Unit}
-                </Text>
-              </View>
-            );
-          }}
-        />
-        <Text>Pantry Ingredients</Text>
-        <Text>Ingredients you might already have</Text>
-        <FlatList
-          data={recipe.OneTimes}
-          renderItem={({item}) => {
-            let oneTimeDetails = getOneTime(item);
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text>{oneTimeDetails.Name}</Text>
-                {oneTimeButton(item)}
-              </View>
-            );
-          }}
-        />
+        <View style={styles.ingredientsList}>
+          <Typography variant="header3">Ingredients</Typography>
+          <FlatList
+            style={{paddingBottom: 15, paddingLeft: 10}}
+            data={Array.from(getIngredients(recipe))}
+            renderItem={({item, index}) => {
+              let [key, value] = item;
+              return (
+                <View
+                  style={{
+                    ...styles.listItem,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Typography>{`\u2022 ${key.Name}`}</Typography>
+                  <Typography>
+                    {value} {key.Options[0].Unit}
+                  </Typography>
+                </View>
+              );
+            }}
+          />
+          <Typography variant="header3">Pantry Ingredients</Typography>
+          <Typography>Ingredients you might already have</Typography>
+          <FlatList
+            style={{paddingLeft: 10}}
+            data={recipe.OneTimes}
+            renderItem={({item}) => {
+              let oneTimeDetails = getOneTime(item);
+              return (
+                <View
+                  style={{
+                    ...styles.listItem,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
+                  {oneTimeButton(item)}
+                </View>
+              );
+            }}
+          />
+        </View>
       </View>
     );
   };
   return (
-    <View style={{justifyContent: 'space-between'}}>
-      <View>
-        <Text style={styles.header}>Cart</Text>
-        <Text style={styles.buttonText}>{cartMeals.size} recipes selected</Text>
-      </View>
-      <View style={{flex: 1}}>
-        {Array.from(cartMeals).map(([key, value]) => {
-          return cartCard(key);
-        })}
-      </View>
-      <View>
+    <>
+      <View style={styles.checkoutFooter}>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Proceed to Checkout</Text>
+          <Typography>Proceed to Checkout</Typography>
         </TouchableOpacity>
       </View>
-    </View>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'space-between',
+          flexDirection: 'column',
+          paddingBottom: 80
+        }}>
+        <View style={styles.cartHeader}>
+          <Typography variant="header1">Cart</Typography>
+          <Typography>{cartMeals.size} recipes selected</Typography>
+        </View>
+        <View>
+          {Array.from(cartMeals).map(([key, value]) => {
+            return cartCard(key);
+          })}
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    color: '#fff',
-    fontFamily: 'Archivo-Bold',
-    fontSize: 20,
+  cartHeader: {
+    paddingBottom: 20,
   },
   card: {
     backgroundColor: '#34383F',
     borderRadius: 10,
     overflow: 'hidden',
-    marginBottom: 10,
+    marginBottom: 20,
     width: 350,
   },
   cardHeader: {
@@ -165,6 +177,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
   },
+  ingredientsList: {
+    padding: 15,
+  },
+  listItem: {
+    paddingTop: 10,
+  },
+  checkoutFooter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    padding: 15,
+    backgroundColor: '#34383F',
+  },
+
   button: {
     backgroundColor: '#E56A25',
     padding: 5,

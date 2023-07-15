@@ -326,10 +326,11 @@ const App: () => Node = () => {
 
   const Body = props => {
     return (
-      <SafeAreaView style={{backgroundColor: '#1B2428', alignItems: 'center', flex: 1}}>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <SafeAreaView
+        style={{backgroundColor: '#1B2428', alignItems: 'center', flex: 1}}>
+
           {props.children}
-        </ScrollView>
+
       </SafeAreaView>
     );
   };
