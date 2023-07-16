@@ -57,7 +57,7 @@ const CartScreen = props => {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <RecipeDetails
-          isCart={true}
+            isCart={true}
             recipe={recipe}
             key={recipe.Id}
             handleCartMeals={props.handleCartMeals}
@@ -112,19 +112,21 @@ const CartScreen = props => {
     );
   };
   return (
-    <View style={{          backgroundColor: '#1B2428', flex: 1}}>
-      <View style={styles.checkoutFooter}>
-        <TouchableOpacity style={styles.button}>
-          <Typography>Proceed to Checkout</Typography>
-        </TouchableOpacity>
-      </View>
+    <View style={{backgroundColor: '#1B2428', flex: 1}}>
+      {cartMeals.size > 0 ? (
+        <View style={styles.checkoutFooter}>
+          <TouchableOpacity style={styles.button}>
+            <Typography>Proceed to Checkout</Typography>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+
       <ScrollView
         keyboardShouldPersistTaps="always"
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'flex-start',
-
           padding: 10,
           flexDirection: 'column',
           paddingBottom: 80,
@@ -133,11 +135,23 @@ const CartScreen = props => {
           <Typography variant="header1">Cart</Typography>
           <Typography>{cartMeals.size} recipes selected</Typography>
         </View>
-        <View>
-          {Array.from(cartMeals).map(([key, value]) => {
-            return cartCard(key);
-          })}
-        </View>
+        {cartMeals.size == 0 ? (
+          <View
+            style={{
+              ...styles.card,
+              padding: 15,
+            }}>
+            <Typography style={{textAlign: 'center'}}>
+              Your cart is empty!
+            </Typography>
+          </View>
+        ) : (
+          <View>
+            {Array.from(cartMeals).map(([key, value]) => {
+              return cartCard(key);
+            })}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -153,7 +167,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 20,
     width: 365,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   cardHeader: {
     borderBottomColor: '#fff',
@@ -168,17 +182,18 @@ const styles = StyleSheet.create({
   },
   checkoutFooter: {
     position: 'absolute',
+    // height: 70,
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1,
-    padding: 15,
+    padding: 20,
     backgroundColor: '#34383F',
   },
 
   button: {
     backgroundColor: '#E56A25',
-    padding: 5,
+    padding: 10,
     borderRadius: 40,
     alignItems: 'center',
   },

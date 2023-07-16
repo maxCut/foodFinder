@@ -16,13 +16,13 @@ import mealVals from '../mealsCopy.json';
 import allIngredients from '../ingredientsCopy.json';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const RecipeScreen = props => {
   let {recipe, handleCartMeals, cartMeals, isCart} = props;
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   let timeDetails;
   if (recipe) {
@@ -59,7 +59,6 @@ const RecipeScreen = props => {
   }
 
   const instructions = instructions => {
-    console.log(instructions);
     const InstructionListItems = ({steps}) => {
       return (
         <FlatList
@@ -109,12 +108,12 @@ const RecipeScreen = props => {
   };
 
   return (
-    <View style={{backgroundColor: '#1B2428', flex: 1}}>
-      <View style={{position: 'absolute', zIndex: 1, left: 10, top: 10}}>
+    <View style={{backgroundColor: '#1B2428', flex: 1, paddingBottom: 50}}>
+      <View style={styles.backButtonContainer}>
         <TouchableOpacity
-        onPress={() => navigation.goBack(null)}
-          style={{backgroundColor: '#fff', padding: 10, borderRadius: 50}}>
-          <Icons name="arrow-back" size={25} />
+          onPress={() => navigation.goBack(null)}
+          style={styles.backButton}>
+          <Icons name="arrow-back" size={25} color='#1B2428' />
         </TouchableOpacity>
       </View>
       <View style={styles.addToCartFooter}>
@@ -215,17 +214,27 @@ const RecipeScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  backButtonContainer: {
+    position: 'absolute',
+    zIndex: 1,
+    left: 10,
+    ...Platform.select({ios: {top: 20}, android: {top: 10}}),
+  },
+  backButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 50,
+  },
   addToCartFooter: {
     position: 'absolute',
     bottom: 0,
     height: 80,
     left: 0,
     right: 0,
-    padding: 15,
+    padding: 20,
     zIndex: 1,
-    padding: 15,
     backgroundColor: '#34383F',
-    ...Platform.select({ios: {paddingBottom: 15}, android: {paddingBottom: 0}}),
+    ...Platform.select({ios: {paddingBottom: 20}, android: {paddingBottom: 0}}),
   },
   background: {
     flexDirection: 'row',
