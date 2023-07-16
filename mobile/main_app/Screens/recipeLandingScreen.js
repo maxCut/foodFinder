@@ -1,6 +1,5 @@
-import React, {useCallback, useState, useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   ScrollView,
@@ -11,33 +10,22 @@ import {
 import mealVals from '../mealsCopy.json';
 import RecipeDetails from '../Components/recipeDetails';
 import Typography from '../Components/typography';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const RecipeLandingScreen = props => {
-  const setViewRecipe = props.setViewRecipe
-  const navigation = useNavigation()
-  // let navigation = props.navigation;
+  const setViewRecipe = props.setViewRecipe;
+  const navigation = useNavigation();
+  const scrollView = useRef();
+  const [currentView, setCurrentView] = useState(0);
+
   let CATEGORIES = [
     {name: 'Quick and Easy'},
     {name: 'Sheet Pan'},
     {name: 'Cooking Mastery'},
   ];
-  // const useComponentSize = () => {
-  //   const [size, setSize] = useState(null);
 
-  //   const onLayout = useCallback(event => {
-  //     const {x, y, width, height} = event.nativeEvent.layout;
-  //     setSize({x, y, width, height});
-  //   }, []);
-
-  //   return [size, onLayout];
-  // };
-  // const [size, onLayout] = useComponentSize();
-
-  const scrollView = useRef();
-  const [currentView, setCurrentView] = useState(0);
   return (
-    <View style={{backgroundColor: '#1B2428', flex: 1}}>
+    <View style={styles.background}>
       <FlatList
         style={styles.navigationList}
         horizontal
@@ -45,19 +33,19 @@ const RecipeLandingScreen = props => {
         renderItem={({item, index}) => {
           let isCurrentCategory = false;
           if (
-            (index == 0 && currentView < 150) ||
+            (index === 0 && currentView < 150) ||
             (currentView >= 150 * index && currentView < 150 * (index + 1))
           ) {
             isCurrentCategory = true;
           }
           return (
-            <View style={{height: 50, marginRight: 10}}>
+            <View style={styles.categoryContainer}>
               <TouchableOpacity
                 style={
                   isCurrentCategory ? styles.currentCategory : styles.category
                 }
                 onPress={() => {
-                  scrollView.current.scrollTo({x: 0, y: 150 * index});
+                  scrollView.current.scrollTo({x: 0, y: 150 * index}); //height of card multiplied by index
                 }}>
                 <Typography style={{padding: 10}}>{item.name}</Typography>
               </TouchableOpacity>
@@ -73,32 +61,26 @@ const RecipeLandingScreen = props => {
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-start',
-
-          padding: 10,
-          flexDirection: 'column',
-          paddingBottom: 80,
-        }}>
+        contentContainerStyle={styles.scroll}>
         {CATEGORIES.map((category, index) => {
           let categoryMeals = mealVals.filter(
             meal => meal.category == category.name,
           );
 
           return (
-            <>
+            <View key={category.name}>
               <Typography variant="header1" style={{marginBottom: 5}}>
                 {category.name}
               </Typography>
               {categoryMeals.map(meal => (
                 <TouchableOpacity
+                  key={meal.Id}
                   style={styles.recipeCard}
                   onPress={() => {
-                    setViewRecipe(meal)
-                    navigation.navigate('Recipe')}}>
+                    setViewRecipe(meal);
+                    navigation.navigate('Recipe');
+                  }}>
                   <RecipeDetails
-                    // <RecipeCard
                     recipe={meal}
                     key={meal.Id}
                     handleCartMeals={props.handleCartMeals}
@@ -106,7 +88,7 @@ const RecipeLandingScreen = props => {
                   />
                 </TouchableOpacity>
               ))}
-            </>
+            </View>
           );
         })}
       </ScrollView>
@@ -115,6 +97,7 @@ const RecipeLandingScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  background: {backgroundColor: '#1B2428', flex: 1},
   navigationList: {
     padding: 10,
     borderBottomColor: '#fff',
@@ -130,6 +113,7 @@ const styles = StyleSheet.create({
     width: 365,
     alignSelf: 'center',
   },
+  categoryContainer: {height: 50, marginRight: 10},
   currentCategory: {
     backgroundColor: '#E56A25',
     borderWidth: 1,
@@ -138,19 +122,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   category: {
-    // backgroundColor: '#E56A25',
     borderWidth: 1,
     borderColor: '#fff',
     borderRadius: 40,
-    // marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    // width: 28,
   },
-  header: {
-    color: '#fff',
-    fontFamily: 'Archivo-Bold',
-    fontSize: 20,
+  scroll: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    padding: 10,
+    flexDirection: 'column',
+    paddingBottom: 80,
   },
 });
 

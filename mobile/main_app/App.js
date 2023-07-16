@@ -134,7 +134,6 @@ const App: () => Node = () => {
   const handleCartMeals = (event, meal, value) => {
     // event.stopPropagation()
     // console.log('handle cart meals');
-    console.log(cartMeals);
     if (cartMeals.has(meal)) {
       if (value == 'increment') {
         setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
@@ -318,6 +317,7 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
+    console.log('hello')
     //setMeals(mealVals);
     setMeals(mealVals);
     updateWebPage();
@@ -341,18 +341,15 @@ const App: () => Node = () => {
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarStyle: {backgroundColor: '#34383F'},
-          tabBarIcon: ({focused, color, size}) => {
+          tabBarIcon: ({focused}) => {
             let iconName;
             let iconColor;
-
             if (route.name === 'Home') {
               iconName = 'home';
             } else if (route.name === 'Cart') {
               iconName = 'shopping-cart';
             }
             iconColor = focused ? '#E56A25' : '#C8D0D4';
-
-            // You can return any component that you like here!
             return <Icons name={iconName} size={25} color={iconColor} />;
           },
           tabBarActiveTintColor: '#E56A25',
@@ -361,14 +358,11 @@ const App: () => Node = () => {
         <Tab.Screen
           name="Home"
           children={() => (
-            // <Body>
             <RecipeLandingScreen
-            setViewRecipe={setViewRecipe}
-              // ref={mealSectionRef}
+              setViewRecipe={setViewRecipe}
               handleCartMeals={handleCartMeals}
               cartMeals={cartMeals}
             />
-            // </Body>
           )}
         />
         <Tab.Screen
@@ -385,6 +379,16 @@ const App: () => Node = () => {
       </Tab.Navigator>
     );
   };
+
+  const RecipeScreenWithProps = () => {
+    return (
+      <RecipeScreen
+      recipe={viewRecipe}
+      handleCartMeals={handleCartMeals}
+      cartMeals={cartMeals}
+    />
+    )
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -395,13 +399,7 @@ const App: () => Node = () => {
         />
         <Stack.Screen
           name="Recipe"
-          component={() =>
-            <RecipeScreen
-            recipe={viewRecipe}
-              handleCartMeals={handleCartMeals}
-              cartMeals={cartMeals}
-            />
-          }
+          component={RecipeScreenWithProps}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

@@ -1,43 +1,22 @@
 import React from 'react';
 import {
-  Text,
   View,
   StyleSheet,
-  Image,
   FlatList,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import mealVals from '../mealsCopy.json';
 import allIngredients from '../ingredientsCopy.json';
-import AddToCartButton from '../Components/addToCartButton';
 import Typography from '../Components/typography';
 import RecipeDetails from '../Components/recipeDetails';
+import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
-  let cartMeals = props.cartMeals;
-  let oneTimes = props.oneTimes;
-
-  const getIngredients = recipe => {
-    let ingredientsTmp = new Map();
-    recipe.Ingredients.forEach(([key, quantity]) => {
-      let ingredientDetails = allIngredients.filter(
-        ingredient => ingredient.Key == key,
-      )[0];
-      ingredientsTmp.set(ingredientDetails, quantity);
-    });
-    return ingredientsTmp;
-  };
-
-  const getOneTime = key => {
-    let oneTimeDetails = allIngredients.filter(
-      ingredient => ingredient.Key == key,
-    )[0];
-    return oneTimeDetails;
-  };
+  let {cartMeals, oneTimes, handleCartMeals} = props;
+  const getIngredients = ingredientHandler.getIngredients;
+  const getOneTime = ingredientHandler.getOneTime;
 
   const oneTimeButton = key => {
-    console.log(oneTimes);
     let value = oneTimes.includes(key);
     return (
       <TouchableOpacity
@@ -49,10 +28,6 @@ const CartScreen = props => {
   };
 
   const cartCard = recipe => {
-    let inCart = false;
-    if (cartMeals.has(recipe)) {
-      inCart = true;
-    }
     return (
       <View style={styles.card}>
         <View style={styles.cardHeader}>
@@ -60,8 +35,8 @@ const CartScreen = props => {
             isCart={true}
             recipe={recipe}
             key={recipe.Id}
-            handleCartMeals={props.handleCartMeals}
-            cartMeals={props.cartMeals}
+            handleCartMeals={handleCartMeals}
+            cartMeals={cartMeals}
           />
         </View>
         <View style={styles.ingredientsList}>
@@ -69,15 +44,10 @@ const CartScreen = props => {
           <FlatList
             style={{paddingBottom: 15, paddingLeft: 10}}
             data={Array.from(getIngredients(recipe))}
-            renderItem={({item, index}) => {
+            renderItem={({item}) => {
               let [key, value] = item;
               return (
-                <View
-                  style={{
-                    ...styles.listItem,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
+                <View style={styles.listItem}>
                   <Typography>{`\u2022 ${key.Name}`}</Typography>
                   <Typography>
                     {value} {key.Options[0].Unit}
@@ -94,13 +64,7 @@ const CartScreen = props => {
             renderItem={({item}) => {
               let oneTimeDetails = getOneTime(item);
               return (
-                <View
-                  style={{
-                    ...styles.listItem,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.listItem}>
                   <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
                   {oneTimeButton(item)}
                 </View>
@@ -112,10 +76,10 @@ const CartScreen = props => {
     );
   };
   return (
-    <View style={{backgroundColor: '#1B2428', flex: 1}}>
+    <View style={styles.background}>
       {cartMeals.size > 0 ? (
         <View style={styles.checkoutFooter}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.checkoutButton}>
             <Typography>Proceed to Checkout</Typography>
           </TouchableOpacity>
         </View>
@@ -124,13 +88,7 @@ const CartScreen = props => {
       <ScrollView
         keyboardShouldPersistTaps="always"
         contentInsetAdjustmentBehavior="automatic"
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-start',
-          padding: 10,
-          flexDirection: 'column',
-          paddingBottom: 80,
-        }}>
+        contentContainerStyle={styles.scroll}>
         <View style={styles.cartHeader}>
           <Typography variant="header1">Cart</Typography>
           <Typography>{cartMeals.size} recipes selected</Typography>
@@ -158,6 +116,29 @@ const CartScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  background: {backgroundColor: '#1B2428', flex: 1},
+  checkoutFooter: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    padding: 20,
+    backgroundColor: '#34383F',
+  },
+  checkoutButton: {
+    backgroundColor: '#E56A25',
+    padding: 10,
+    borderRadius: 40,
+    alignItems: 'center',
+  },
+  scroll: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    padding: 10,
+    flexDirection: 'column',
+    paddingBottom: 80,
+  },
   cartHeader: {
     paddingBottom: 20,
   },
@@ -179,22 +160,8 @@ const styles = StyleSheet.create({
   },
   listItem: {
     paddingTop: 10,
-  },
-  checkoutFooter: {
-    position: 'absolute',
-    // height: 70,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-    padding: 20,
-    backgroundColor: '#34383F',
-  },
-
-  button: {
-    backgroundColor: '#E56A25',
-    padding: 10,
-    borderRadius: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   oneTimeAdd: {

@@ -1,27 +1,25 @@
 import React from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   ScrollView,
   Dimensions,
-  FlatList,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import Typography from '../Components/typography';
 import timeHandler from '../Utils/timeHandler';
 import AddToCartButton from '../Components/addToCartButton.js';
-import mealVals from '../mealsCopy.json';
-import allIngredients from '../ingredientsCopy.json';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import ingredientHandler from '../Utils/ingredientHandler';
 
 const RecipeScreen = props => {
-  let {recipe, handleCartMeals, cartMeals, isCart} = props;
+  let {recipe, handleCartMeals, cartMeals} = props;
+  const getIngredients = ingredientHandler.getIngredients;
+  const getOneTime = ingredientHandler.getOneTime;
   const windowWidth = Dimensions.get('window').width;
-  const windowHeight = Dimensions.get('window').height;
   const navigation = useNavigation();
 
   let timeDetails;
@@ -36,35 +34,16 @@ const RecipeScreen = props => {
     ];
   }
 
-  const getIngredients = recipe => {
-    let ingredientsTmp = new Map();
-    recipe.Ingredients.forEach(([key, quantity]) => {
-      let ingredientDetails = allIngredients.filter(
-        ingredient => ingredient.Key == key,
-      )[0];
-      ingredientsTmp.set(ingredientDetails, quantity);
-    });
-    return ingredientsTmp;
-  };
-
-  const getOneTime = key => {
-    let oneTimeDetails = allIngredients.filter(
-      ingredient => ingredient.Key == key,
-    )[0];
-    return oneTimeDetails;
-  };
   let inCart = false;
   if (props.cartMeals.has(recipe)) {
     inCart = true;
   }
 
-  const instructions = instructions => {
+  const instructions = () => {
     const InstructionListItems = ({steps}) => {
       return (
-        <FlatList
-          data={steps}
-          renderItem={({item, index}) => {
-            console.log(item);
+        <View>
+          {steps.map((item, index) => {
             return (
               <View style={{paddingTop: 15}}>
                 <Typography>
@@ -72,12 +51,12 @@ const RecipeScreen = props => {
                 </Typography>
               </View>
             );
-          }}
-        />
+          })}
+        </View>
       );
     };
 
-    if (typeof instructions[0] == 'object') {
+    if (typeof recipe.instructions[0] == 'object') {
       return (
         <>
           {recipe.instructions.map((step, index) => {
@@ -87,9 +66,7 @@ const RecipeScreen = props => {
                   <Typography style={{fontWeight: 'bold', marginTop: 20}}>
                     {key}
                   </Typography>
-                  {/* <ol> */}
                   <InstructionListItems steps={step[key]} />
-                  {/* </ol> */}
                 </>
               );
             });
@@ -97,23 +74,17 @@ const RecipeScreen = props => {
         </>
       );
     } else {
-      return (
-        // <ol>
-        <>
-          <InstructionListItems steps={instructions} />
-        </>
-        // </ol>
-      );
+      return <InstructionListItems steps={recipe.instructions} />;
     }
   };
 
   return (
-    <View style={{backgroundColor: '#1B2428', flex: 1, paddingBottom: 50}}>
+    <View style={styles.background}>
       <View style={styles.backButtonContainer}>
         <TouchableOpacity
           onPress={() => navigation.goBack(null)}
           style={styles.backButton}>
-          <Icons name="arrow-back" size={25} color='#1B2428' />
+          <Icons name="arrow-back" size={25} color="#1B2428" />
         </TouchableOpacity>
       </View>
       <View style={styles.addToCartFooter}>
@@ -124,14 +95,7 @@ const RecipeScreen = props => {
           cartMeals={cartMeals}
         />
       </View>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'flex-start',
-          // padding: 10,
-          flexDirection: 'column',
-          paddingBottom: 80,
-        }}>
+      <ScrollView contentContainerStyle={styles.scroll}>
         <Image
           styles={styles.image}
           source={{width: windowWidth, height: 350, uri: recipe.Image}}
@@ -144,13 +108,7 @@ const RecipeScreen = props => {
           <View style={styles.timeDetailList}>
             {timeDetails.map(item => {
               return (
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.timeDetailListItem}>
                   <Typography style={{fontWeight: 'bold'}}>
                     {item.key}
                   </Typography>
@@ -159,53 +117,38 @@ const RecipeScreen = props => {
               );
             })}
           </View>
-          <View style={styles.ingredientsList}>
+          <View style={styles.list}>
             <Typography variant="header3">Ingredients</Typography>
             <Typography>{recipe.IncrementAmount} servings</Typography>
-            <FlatList
-              style={{paddingBottom: 15, paddingLeft: 10}}
-              data={Array.from(getIngredients(recipe))}
-              renderItem={({item, index}) => {
-                let [key, value] = item;
+            <View style={{...styles.list, paddingTop: 0}}>
+              {Array.from(getIngredients(recipe)).map(ingredient => {
+                let [key, value] = ingredient;
                 return (
-                  <View
-                    style={{
-                      ...styles.listItem,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
+                  <View style={styles.listItem}>
                     <Typography>{`\u2022 ${key.Name}`}</Typography>
                     <Typography>
                       {value} {key.Options[0].Unit}
                     </Typography>
                   </View>
                 );
-              }}
-            />
+              })}
+            </View>
             <Typography variant="header3">Pantry Ingredients</Typography>
             <Typography>Ingredients you might already have</Typography>
-            <FlatList
-              style={{paddingLeft: 10}}
-              data={recipe.OneTimes}
-              renderItem={({item}) => {
-                let oneTimeDetails = getOneTime(item);
+            <View style={{...styles.list, paddingTop: 0}}>
+              {recipe.OneTimes.map(oneTime => {
+                let oneTimeDetails = getOneTime(oneTime);
                 return (
-                  <View
-                    style={{
-                      ...styles.listItem,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}>
+                  <View style={styles.listItem}>
                     <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
                   </View>
                 );
-              }}
-            />
+              })}
+            </View>
           </View>
-          <View style={styles.instructionList}>
+          <View style={styles.list}>
             <Typography variant="header2">Instructions</Typography>
-            {instructions(recipe.instructions)}
+            {instructions()}
           </View>
         </View>
       </ScrollView>
@@ -214,6 +157,7 @@ const RecipeScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  background: {backgroundColor: '#1B2428', flex: 1, paddingBottom: 50},
   backButtonContainer: {
     position: 'absolute',
     zIndex: 1,
@@ -236,13 +180,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#34383F',
     ...Platform.select({ios: {paddingBottom: 20}, android: {paddingBottom: 0}}),
   },
-  background: {
-    flexDirection: 'row',
-    backgroundColor: '#34383F',
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginBottom: 10,
-    width: 350,
+  scroll: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    paddingBottom: 80,
+  },
+  image: {
+    flex: 1,
   },
   timeDetailList: {
     backgroundColor: '#34383F',
@@ -253,29 +198,19 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
   },
-  ingredientsList: {padding: 15},
-  instructionList: {padding: 15},
-  button: {
-    backgroundColor: '#E56A25',
-    padding: 5,
-    borderRadius: 40,
+  timeDetailListItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  circleButton: {
-    backgroundColor: '#E56A25',
-    padding: 5,
-    borderRadius: 40,
+  list: {padding: 15},
+  listItem: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    width: 28,
   },
-  inCartText: {color: '#fff', fontSize: 10},
-  image: {
-    flex: 1,
-  },
-  buttonText: {
-    color: '#fff',
-  },
-  listItem: {paddingTop: 10},
 });
 
 export default RecipeScreen;
