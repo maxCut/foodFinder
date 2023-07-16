@@ -40,18 +40,25 @@ const RecipeLandingScreen = props => {
         horizontal
         data={CATEGORIES}
         renderItem={({item, index}) => {
+          let isCurrentCategory = false;
+          if (
+            (index == 0 && currentView < 150) ||
+            (currentView >= 150 * index && currentView < 150 * (index + 1))
+          ) {
+            isCurrentCategory = true;
+          }
           return (
-            <TouchableOpacity
-              style={
-                currentView >= 150 * index && currentView < 150 * (index + 1)
-                  ? styles.currentCategory
-                  : styles.category
-              }
-              onPress={() => {
-                scrollView.current.scrollTo({x: 0, y: 150 * index});
-              }}>
-              <Typography>{item.name}</Typography>
-            </TouchableOpacity>
+            <View style={{height: 50, marginRight: 10}}>
+              <TouchableOpacity
+                style={
+                  isCurrentCategory ? styles.currentCategory : styles.category
+                }
+                onPress={() => {
+                  scrollView.current.scrollTo({x: 0, y: 150 * index});
+                }}>
+                <Typography style={{padding: 10}}>{item.name}</Typography>
+              </TouchableOpacity>
+            </View>
           );
         }}
       />
@@ -118,7 +125,8 @@ const styles = StyleSheet.create({
   },
   currentCategory: {
     backgroundColor: '#E56A25',
-    padding: 5,
+    borderWidth: 1,
+    borderColor: '#E56A25',
     borderRadius: 40,
     alignItems: 'center',
   },
@@ -126,10 +134,9 @@ const styles = StyleSheet.create({
     // backgroundColor: '#E56A25',
     borderWidth: 1,
     borderColor: '#fff',
-    padding: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
     borderRadius: 40,
+    // marginRight: 10,
+    justifyContent: 'center',
     alignItems: 'center',
     // width: 28,
   },
