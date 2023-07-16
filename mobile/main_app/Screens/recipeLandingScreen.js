@@ -8,12 +8,15 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import RecipeCard from '../components/recipeCard';
 import mealVals from '../mealsCopy.json';
-import RecipeDetails from '../components/recipeDetails';
-import Typography from '../components/typography';
+import RecipeDetails from '../Components/recipeDetails';
+import Typography from '../Components/typography';
+import { useNavigation } from '@react-navigation/native';
 
 const RecipeLandingScreen = props => {
+  const setViewRecipe = props.setViewRecipe
+  const navigation = useNavigation()
+  // let navigation = props.navigation;
   let CATEGORIES = [
     {name: 'Quick and Easy'},
     {name: 'Sheet Pan'},
@@ -89,7 +92,11 @@ const RecipeLandingScreen = props => {
                 {category.name}
               </Typography>
               {categoryMeals.map(meal => (
-                <View style={styles.recipeCard}>
+                <TouchableOpacity
+                  style={styles.recipeCard}
+                  onPress={() => {
+                    setViewRecipe(meal)
+                    navigation.navigate('Recipe')}}>
                   <RecipeDetails
                     // <RecipeCard
                     recipe={meal}
@@ -97,7 +104,7 @@ const RecipeLandingScreen = props => {
                     handleCartMeals={props.handleCartMeals}
                     cartMeals={props.cartMeals}
                   />
-                </View>
+                </TouchableOpacity>
               ))}
             </>
           );

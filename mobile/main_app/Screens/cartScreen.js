@@ -8,12 +8,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import RecipeCard from '../components/recipeCard';
 import mealVals from '../mealsCopy.json';
 import allIngredients from '../ingredientsCopy.json';
-import AddToCartButton from '../components/addToCartButton';
-import Typography from '../components/typography';
-import RecipeDetails from '../components/recipeDetails';
+import AddToCartButton from '../Components/addToCartButton';
+import Typography from '../Components/typography';
+import RecipeDetails from '../Components/recipeDetails';
 
 const CartScreen = props => {
   let cartMeals = props.cartMeals;

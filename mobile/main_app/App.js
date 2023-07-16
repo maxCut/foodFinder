@@ -26,9 +26,9 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import RecipeCard from './components/recipeCard';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
 import CartScreen from './Screens/cartScreen';
+import RecipeScreen from './Screens/recipeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 
@@ -41,6 +41,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {wrap} from 'module';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const webPages = {
   checkout:
@@ -321,22 +322,21 @@ const App: () => Node = () => {
     setMeals(mealVals);
     updateWebPage();
   }, []);
+  const [viewRecipe, setViewRecipe] = useState(null);
 
   const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
   const Body = props => {
     return (
       <SafeAreaView
         style={{backgroundColor: '#1B2428', alignItems: 'center', flex: 1}}>
-
-          {props.children}
-
+        {props.children}
       </SafeAreaView>
     );
   };
-
-  return (
-    <NavigationContainer>
+  const MainScreens = () => {
+    return (
       <Tab.Navigator
         screenOptions={({route}) => ({
           headerShown: false,
@@ -362,26 +362,49 @@ const App: () => Node = () => {
           name="Home"
           children={() => (
             // <Body>
-              <RecipeLandingScreen
-                // ref={mealSectionRef}
-                handleCartMeals={handleCartMeals}
-                cartMeals={cartMeals}
-              />
+            <RecipeLandingScreen
+            setViewRecipe={setViewRecipe}
+              // ref={mealSectionRef}
+              handleCartMeals={handleCartMeals}
+              cartMeals={cartMeals}
+            />
             // </Body>
           )}
         />
         <Tab.Screen
           name="Cart"
           children={() => (
-              <CartScreen
-                handleCartMeals={handleCartMeals}
-                handleOneTimes={handleOneTimes}
-                cartMeals={cartMeals}
-                oneTimes={oneTimes}
-              />
+            <CartScreen
+              handleCartMeals={handleCartMeals}
+              handleOneTimes={handleOneTimes}
+              cartMeals={cartMeals}
+              oneTimes={oneTimes}
+            />
           )}
         />
       </Tab.Navigator>
+    );
+  };
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={MainScreens}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Recipe"
+          component={() =>
+            <RecipeScreen
+            recipe={viewRecipe}
+              handleCartMeals={handleCartMeals}
+              cartMeals={cartMeals}
+            />
+          }
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 

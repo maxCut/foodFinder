@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Image, View, Text} from 'react-native';
 import AddToCartButton from './addToCartButton';
 import Typography from './typography';
+import timeHandler from '../Utils/timeHandler';
 
 const RecipeDetails = props => {
   let {recipe, handleCartMeals, cartMeals, isCart} = props;
@@ -16,18 +17,17 @@ const RecipeDetails = props => {
         styles={styles.image}
         source={{width: 150, height: 150, uri: recipe.Image}}
       />
-      <View style={{flex: 1, padding: 15}}>
+      <View style={{flex: 1, padding: 10}}>
         <View style={{flex: 1}}>
-          <Typography variant='header2'>
-            {props.recipe.Name}
-          </Typography>
+          <Typography variant="header2">{props.recipe.Name}</Typography>
           {isCart ? null : (
             <Text style={{fontSize: 10, color: '#fff'}}>
               {props.recipe.description}
             </Text>
           )}
           <Text style={{fontSize: 10, color: '#fff'}}>
-            {props.recipe.cookTime} min | {recipe.IncrementAmount} servings
+            {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)} min |{' '}
+            {recipe.IncrementAmount} servings
           </Text>
         </View>
         <AddToCartButton

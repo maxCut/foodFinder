@@ -6,7 +6,7 @@ const AddToCartButton = props => {
   let recipe = props.recipe
 
   return (
-    <View>
+    <View style={{display: 'flex', justifyContent: 'center', height: 40}}>
       {inCart ? (
         <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
@@ -15,11 +15,11 @@ const AddToCartButton = props => {
             <Text style={{...styles.buttonText, fontWeight: 'bold'}}>-</Text>
           </TouchableOpacity>
           <View style={{alignItems: 'center', flex: 1}}>
-            <Text style={styles.inCartText}>
+            <Text style={{...styles.inCartText, fontWeight: 'bold'}}>
               {props.cartMeals.get(recipe)} in your cart
             </Text>
             <Text style={styles.inCartText}>
-              {props.recipe.IncrementAmount} servings
+              {props.recipe.IncrementAmount * props.cartMeals.get(recipe)} servings
             </Text>
           </View>
           <TouchableOpacity
