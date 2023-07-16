@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import allIngredients from '../ingredientsCopy.json';
 import Typography from '../Components/typography';
 import RecipeDetails from '../Components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
-  let {cartMeals, oneTimes, handleCartMeals} = props;
+  let {cartMeals, oneTimes, handleCartMeals, setPageState} = props;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
 
@@ -79,7 +78,11 @@ const CartScreen = props => {
     <View style={styles.background}>
       {cartMeals.size > 0 ? (
         <View style={styles.checkoutFooter}>
-          <TouchableOpacity style={styles.checkoutButton}>
+          <TouchableOpacity
+            onPress={async () => {
+              setPageState('Web');
+            }}
+            style={styles.checkoutButton}>
             <Typography>Proceed to Checkout</Typography>
           </TouchableOpacity>
         </View>

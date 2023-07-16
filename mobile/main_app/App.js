@@ -7,7 +7,7 @@
  */
 
 import React, {useState, Component, useEffect} from 'react';
-import {Button, TouchableOpacity} from 'react-native';
+import {Button, TouchableOpacity, Platform} from 'react-native';
 import type {Node} from 'react';
 // import mealVals from './meals.json';
 import mealVals from './mealsCopy.json';
@@ -49,74 +49,24 @@ const webPages = {
 };
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const Counter = ({mealId, mealSectionStates, setMealSectionStates}): Node => {
-  const [state, setState] = useState(0);
-
-  useEffect(() => {
-    setMealSectionStates(mealSectionStates.set(mealId, state));
-  }, [mealId, mealSectionStates, setMealSectionStates, state]);
-  return (
-    <View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
-      <Button
-        onPress={() => {
-          if (state > 0) {
-            setState(state - 1);
-          }
-        }}
-        title="-"
-      />
-      <Text>{state}</Text>
-      <Button
-        onPress={() => {
-          setState(state + 1);
-        }}
-        title="+"
-      />
-    </View>
-  );
-};
 
 const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  // const isDarkMode = useColorScheme() === 'dark';
+  // const backgroundStyle = {
+  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  // };
   const [meals, setMeals] = useState([]);
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
-  const mealSectionRef = React.useRef(null);
   const [mealSectionStates, setMealSectionStates] = useState(new Map());
   let emptyCart = new Map();
   const [cartMeals, setCartMeals] = useState(emptyCart);
+  const [viewRecipe, setViewRecipe] = useState(null);
+
+  const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
   const handleOneTimes = (key, value) => {
     if (oneTimes.includes(key)) {
@@ -132,8 +82,6 @@ const App: () => Node = () => {
   };
 
   const handleCartMeals = (event, meal, value) => {
-    // event.stopPropagation()
-    // console.log('handle cart meals');
     if (cartMeals.has(meal)) {
       if (value == 'increment') {
         setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
@@ -317,24 +265,10 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
-    console.log('hello')
-    //setMeals(mealVals);
     setMeals(mealVals);
     updateWebPage();
   }, []);
-  const [viewRecipe, setViewRecipe] = useState(null);
 
-  const Tab = createBottomTabNavigator();
-  const Stack = createStackNavigator();
-
-  const Body = props => {
-    return (
-      <SafeAreaView
-        style={{backgroundColor: '#1B2428', alignItems: 'center', flex: 1}}>
-        {props.children}
-      </SafeAreaView>
-    );
-  };
   const MainScreens = () => {
     return (
       <Tab.Navigator
@@ -373,6 +307,7 @@ const App: () => Node = () => {
               handleOneTimes={handleOneTimes}
               cartMeals={cartMeals}
               oneTimes={oneTimes}
+              setPageState={setPageState}
             />
           )}
         />
@@ -383,84 +318,33 @@ const App: () => Node = () => {
   const RecipeScreenWithProps = () => {
     return (
       <RecipeScreen
-      recipe={viewRecipe}
-      handleCartMeals={handleCartMeals}
-      cartMeals={cartMeals}
-    />
-    )
-  }
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Main"
-          component={MainScreens}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Recipe"
-          component={RecipeScreenWithProps}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-
-  //setMeals([{id: 2, name: 'foo'}]);
+        recipe={viewRecipe}
+        handleCartMeals={handleCartMeals}
+        cartMeals={cartMeals}
+      />
+    );
+  };
+  
   if (pageState === 'Main') {
     return (
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
-          <View
-            style={{
-              // backgroundColor: isDarkMode ? Colors.black : Colors.white,
-              backgroundColor: '#1B2428',
-            }}>
-            <Section id="meals" title="Step One">
-              <RecipeLandingScreen
-                ref={mealSectionRef}
-                handleCartMeals={handleCartMeals}
-                cartMeals={cartMeals}
-              />
-            </Section>
-            <Button
-              title="Checkout"
-              onPress={async () => {
-                setPageState('Web');
-              }}
-            />
-            <Section title="Select any spices you don't have">
-              <ReloadInstructions />
-            </Section>
-            <Section title="Debug">
-              <DebugInstructions />
-            </Section>
-            <Section title="Learn More">
-              Read the docs to discover what to do next:
-            </Section>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Main"
+            component={MainScreens}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Recipe"
+            component={RecipeScreenWithProps}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   } else if (pageState === 'Web') {
-    //fetch('http://www.google.com').then(response => {
-    //const html = response.text();
-    //const parser = new DOMParser.DOMParser();
-    //parsed = parser.parseFromString(html, 'text/html');
-    //parsed.getElementsByAttribute('class', 'b');
-    //});
     return (
-      <View
-        style={{
-          flex: 1,
-        }}>
+      <View style={styles.webView}>
         <Button
           title="Back"
           onPress={async () => {
@@ -469,7 +353,6 @@ const App: () => Node = () => {
         />
         <WebView
           source={{uri: pageUrl}}
-          style={{marginTop: 20}}
           onNavigationStateChange={({url, _}) => {
             updateWebPage();
           }}
@@ -478,8 +361,8 @@ const App: () => Node = () => {
     );
   }
 };
-
 const styles = StyleSheet.create({
+  webView: {flex: 1, ...Platform.select({ios: {marginTop: 40}})},
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
