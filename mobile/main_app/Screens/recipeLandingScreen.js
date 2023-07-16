@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState, useRef} from 'react';
 import {
   Text,
   View,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import RecipeCard from '../components/recipeCard';
 import mealVals from '../mealsCopy.json';
@@ -18,22 +19,48 @@ const RecipeLandingScreen = props => {
     {name: 'Sheet Pan'},
     {name: 'Cooking Mastery'},
   ];
+  // const useComponentSize = () => {
+  //   const [size, setSize] = useState(null);
 
+  //   const onLayout = useCallback(event => {
+  //     const {x, y, width, height} = event.nativeEvent.layout;
+  //     setSize({x, y, width, height});
+  //   }, []);
+
+  //   return [size, onLayout];
+  // };
+  // const [size, onLayout] = useComponentSize();
+
+  const scrollView = useRef();
+  const [currentView, setCurrentView] = useState(0);
   return (
     <View style={{backgroundColor: '#1B2428', flex: 1}}>
       <FlatList
-        style={{padding: 10, borderBottomColor: '#fff', borderBottomWidth: 1}}
+        style={styles.navigationList}
         horizontal
         data={CATEGORIES}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
           return (
-            <TouchableOpacity style={styles.currentCategory}>
+            <TouchableOpacity
+              style={
+                currentView >= 150 * index && currentView < 150 * (index + 1)
+                  ? styles.currentCategory
+                  : styles.category
+              }
+              onPress={() => {
+                scrollView.current.scrollTo({x: 0, y: 150 * index});
+              }}>
               <Typography>{item.name}</Typography>
             </TouchableOpacity>
           );
         }}
       />
       <ScrollView
+        ref={scrollView}
+        onScroll={e => {
+          setCurrentView(e.nativeEvent.contentOffset.y);
+        }}
+        scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{
@@ -48,6 +75,7 @@ const RecipeLandingScreen = props => {
           let categoryMeals = mealVals.filter(
             meal => meal.category == category.name,
           );
+
           return (
             <>
               <Typography variant="header1" style={{marginBottom: 5}}>
@@ -73,6 +101,12 @@ const RecipeLandingScreen = props => {
 };
 
 const styles = StyleSheet.create({
+  navigationList: {
+    padding: 10,
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    ...Platform.select({ios: {marginTop: 40}}),
+  },
   recipeCard: {
     flexDirection: 'row',
     backgroundColor: '#34383F',
