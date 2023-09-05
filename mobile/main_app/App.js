@@ -7,9 +7,10 @@
  */
 
 import React, {useState, Component, useEffect} from 'react';
-import {Button, TouchableOpacity} from 'react-native';
+import {Button, TouchableOpacity, Platform} from 'react-native';
 import type {Node} from 'react';
-import mealVals from './meals.json';
+// import mealVals from './meals.json';
+import mealVals from './mealsCopy.json';
 import ingredientVals from './ingredients.json';
 import {Linking, NavState} from 'react-native';
 import {WebView} from 'react-native-webview';
@@ -25,6 +26,11 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import RecipeLandingScreen from './Screens/recipeLandingScreen';
+import CartScreen from './Screens/cartScreen';
+import RecipeScreen from './Screens/recipeScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import Icons from 'react-native-vector-icons/MaterialIcons';
 
 import {
   Colors,
@@ -34,6 +40,8 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {wrap} from 'module';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const webPages = {
   checkout:
@@ -41,72 +49,59 @@ const webPages = {
 };
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const Counter = ({mealId, mealSectionStates, setMealSectionStates}): Node => {
-  const [state, setState] = useState(0);
-
-  useEffect(() => {
-    setMealSectionStates(mealSectionStates.set(mealId, state));
-  }, [mealId, mealSectionStates, setMealSectionStates, state]);
-  return (
-    <View style={{alignItems: 'flex-end', flexDirection: 'row'}}>
-      <Button
-        onPress={() => {
-          if (state > 0) {
-            setState(state - 1);
-          }
-        }}
-        title="-"
-      />
-      <Text>{state}</Text>
-      <Button
-        onPress={() => {
-          setState(state + 1);
-        }}
-        title="+"
-      />
-    </View>
-  );
-};
 
 const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  // const isDarkMode = useColorScheme() === 'dark';
+  // const backgroundStyle = {
+  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  // };
   const [meals, setMeals] = useState([]);
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
-  const mealSectionRef = React.useRef(null);
   const [mealSectionStates, setMealSectionStates] = useState(new Map());
+  let emptyCart = new Map();
+  const [cartMeals, setCartMeals] = useState(emptyCart);
+  const [viewRecipe, setViewRecipe] = useState(null);
+
+  const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
+
+  const handleOneTimes = (key, value) => {
+    if (oneTimes.includes(key)) {
+      let tmp = oneTimes;
+      tmp.splice(tmp.indexOf(key), 1);
+      setOneTimes(Array.from(tmp));
+    } else {
+      setOneTimes(prev => {
+        prev.push(key);
+        return Array.from(prev);
+      });
+    }
+  };
+
+  const handleCartMeals = (event, meal, value) => {
+    if (cartMeals.has(meal)) {
+      if (value == 'increment') {
+        setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
+      } else {
+        setCartMeals(prev => {
+          let quantity = prev.get(meal);
+          if (quantity == 1) {
+            prev.delete(meal);
+            return new Map(prev);
+          } else {
+            return new Map(prev.set(meal, quantity - 1));
+          }
+        });
+      }
+    } else {
+      if (value == 'increment') {
+        setCartMeals(prev => new Map(prev.set(meal, 1)));
+      }
+    }
+  };
 
   function mealAddedEvent(id) {
     meals[id].OneTimes.forEach(oneTimeId => {
@@ -270,74 +265,86 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
-    //setMeals(mealVals);
     setMeals(mealVals);
     updateWebPage();
   }, []);
 
-  //setMeals([{id: 2, name: 'foo'}]);
+  const MainScreens = () => {
+    return (
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          headerShown: false,
+          tabBarStyle: {backgroundColor: '#34383F'},
+          tabBarIcon: ({focused}) => {
+            let iconName;
+            let iconColor;
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Cart') {
+              iconName = 'shopping-cart';
+            }
+            iconColor = focused ? '#E56A25' : '#C8D0D4';
+            return <Icons name={iconName} size={25} color={iconColor} />;
+          },
+          tabBarActiveTintColor: '#E56A25',
+          tabBarInactiveTintColor: 'gray',
+        })}>
+        <Tab.Screen
+          name="Home"
+          children={() => (
+            <RecipeLandingScreen
+              setViewRecipe={setViewRecipe}
+              handleCartMeals={handleCartMeals}
+              cartMeals={cartMeals}
+            />
+          )}
+        />
+        <Tab.Screen
+          name="Cart"
+          children={() => (
+            <CartScreen
+              handleCartMeals={handleCartMeals}
+              handleOneTimes={handleOneTimes}
+              cartMeals={cartMeals}
+              oneTimes={oneTimes}
+              setPageState={setPageState}
+            />
+          )}
+        />
+      </Tab.Navigator>
+    );
+  };
+
+  const RecipeScreenWithProps = () => {
+    return (
+      <RecipeScreen
+        recipe={viewRecipe}
+        handleCartMeals={handleCartMeals}
+        cartMeals={cartMeals}
+      />
+    );
+  };
+  
   if (pageState === 'Main') {
     return (
-      <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
-          <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-            <Section id="meals" title="Step One">
-              <View ref={mealSectionRef}>
-                <Text>Select yoour meals</Text>
-                {meals.map(item => (
-                  <View key={item.Id}>
-                    <Text>{item.Name}</Text>
-                    <Counter
-                      mealId={item.Id}
-                      mealSectionStates={mealSectionStates}
-                      setMealSectionStates={setMealSectionStates}
-                    />
-                  </View>
-                ))}
-              </View>
-            </Section>
-            <Button
-              title="Checkout"
-              onPress={async () => {
-                setPageState('Web');
-              }}
-            />
-            <Section title="Select any spices you don't have">
-              <ReloadInstructions />
-            </Section>
-            <Section title="Debug">
-              <DebugInstructions />
-            </Section>
-            <Section title="Learn More">
-              Read the docs to discover what to do next:
-            </Section>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Main"
+            component={MainScreens}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Recipe"
+            component={RecipeScreenWithProps}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   } else if (pageState === 'Web') {
-    //fetch('http://www.google.com').then(response => {
-    //const html = response.text();
-    //const parser = new DOMParser.DOMParser();
-    //parsed = parser.parseFromString(html, 'text/html');
-    //parsed.getElementsByAttribute('class', 'b');
-    //});
-
     return (
-      <View
-        style={{
-          flex: 1,
-        }}>
+      <View style={styles.webView}>
         <Button
           title="Back"
           onPress={async () => {
@@ -346,7 +353,6 @@ const App: () => Node = () => {
         />
         <WebView
           source={{uri: pageUrl}}
-          style={{marginTop: 20}}
           onNavigationStateChange={({url, _}) => {
             updateWebPage();
           }}
@@ -355,8 +361,8 @@ const App: () => Node = () => {
     );
   }
 };
-
 const styles = StyleSheet.create({
+  webView: {flex: 1, ...Platform.select({ios: {marginTop: 40}})},
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
