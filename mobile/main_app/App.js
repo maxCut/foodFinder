@@ -19,7 +19,6 @@ import {LogBox} from 'react-native';
 var HTMLParser = require('fast-html-parser');
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -31,6 +30,7 @@ import CartScreen from './Screens/cartScreen';
 import RecipeScreen from './Screens/recipeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import ingredientHandler from './Utils/ingredientHandler';
 
 import {
   Colors,
@@ -55,15 +55,15 @@ const App: () => Node = () => {
   // const backgroundStyle = {
   //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   // };
-  const [meals, setMeals] = useState([]);
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
-  const [mealSectionStates, setMealSectionStates] = useState(new Map());
   let emptyCart = new Map();
   const [cartMeals, setCartMeals] = useState(emptyCart);
   const [viewRecipe, setViewRecipe] = useState(null);
+  const getIngredients = ingredientHandler.getIngredients;
+  const getIngredient = ingredientHandler.getOneTime;
 
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
@@ -102,29 +102,6 @@ const App: () => Node = () => {
       }
     }
   };
-
-  function mealAddedEvent(id) {
-    meals[id].OneTimes.forEach(oneTimeId => {
-      var oneTimeIngredient = ingredientVals[oneTimeId];
-      addOneTime(
-        oneTimeIngredient.Name,
-        oneTimeIngredient.Options[0].Img,
-        oneTimeId,
-        meals[id].IncrementAmount,
-      );
-    });
-  }
-
-  function mealRemovedEvent(id) {
-    meals[id].OneTimes.forEach(oneTimeId => {
-      var oneTimeIngredient = ingredientVals[oneTimeId];
-      //removeOneTime(oneTimeId, meals[id].IncrementAmount);
-    });
-  }
-
-  function addOneTime(oneTime) {
-    setOneTimes([...oneTimes, oneTime]);
-  }
 
   async function fetchOffer(element) {
     const response = await fetch(
@@ -190,15 +167,71 @@ const App: () => Node = () => {
   }
 
   async function checkout() {
-    const meals = getSelectedItems();
-    return;
-    await sendToCart(meals);
+    const ingredientDatas = getIngredientsForPurchase();
+    console.log(ingredientDatas);
+    //await sendToCart(ingredientDatas);
   }
+
+  function getOptionQuantity(neededAmount,ingredientData,oneTime)
+  {
+      if(oneTime)
+      {
+        console.log("here!!!")
+        return {asin:ingredientData.ASIN,quantity:1}
+      }
+      console.log("needed amount ",neededAmount)
+      console.log("ingredient data ",ingredientData)
+      return {asin:ingredientData.ASIN,quantity:Math.ceil(neededAmount/ingredientData.Unit_Size)}
+  }
+  function getOptionQuantities(neededAmount,ingredientDatas, oneTime)
+  {
+      optionArray = []
+      ingredientDatas.forEach(ingredientData => {
+          optionArray.push(getOptionQuantity(neededAmount, ingredientData, oneTime))
+      });
+      return optionArray
+  }
+
+  function getIngredientsForPurchase()
+  {
+      const neededTotalIngredientsMap = getSelectedItems()
+      let ingredientPurchaseMap = new Map()
+      
+    for (const ingredient of neededTotalIngredientsMap.keys()) 
+          {
+              const neededAmount = neededTotalIngredientsMap.get(ingredient)
+              console.log(neededAmount)
+              //ingredientData = ingredients[ingredient].Options[0]
+              const isOneTime = ingredient[0]=='p'
+              console.log(ingredient)
+              console.log(isOneTime)
+              const optionQuantities =  getOptionQuantities(neededAmount,getIngredient(ingredient).Options,isOneTime)
+              ingredientPurchaseMap.set(ingredient,optionQuantities)
+          }
+
+      return ingredientPurchaseMap
+  }
+
   function getSelectedItems() {
-    const meals = mealSectionStates.keys;
     let ingredients = new Map();
-    for (const meal in meals) {
+    for (const [meal, quantity] of cartMeals.entries()) { //ingredients
+      for (const [ingredient, amount] of meal.Ingredients) {
+        if (ingredients.has(ingredient)) {
+          ingredients.set(
+            ingredient,
+            ingredients.get(ingredient) + amount * quantity,
+          );
+          ingredients[ingredient] += amount * quantity;
+        } else {
+          ingredients.set(ingredient, amount * quantity);
+        }
+      }
     }
+    for(const oneTime of oneTimes)
+    {
+      ingredients.set(oneTime,1)
+    }
+    return ingredients
   }
 
   async function checkLoggedIn() {
@@ -265,7 +298,6 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
-    setMeals(mealVals);
     updateWebPage();
   }, []);
 
@@ -324,7 +356,7 @@ const App: () => Node = () => {
       />
     );
   };
-  
+
   if (pageState === 'Main') {
     return (
       <NavigationContainer>

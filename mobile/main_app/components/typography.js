@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'Archivo-Bold',
     fontSize: 30,
-    alignSelf: 'flex-start'
+    alignSelf: 'flex-start',
   },
   header2: {
     color: '#fff',
