@@ -105,7 +105,7 @@ const App: () => Node = () => {
 
   async function fetchOffer(element) {
     const response = await fetch(
-      `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=foodfinder00-20`,
+      `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20`,
     );
     const html2 = await response.text();
     const parser = new DOMParser.DOMParser({
@@ -168,8 +168,14 @@ const App: () => Node = () => {
 
   async function checkout() {
     const ingredientDatas = getIngredientsForPurchase();
+    let cart = [];
+    for(const element of ingredientDatas.keys() )
+    {
+      cart.push(ingredientDatas[element])
+    }
     console.log(ingredientDatas);
-    //await sendToCart(ingredientDatas);
+    console.log(cart)
+    //await sendToCart(cart);
   }
 
   function getOptionQuantity(neededAmount,ingredientData,oneTime)
