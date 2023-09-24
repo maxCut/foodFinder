@@ -165,7 +165,6 @@ const App: () => Node = () => {
       if (addToCart.asin == element.asin) {
           token = addToCart.csrfToken;
           offer = addToCart.offerListingID;
-          console.log("i am here!! ", [offer,token])
           return [offer, token];
       }
   }
@@ -175,20 +174,16 @@ const App: () => Node = () => {
   async function addFirstListedItemToCart(element) {
     let offer = '';
     let token = '';
-    console.log(" add first listed item to card " , element)
     for (const option of element) {
-      console.log("here 1")
       try{
 
       [offer, token] = await fetchOffer(option);
       }
       catch(exception)
       {}
-      console.log("here2",[offer, token]);
       if (offer === '') {
         continue;
       }
-      console.log("offer is ,"  ,offer)
       let body = {
         asin: option.asin,
         brandId: 'QW1hem9uIEZyZXNo',
