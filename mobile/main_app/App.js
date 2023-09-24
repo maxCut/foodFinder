@@ -103,41 +103,92 @@ const App: () => Node = () => {
     }
   };
 
-  async function fetchOffer(element) {
+
+  function getFirstGreaterThanTarget(target, arr) {
+    lowerBound = 0;
+    upperBound = arr.length;
+    if (arr[lowerBound] > target) {
+        return arr[lowerBound];
+    }
+    while (lowerBound < upperBound) {
+        pivot = Math.floor((lowerBound + upperBound) / 2);
+        if (arr[pivot] == target) {
+            return arr[pivot + 1];
+        } else if (arr[pivot] < target) {
+            lowerBound = pivot;
+        } else {
+            upperBound = pivot;
+        }
+        if (upperBound == lowerBound) {
+            return arr[upperBound + 1];
+        }
+        if (upperBound - lowerBound == 1) {
+            return arr[upperBound];
+        }
+    }
+}
+
+  function parseHtmlForTagsThatContainSubString(html, searchword) {
+    allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
+        (a) => a.index
+    );
+    searchwordTags = [
+        ...html.matchAll(new RegExp("<[^<>]*" + searchword + "[^<>]*>", "gi")),
+    ].map((a) => a.index);
+    retTags = [];
+    searchwordTags.forEach((index) => {
+        closeIndex = getFirstGreaterThanTarget(index, allTags);
+        retTags.push(html.substring(index, closeIndex));
+    });
+    return retTags;
+}
+  async function fetchOffer(element){
     const response = await fetch(
       `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20`,
     );
     const html2 = await response.text();
-    const parser = new DOMParser.DOMParser({
-      errorHandler: {
-        warning: function (w) {},
-        error: function (e) {},
-        fatalError: function (e) {
-          console.error(e);
-        },
-      },
-    });
+    let tags = parseHtmlForTagsThatContainSubString(
+      html2,
+      "data-fresh-add-to-cart"
+  )
+    for (let i = 0; i < tags.length; i++) {
+      let tag = tags[i];
+      let addToCartStartIndex = tag.search("{&quot;");
+      let addToCartStopIndex = tag.search("&quot;}") + 7;
+      let unformatedString = tag.substring(
+          addToCartStartIndex,
+          addToCartStopIndex
+      );
+      let formatedString = unformatedString.replaceAll("&quot;", '"');
+      let addToCart = JSON.parse(formatedString);
 
-    const parsed = parser.parseFromString(html2);
-    const listingId = parsed.getElementById('offerListingID');
-    const addToCartForm = parsed.getElementById('addToCart');
-    const csfrToken = Array.from(addToCartForm.elements).filter(_element => {
-      return _element.name === 'CSRF';
-    });
-    if (csfrToken.length > 0) {
-      return [listingId, csfrToken[0].value];
-    }
-    throw Error("can't get token");
+      if (addToCart.asin == element.asin) {
+          token = addToCart.csrfToken;
+          offer = addToCart.offerListingID;
+          console.log("i am here!! ", [offer,token])
+          return [offer, token];
+      }
+  }
+    return [null,null]
   }
 
   async function addFirstListedItemToCart(element) {
     let offer = '';
     let token = '';
+    console.log(" add first listed item to card " , element)
     for (const option of element) {
-      [offer, token] = fetchOffer(option);
+      console.log("here 1")
+      try{
+
+      [offer, token] = await fetchOffer(option);
+      }
+      catch(exception)
+      {}
+      console.log("here2",[offer, token]);
       if (offer === '') {
         continue;
       }
+      console.log("offer is ,"  ,offer)
       let body = {
         asin: option.asin,
         brandId: 'QW1hem9uIEZyZXNo',
@@ -161,6 +212,8 @@ const App: () => Node = () => {
     }
   }
   async function sendToCart(asin_set) {
+
+
     for (const element of asin_set) {
       addFirstListedItemToCart(element);
     }
@@ -171,22 +224,17 @@ const App: () => Node = () => {
     let cart = [];
     for(const element of ingredientDatas.keys() )
     {
-      cart.push(ingredientDatas[element])
+      cart.push(ingredientDatas.get(element))
     }
-    console.log(ingredientDatas);
-    console.log(cart)
-    //await sendToCart(cart);
+    await sendToCart(cart);
   }
 
   function getOptionQuantity(neededAmount,ingredientData,oneTime)
   {
       if(oneTime)
       {
-        console.log("here!!!")
         return {asin:ingredientData.ASIN,quantity:1}
       }
-      console.log("needed amount ",neededAmount)
-      console.log("ingredient data ",ingredientData)
       return {asin:ingredientData.ASIN,quantity:Math.ceil(neededAmount/ingredientData.Unit_Size)}
   }
   function getOptionQuantities(neededAmount,ingredientDatas, oneTime)
@@ -206,11 +254,8 @@ const App: () => Node = () => {
     for (const ingredient of neededTotalIngredientsMap.keys()) 
           {
               const neededAmount = neededTotalIngredientsMap.get(ingredient)
-              console.log(neededAmount)
               //ingredientData = ingredients[ingredient].Options[0]
               const isOneTime = ingredient[0]=='p'
-              console.log(ingredient)
-              console.log(isOneTime)
               const optionQuantities =  getOptionQuantities(neededAmount,getIngredient(ingredient).Options,isOneTime)
               ingredientPurchaseMap.set(ingredient,optionQuantities)
           }
@@ -282,7 +327,7 @@ const App: () => Node = () => {
     }
   }
 
-  async function loadLoginPrompt() {
+  async function loadLoginPrompt(){
     LogBox.ignoreAllLogs();
     try {
       const response = await fetch('https://www.amazon.com');
@@ -300,7 +345,10 @@ const App: () => Node = () => {
       const loginURL = parsed.getElementById('nav-flyout-ya-signin').firstChild
         .attributes[0].nodeValue;
       setPageUrl(loginURL);
-    } catch {}
+    } catch(error) {
+      
+      console.log('error loading url may be web error : ', error)
+    }
   }
 
   useEffect(() => {
