@@ -16,6 +16,7 @@ import {Linking, NavState} from 'react-native';
 import {WebView} from 'react-native-webview';
 import DOMParser from 'react-native-html-parser';
 import {LogBox} from 'react-native';
+import Loader from 'react-loader-spinner';
 var HTMLParser = require('fast-html-parser');
 import {
   SafeAreaView,
@@ -207,10 +208,8 @@ const App: () => Node = () => {
     }
   }
   async function sendToCart(asin_set) {
-
-
     for (const element of asin_set) {
-      addFirstListedItemToCart(element);
+      await addFirstListedItemToCart(element);
     }
   }
 
@@ -221,7 +220,9 @@ const App: () => Node = () => {
     {
       cart.push(ingredientDatas.get(element))
     }
+    setPageState("Loading")
     await sendToCart(cart);
+    setPageState("Web")
   }
 
   function getOptionQuantity(neededAmount,ingredientData,oneTime)
@@ -440,6 +441,13 @@ const App: () => Node = () => {
         />
       </View>
     );
+  }
+  else if(pageState === 'Loading')
+  {
+    return (<View>
+      <Header>Adding Items to Cart</Header>
+      <Loader type="Circles" color="#00BFFF" height={80} width={80}/>
+    </View>);
   }
 };
 const styles = StyleSheet.create({
