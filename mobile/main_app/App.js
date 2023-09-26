@@ -16,7 +16,9 @@ import {Linking, NavState} from 'react-native';
 import {WebView} from 'react-native-webview';
 import DOMParser from 'react-native-html-parser';
 import {LogBox} from 'react-native';
-import Loader from 'react-loader-spinner';
+import Spinner from 'react-bootstrap/Spinner'
+import Typography from './Components/typography';
+import {ActivityIndicator} from 'react-native';
 var HTMLParser = require('fast-html-parser');
 import {
   SafeAreaView,
@@ -208,7 +210,9 @@ const App: () => Node = () => {
     }
   }
   async function sendToCart(asin_set) {
+    console.log("here1")
     for (const element of asin_set) {
+      console.log("here 2")
       await addFirstListedItemToCart(element);
     }
   }
@@ -220,9 +224,11 @@ const App: () => Node = () => {
     {
       cart.push(ingredientDatas.get(element))
     }
+    console.log("here")
     setPageState("Loading")
-    await sendToCart(cart);
-    setPageState("Web")
+    //await sendToCart(cart);
+    console.log("now here")
+    //setPageState("Cart")
   }
 
   function getOptionQuantity(neededAmount,ingredientData,oneTime)
@@ -312,9 +318,9 @@ const App: () => Node = () => {
         return;
       }
       webPageState = 'Checkout';
-      checkout();
-      setPageUrl(webPages.checkout); //TODO this should happen after added to cart
-    } else {
+     await checkout();
+    } 
+    else {
       if (webPageState === 'Login') {
         return;
       }
@@ -444,13 +450,34 @@ const App: () => Node = () => {
   }
   else if(pageState === 'Loading')
   {
-    return (<View>
-      <Header>Adding Items to Cart</Header>
-      <Loader type="Circles" color="#00BFFF" height={80} width={80}/>
+    console.log("loading")
+    return (<View style={{...styles.background, padding:80}}>
+      <Typography style = {{textAlign:'center', margin: 80}} variant="header2">Adding items to cart</Typography>
+      <Text style = {{textAlign:'center'}} >
+      <ActivityIndicator size={"large"}/>;
+      </Text>
     </View>);
+  }
+  else if(pageState === 'Cart')
+  {
+    console.log("cart")
+    return (
+      <View style={styles.webView}>
+        <Button
+          title="Back"
+          onPress={async () => {
+            setPageState('Main');
+          }}
+        />
+        <WebView
+          source={{uri: webPages.checkout}}
+        />
+      </View>
+    );
   }
 };
 const styles = StyleSheet.create({
+  background: {backgroundColor: '#1B2428', flex: 1},
   webView: {flex: 1, ...Platform.select({ios: {marginTop: 40}})},
   sectionContainer: {
     marginTop: 32,
