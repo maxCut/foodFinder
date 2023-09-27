@@ -11,7 +11,7 @@ import RecipeDetails from '../Components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
-  let {cartMeals, oneTimes, handleCartMeals, setPageState} = props;
+  let {cartMeals, oneTimes, handleCartMeals, tryToReachCheckout} = props;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
 
@@ -40,7 +40,7 @@ const CartScreen = props => {
         </View>
         <View style={styles.ingredientsList}>
           <Typography variant="header3">Ingredients</Typography>
-          <FlatList
+          <View
             style={{paddingBottom: 15, paddingLeft: 10}}
             data={Array.from(getIngredients(recipe))}
             renderItem={({item}) => {
@@ -57,7 +57,7 @@ const CartScreen = props => {
           />
           <Typography variant="header3">Pantry Ingredients</Typography>
           <Typography>Ingredients you might already have</Typography>
-          <FlatList
+          <View
             style={{paddingLeft: 10}}
             data={recipe.OneTimes}
             renderItem={({item}) => {
@@ -80,7 +80,7 @@ const CartScreen = props => {
         <View style={styles.checkoutFooter}>
           <TouchableOpacity
             onPress={async () => {
-              setPageState('Web');
+              tryToReachCheckout();
             }}
             style={styles.checkoutButton}>
             <Typography>Proceed to Checkout</Typography>

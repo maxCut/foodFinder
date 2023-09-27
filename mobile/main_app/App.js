@@ -67,6 +67,8 @@ const App: () => Node = () => {
   const [viewRecipe, setViewRecipe] = useState(null);
   const getIngredients = ingredientHandler.getIngredients;
   const getIngredient = ingredientHandler.getOneTime;
+  const [itemsToAdd,setItemsToAdd] = useState(1);
+  const [itemsAdded,setItemsAdded] = useState(0);
 
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
@@ -184,6 +186,10 @@ const App: () => Node = () => {
       }
       catch(exception)
       {}
+      if(1>0) //TODO remove
+      {
+        return;
+      }
       if (offer === '') {
         continue;
       }
@@ -211,7 +217,11 @@ const App: () => Node = () => {
   }
   async function sendToCart(asin_set) {
     console.log("here1")
+    setItemsToAdd(asin_set.length)
+    let count = 0;
     for (const element of asin_set) {
+      count+=1;
+      setItemsAdded(count)
       console.log("here 2")
       await addFirstListedItemToCart(element);
     }
@@ -226,9 +236,9 @@ const App: () => Node = () => {
     }
     console.log("here")
     setPageState("Loading")
-    //await sendToCart(cart);
+    await sendToCart(cart);
     console.log("now here")
-    //setPageState("Cart")
+    setPageState("Cart")
   }
 
   function getOptionQuantity(neededAmount,ingredientData,oneTime)
@@ -329,6 +339,19 @@ const App: () => Node = () => {
     }
   }
 
+  async function tryToReachCheckout()
+  {
+    console.log("here")
+    setPageState("Loading")
+    var loggedIn = await checkLoggedIn();
+    if (loggedIn) {
+      updateWebPage();
+    }
+    else{
+      setPageState("Web")
+    }
+  }
+
   async function loadLoginPrompt(){
     LogBox.ignoreAllLogs();
     try {
@@ -354,7 +377,7 @@ const App: () => Node = () => {
   }
 
   useEffect(() => {
-    updateWebPage();
+    //updateWebPage();
   }, []);
 
   const MainScreens = () => {
@@ -395,7 +418,7 @@ const App: () => Node = () => {
               handleOneTimes={handleOneTimes}
               cartMeals={cartMeals}
               oneTimes={oneTimes}
-              setPageState={setPageState}
+              tryToReachCheckout={tryToReachCheckout}
             />
           )}
         />
@@ -452,10 +475,11 @@ const App: () => Node = () => {
   {
     console.log("loading")
     return (<View style={{...styles.background, padding:80}}>
-      <Typography style = {{textAlign:'center', margin: 80}} variant="header2">Adding items to cart</Typography>
+      <Typography style = {{textAlign:'center', margin: 30}} variant="header2">Adding items to cart</Typography>
       <Text style = {{textAlign:'center'}} >
       <ActivityIndicator size={"large"}/>;
       </Text>
+      <Typography style = {{textAlign:'center', margin: 10}} variant="header2">{100*itemsAdded/itemsToAdd}%</Typography>
     </View>);
   }
   else if(pageState === 'Cart')
