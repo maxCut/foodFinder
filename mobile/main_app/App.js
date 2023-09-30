@@ -6,26 +6,17 @@
  * @flow strict-local
  */
 
-import React, {useState, Component, useEffect} from 'react';
-import {Button, TouchableOpacity, Platform} from 'react-native';
-import type {Node} from 'react';
+import React, {useState} from 'react';
+import {Button, Platform} from 'react-native';
 // import mealVals from './meals.json';
-import mealVals from './mealsCopy.json';
-import ingredientVals from './ingredients.json';
-import {Linking, NavState} from 'react-native';
 import {WebView} from 'react-native-webview';
 import DOMParser from 'react-native-html-parser';
 import {LogBox} from 'react-native';
-import Spinner from 'react-bootstrap/Spinner'
 import Typography from './Components/typography';
 import {ActivityIndicator} from 'react-native';
-var HTMLParser = require('fast-html-parser');
 import {
-  SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
@@ -34,15 +25,6 @@ import RecipeScreen from './Screens/recipeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import ingredientHandler from './Utils/ingredientHandler';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import {wrap} from 'module';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -53,19 +35,17 @@ const webPages = {
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 
-const App: () => Node = () => {
+const App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
   // const backgroundStyle = {
   //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   // };
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
-  const [html, setHtml] = useState('<html>Loading</html>');
   const [pageUrl, setPageUrl] = useState('');
   let emptyCart = new Map();
   const [cartMeals, setCartMeals] = useState(emptyCart);
   const [viewRecipe, setViewRecipe] = useState(null);
-  const getIngredients = ingredientHandler.getIngredients;
   const getIngredient = ingredientHandler.getOneTime;
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
@@ -375,10 +355,6 @@ const App: () => Node = () => {
       console.log('error loading url may be web error : ', error)
     }
   }
-
-  useEffect(() => {
-    //updateWebPage();
-  }, []);
 
   const MainScreens = () => {
     return (

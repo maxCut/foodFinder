@@ -45,7 +45,7 @@ const RecipeScreen = props => {
         <View>
           {steps.map((item, index) => {
             return (
-              <View style={{paddingTop: 15}}>
+              <View key = {index} style={{paddingTop: 15}}>
                 <Typography>
                   {index + 1}. {item}
                 </Typography>
@@ -63,10 +63,10 @@ const RecipeScreen = props => {
             return Object.keys(step).map(key => {
               return (
                 <>
-                  <Typography style={{fontWeight: 'bold', marginTop: 20}}>
+                  <Typography key = {index} style={{fontWeight: 'bold', marginTop: 20}}>
                     {key}
                   </Typography>
-                  <InstructionListItems steps={step[key]} />
+                  <InstructionListItems key = {index}steps={step[key]} />
                 </>
               );
             });
@@ -106,9 +106,9 @@ const RecipeScreen = props => {
             <Typography>{props.recipe.description}</Typography>
           </View>
           <View style={styles.timeDetailList}>
-            {timeDetails.map(item => {
+            {timeDetails.map((item,index) => {
               return (
-                <View style={styles.timeDetailListItem}>
+                <View key = {index} style={styles.timeDetailListItem}>
                   <Typography style={{fontWeight: 'bold'}}>
                     {item.key}
                   </Typography>
@@ -121,10 +121,10 @@ const RecipeScreen = props => {
             <Typography variant="header3">Ingredients</Typography>
             <Typography>{recipe.IncrementAmount} servings</Typography>
             <View style={{...styles.list, paddingTop: 0}}>
-              {Array.from(getIngredients(recipe)).map(ingredient => {
+              {Array.from(getIngredients(recipe)).map((ingredient,index) => {
                 let [key, value] = ingredient;
                 return (
-                  <View style={styles.listItem}>
+                  <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${key.Name}`}</Typography>
                     <Typography>
                       {value} {key.Options[0].Unit}
@@ -136,10 +136,10 @@ const RecipeScreen = props => {
             <Typography variant="header3">Pantry Ingredients</Typography>
             <Typography>Ingredients you might already have</Typography>
             <View style={{...styles.list, paddingTop: 0}}>
-              {recipe.OneTimes.map(oneTime => {
+              {recipe.OneTimes.map((oneTime,index) => {
                 let oneTimeDetails = getOneTime(oneTime);
                 return (
-                  <View style={styles.listItem}>
+                  <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
                   </View>
                 );

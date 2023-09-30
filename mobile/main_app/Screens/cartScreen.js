@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -28,7 +27,7 @@ const CartScreen = props => {
 
   const cartCard = recipe => {
     return (
-      <View style={styles.card}>
+      <View key = {recipe} style={styles.card}>
         <View style={styles.cardHeader}>
           <RecipeDetails
             isCart={true}

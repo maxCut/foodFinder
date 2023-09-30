@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import mealVals from '../mealsCopy.json';
 import RecipeDetails from '../Components/recipeDetails';
 import Typography from '../Components/typography';
 import {useNavigation} from '@react-navigation/native';
@@ -17,12 +16,39 @@ const RecipeLandingScreen = props => {
   const navigation = useNavigation();
   const scrollView = useRef();
   const [currentView, setCurrentView] = useState(0);
+  const [mealVals, setMealVals] = useState(require("../mealsCopy.json"))
 
-  let CATEGORIES = [
-    {name: 'Quick and Easy'},
-    {name: 'Sheet Pan'},
-    {name: 'Cooking Mastery'},
-  ];
+useEffect(() => {
+  fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
+    response.json().then((json)=>
+    {
+      setMealVals(json)
+    })
+  }).catch(()=>{})
+}, [setMealVals]);
+
+useEffect(() => {
+  CATEGORIES = getCategories();
+},[mealVals]);
+
+
+function getCategories()
+{
+
+  let categories = []
+  for(meal of mealVals)
+  {
+    if(meal.category)
+    {
+      categories.push(meal.category)
+    }
+  }
+  categories = categories.filter((item,
+    index) => categories.indexOf(item) === index);
+  categories = categories.sort();
+  return categories.map((cat)=>{return {name:cat}});
+}
+  let CATEGORIES = getCategories();
 
   return (
     <View style={styles.background}>

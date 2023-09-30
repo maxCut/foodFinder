@@ -1,4 +1,11 @@
-import allIngredients from '../ingredientsCopy.json';
+let allIngredients = require("../ingredientsCopy.json")
+
+fetch('https://www.chefbop.com/shared/ingredientsCopy.json').then((response)=>{
+  response.json().then((json)=>
+  {
+    allIngredients = json
+  })
+}).catch(()=>{})
 
 const getIngredients = recipe => {
   let ingredientsTmp = new Map();
