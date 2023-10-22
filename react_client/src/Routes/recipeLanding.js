@@ -105,12 +105,27 @@ const RecipeLanding = (props) => {
   let quickAndEasyRef = useRef(null)
   let sheetPanRef = useRef(null)
   let cookingMasteryRef = useRef(null)
+  
+function getCategories()
+{
+  let categories = []
+  for(const meal of meals)
+  {
+    if(meal.category)
+    {
+      categories.push(meal.category)
+    }
+  }
+  categories = categories.filter((item,
+    index) => categories.indexOf(item) === index);
+  categories = categories.sort();
+  return categories.map((cat)=>{return {name:cat}});
+}
+  let CATEGORIES = getCategories();
 
-  let CATEGORIES = [
-    { name: 'Quick and Easy', ref: quickAndEasyRef },
-    { name: 'Sheet Pan', ref: sheetPanRef },
-    { name: 'Cooking Mastery', ref: cookingMasteryRef }
-  ]
+  useEffect(() => {
+    CATEGORIES = getCategories();
+  },[meals]);
 
   useEffect(() => {
     const handleScroll = () => {
