@@ -300,6 +300,18 @@
         ]
     },
     {
+        "Key": "f22",
+        "Name": "Chicken Tenders",
+        "Options": [
+            {
+                "Unit": "Units",
+                "Unit_Size": "6",
+                "Link": "https://amzn.to/3tAnSli",
+                "ASIN": "B00AR0ZZX0"
+            }
+        ]
+    },
+    {
         "Key": "p1",
         "Name": "Balsamic Vinegar",
         "Options": [
