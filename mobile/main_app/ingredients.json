@@ -301,6 +301,66 @@
     },
     {
         "Key": "f22",
+        "Name": "Flank Steak Strips",
+        "Options": [
+            {
+                "Unit": "lbs",
+                "Unit_Size": "1",
+                "Link": "https://amzn.to/3PUTGZQ",
+                "ASIN": "B0974FDLL5"
+            }
+        ]
+    },
+    {
+        "Key": "f23",
+        "Name": "Pepper and onion blend",
+        "Options": [
+            {
+                "Unit": "unit",
+                "Unit_Size": "1",
+                "Link": "https://amzn.to/3Q6nJPs",
+                "ASIN": "B07WJGM4NB"
+            }
+        ]
+    },
+    {
+        "Key": "f24",
+        "Name": "Shredded Cheese",
+        "Options": [
+            {
+                "Unit": "lbs",
+                "Unit_Size": "1",
+                "Link": "https://amzn.to/3LRrnu3",
+                "ASIN": "B08J4QQJ3K"
+            }
+        ]
+    },
+    {
+        "Key": "f25",
+        "Name": "Sour Cream",
+        "Options": [
+            {
+                "Unit": "oz",
+                "Unit_Size": "24",
+                "Link": "https://amzn.to/3ZKMRhG",
+                "ASIN": "B08KT4HCWK"
+            }
+        ]
+    },
+    {
+        "Key": "f26",
+        "Name": "Tortillas",
+        "Options": [
+            {
+                "Unit": "units",
+                "Unit_Size": "20",
+                "Link": "https://amzn.to/3Q9JKwS",
+                "ASIN": "B08KT4HCWK"
+            }
+        ]
+    },
+    {
+        "Key": "f27",
         "Name": "Chicken Tenders",
         "Options": [
             {
@@ -457,6 +517,33 @@
                 "Link": "https://amzn.to/3B2fGdE",
                 "Img": "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07W1WVXX3&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=foodfinder00-20&language=en_US",
                 "ASIN": "B07W1WVXX3"
+            }
+        ]
+    },
+
+    {
+        "Key": "p11",
+        "Name": "Fajita Seasoining",
+        "Options": [
+            {
+                "Unit": "oz",
+                "Unit_Size": "4",
+                "Link": "https://amzn.to/46izZlq",
+                "Img": "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07W1WV5G6&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=chefbop-20&language=en_US",
+                "ASIN": "B07W1WV5G6"
+            }
+        ]
+    },
+    {
+        "Key": "p12",
+        "Name": "Breadcrumbs",
+        "Options": [
+            {
+                "Unit": "oz",
+                "Unit_Size": "15",
+                "Link": "https://amzn.to/49cQfXh",
+                "Img":"//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00099XO50&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=chefbop-20&language=en_US",
+                "ASIN": "B00099XO50 "
             }
         ]
     },
