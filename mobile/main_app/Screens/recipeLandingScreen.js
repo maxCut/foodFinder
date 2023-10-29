@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import RecipeDetails from '../Components/recipeDetails';
-import Typography from '../Components/typography';
+import RecipeDetails from '../components/recipeDetails';
+import Typography from '../components/typography';
 import {useNavigation} from '@react-navigation/native';
 
 const RecipeLandingScreen = props => {

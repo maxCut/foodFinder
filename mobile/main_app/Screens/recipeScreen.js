@@ -8,9 +8,9 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import Typography from '../Components/typography';
+import Typography from '../components/typography';
 import timeHandler from '../Utils/timeHandler';
-import AddToCartButton from '../Components/addToCartButton.js';
+import AddToCartButton from '../components/addToCartButton.js';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';

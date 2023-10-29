@@ -12,7 +12,7 @@ import {Button, Platform} from 'react-native';
 import {WebView} from 'react-native-webview';
 import DOMParser from 'react-native-html-parser';
 import {LogBox} from 'react-native';
-import Typography from './Components/typography';
+import Typography from './components/typography';
 import {ActivityIndicator} from 'react-native';
 import {
   StyleSheet,

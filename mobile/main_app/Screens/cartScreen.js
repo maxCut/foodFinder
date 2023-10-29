@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import Typography from '../Components/typography';
-import RecipeDetails from '../Components/recipeDetails';
+import Typography from '../components/typography';
+import RecipeDetails from '../components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
