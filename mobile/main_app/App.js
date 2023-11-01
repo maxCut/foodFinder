@@ -27,6 +27,7 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import ingredientHandler from './Utils/ingredientHandler';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
+import analytics from '@react-native-firebase/analytics';
 
 const webPages = {
   checkout:
@@ -208,16 +209,19 @@ const App = () => {
   }
 
   async function checkout() {
+
     const ingredientDatas = getIngredientsForPurchase();
     let cart = [];
     for(const element of ingredientDatas.keys() )
     {
       cart.push(ingredientDatas.get(element))
     }
-    console.log("here")
+    analytics().logEvent('checkout', {
+     "cart": cart
+    })
+    
     setPageState("Loading")
     await sendToCart(cart);
-    console.log("now here")
     setPageState("Cart")
   }
 
