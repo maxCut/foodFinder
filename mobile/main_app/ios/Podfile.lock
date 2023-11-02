@@ -16,6 +16,11 @@ PODS:
     - FirebaseAnalytics (~> 10.15.0)
   - Firebase/CoreOnly (10.15.0):
     - FirebaseCore (= 10.15.0)
+  - Firebase/InAppMessaging (10.15.0):
+    - Firebase/CoreOnly
+    - FirebaseInAppMessaging (~> 10.15.0-beta)
+  - FirebaseABTesting (10.17.0):
+    - FirebaseCore (~> 10.0)
   - FirebaseAnalytics (10.15.0):
     - FirebaseAnalytics/AdIdSupport (= 10.15.0)
     - FirebaseCore (~> 10.0)
@@ -40,6 +45,12 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreInternal (10.17.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseInAppMessaging (10.15.0-beta):
+    - FirebaseABTesting (~> 10.0)
+    - FirebaseCore (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
   - FirebaseInstallations (10.17.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
@@ -399,6 +410,10 @@ PODS:
   - RNFBApp (18.6.0):
     - Firebase/CoreOnly (= 10.15.0)
     - React-Core
+  - RNFBInAppMessaging (18.6.0):
+    - Firebase/InAppMessaging (= 10.15.0)
+    - React-Core
+    - RNFBApp
   - RNGestureHandler (2.13.1):
     - React-Core
   - RNReanimated (3.5.4):
@@ -478,6 +493,7 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBInAppMessaging (from `../node_modules/@react-native-firebase/in-app-messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -487,9 +503,11 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Firebase
+    - FirebaseABTesting
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreInternal
+    - FirebaseInAppMessaging
     - FirebaseInstallations
     - fmt
     - GoogleAppMeasurement
@@ -575,6 +593,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNFBInAppMessaging:
+    :path: "../node_modules/@react-native-firebase/in-app-messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -592,9 +612,11 @@ SPEC CHECKSUMS:
   FBLazyVector: b2ab2b9a9e8e1917caf61518a5fa37bdac445202
   FBReactNativeSpec: 4df8af73da797c1ec9ccd4418cf14fd21c19b8ab
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
+  FirebaseABTesting: 609e15b57b5f1096c8feb984e8995d9e769858fe
   FirebaseAnalytics: 47cef43728f81a839cf1306576bdd77ffa2eac7e
   FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
   FirebaseCoreInternal: 2cf9202e226e3f78d2bf6d56c472686b935bfb7f
+  FirebaseInAppMessaging: 00746f589c1f3481530b5bdcca2bed3b44dccbe4
   FirebaseInstallations: 9387bf15abfc69a714f54e54f74a251264fdb79b
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
@@ -636,6 +658,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNFBAnalytics: 51972cd38b95e28d9105d54d22196e399e68caaf
   RNFBApp: 29a81c55c97887851fe2d8180293e0c618523d02
+  RNFBInAppMessaging: 59c47a9ac75c0e6f53c2d2a9f6e9d135a2a49f33
   RNGestureHandler: 38aa38413896620338948fbb5c90579a7b1c3fde
   RNReanimated: 12a905af0de1a7f728eacebc5a6af1cc5ada64ad
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
