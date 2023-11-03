@@ -26,14 +26,15 @@ import RecipeScreen from './Screens/recipeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import amazonUtils from './Utils/amazonUtils';
+import imageCacheUtils from './Utils/imageCacheUtils';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import analytics from '@react-native-firebase/analytics';
+import LoadingScreen from './Screens/loadingScreen';
+import AmazonWebView from './Screens/amazonWebView';
+import AmazonLogin from './Screens/amazonLogin';
+import CookieManager from '@react-native-cookies/cookies';
 
-const webPages = {
-  checkout:
-    'https://www.amazon.com/cart/localmarket?ref_=ewc_gtc&almBrandId=QW1hem9uIEZyZXNo',
-};
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 
@@ -52,7 +53,7 @@ const App = () => {
   const [itemsAdded,setItemsAdded] = useState(0);
 
   const [mealVals, setMealVals] = useState(require("./mealsCopy.json"))
-
+  const [imageCache, setImageCache] = useState(new Map())
 useEffect(() => {
   fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
     response.json().then((json)=>
@@ -62,16 +63,14 @@ useEffect(() => {
   }).catch(()=>{})
 }, [setMealVals]);
 
+useEffect(()=>{
+  setImageCache(imageCacheUtils.loadImageCache(mealVals))
+},[mealVals])
 
-  const imageCache = new Map();
-  for(meal of mealVals)
-  {
-    imageCache.set(meal.Id, 
-      <Image
-        styles={styles.image}
-        source={{width: 150, height: 150, uri: meal.Image}}
-      />)
-  }
+useEffect(()=>{
+// clear cookies
+CookieManager.clearAll()
+})
 
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
@@ -114,8 +113,7 @@ useEffect(() => {
   };
 
   var webPageState = null;
-  async function updateWebPage() {
-  
+  async function checkIfUserLoggedIn() {
     var loggedIn = await amazonUtils.checkLoggedIn();
     if (loggedIn) {
       if (webPageState === 'Checkout') {
@@ -130,14 +128,14 @@ useEffect(() => {
       }
       webPageState = 'Login';
       await loadLoginPrompt();
-      setPageState("Web")
+      setPageState("Login")
     }
   }
   
   async function tryToReachCheckout()
   {
     setPageState("Loading")
-    updateWebPage();
+    checkIfUserLoggedIn();
   }
   
   async function loadLoginPrompt(){
@@ -261,51 +259,19 @@ async function checkout() {
         </Stack.Navigator>
       </NavigationContainer>
     );
-  } else if (pageState === 'Web') {
+  } else if (pageState === 'Login') {
     return (
-      <View style={styles.webView}>
-        <Button
-          title="Back"
-          onPress={async () => {
-            setPageState('Main');
-          }}
-        />
-        <WebView
-        originWhitelist={['*']}
-        thirdPartyCookiesEnabled={true}
-        sharedCookiesEnabled={true}
-          source={{uri: pageUrl}}
-          onNavigationStateChange={({url, _}) => {
-            updateWebPage();
-          }}
-        />
-      </View>
+      <AmazonLogin setPageState = {setPageState} checkIfUserLoggedIn = {checkIfUserLoggedIn} pageUrl = {pageUrl}/>
     );
   }
   else if(pageState === 'Loading')
   {
-    return (<View style={{...styles.background, padding:80}}>
-      <Typography style = {{textAlign:'center', margin: 30}} variant="header2">Adding items to cart</Typography>
-      <Text style = {{textAlign:'center'}} >
-      <ActivityIndicator size={"large"}/>;
-      </Text>
-      <Typography style = {{textAlign:'center', margin: 10}} variant="header2">{100*itemsAdded/itemsToAdd}%</Typography>
-    </View>);
+    return (<LoadingScreen itemsToAdd = {itemsToAdd} itemsAdded= {itemsAdded}/>);
   }
   else if(pageState === 'Cart')
   {
     return (
-      <View style={styles.webView}>
-        <Button
-          title="Back"
-          onPress={async () => {
-            setPageState('Main');
-          }}
-        />
-        <WebView
-          source={{uri: webPages.checkout}}
-        />
-      </View>
+      <AmazonWebView setPageState = {setPageState}/>
     );
   }
 };
