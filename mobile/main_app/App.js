@@ -44,8 +44,9 @@ const App = () => {
   const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [pageUrl, setPageUrl] = useState('');
-  let emptyCart = new Map();
-  const [cartMeals, setCartMeals] = useState(emptyCart);
+  const mealMap = new Map();
+  const [cartMeals, setCartMeals] = useState(mealMap);
+
   const [viewRecipe, setViewRecipe] = useState(null);
   const getIngredient = ingredientHandler.getOneTime;
   const [itemsToAdd,setItemsToAdd] = useState(1);
@@ -67,24 +68,32 @@ const App = () => {
     }
   };
 
+  const imageMap = new Map()
+  for()
+  {
+    
+  }
+
   const handleCartMeals = (event, meal, value) => {
-    if (cartMeals.has(meal)) {
+
+    //Two cases depending on if we want to refresh.
+    if (mealMap.has(meal)) {
       if (value == 'increment') {
-        setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
+        mealMap.set(meal,mealMap.get(meal)+1)
       } else {
-        setCartMeals(prev => {
-          let quantity = prev.get(meal);
-          if (quantity == 1) {
-            prev.delete(meal);
-            return new Map(prev);
-          } else {
-            return new Map(prev.set(meal, quantity - 1));
-          }
-        });
+        let  quantity  = mealMap.get(meal);
+        if(quantity == 1)
+        {
+          mealMap.delete(meal)
+        }
+        else
+        {
+          mealMap.set(meal, mealMap.get(meal)-1);
+        }
       }
     } else {
       if (value == 'increment') {
-        setCartMeals(prev => new Map(prev.set(meal, 1)));
+        mealMap.set(meal,1)
       }
     }
   };
@@ -357,6 +366,7 @@ const App = () => {
   const MainScreens = () => {
     return (
       <Tab.Navigator
+      onPress = {()=>{setCartMeals(mealMap)}}
         screenOptions={({route}) => ({
           headerShown: false,
           tabBarStyle: {backgroundColor: '#34383F'},
