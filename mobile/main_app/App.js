@@ -166,10 +166,8 @@ const App = () => {
       [offer, token] = await fetchOffer(option);
       }
       catch(exception)
-      {}
-      if(1>0) //TODO remove
       {
-        return;
+        console.log("exception adding item " + exception)
       }
       if (offer === '') {
         continue;
@@ -193,17 +191,16 @@ const App = () => {
       } catch {
         continue;
       }
+      console.log("success?")
       return;
     }
   }
   async function sendToCart(asin_set) {
-    console.log("here1")
     setItemsToAdd(asin_set.length)
     let count = 0;
     for (const element of asin_set) {
       count+=1;
       setItemsAdded(count)
-      console.log("here 2")
       await addFirstListedItemToCart(element);
     }
   }
@@ -300,12 +297,15 @@ const App = () => {
         .getElementById('nav-link-accountList')
         .toString()
         .includes('nav_youraccount_btn');
-    } catch {}
+    } catch {
+      console.log("error checking if logged in")
+    }
     return false;
   }
 
   var webPageState = null;
   async function updateWebPage() {
+
     var loggedIn = await checkLoggedIn();
     if (loggedIn) {
       if (webPageState === 'Checkout') {
@@ -320,20 +320,14 @@ const App = () => {
       }
       webPageState = 'Login';
       await loadLoginPrompt();
+      setPageState("Web")
     }
   }
 
   async function tryToReachCheckout()
   {
-    console.log("here")
     setPageState("Loading")
-    var loggedIn = await checkLoggedIn();
-    if (loggedIn) {
-      updateWebPage();
-    }
-    else{
-      setPageState("Web")
-    }
+    updateWebPage();
   }
 
   async function loadLoginPrompt(){
@@ -443,6 +437,9 @@ const App = () => {
           }}
         />
         <WebView
+        originWhitelist={['*']}
+        thirdPartyCookiesEnabled={true}
+        sharedCookiesEnabled={true}
           source={{uri: pageUrl}}
           onNavigationStateChange={({url, _}) => {
             updateWebPage();
@@ -453,7 +450,6 @@ const App = () => {
   }
   else if(pageState === 'Loading')
   {
-    console.log("loading")
     return (<View style={{...styles.background, padding:80}}>
       <Typography style = {{textAlign:'center', margin: 30}} variant="header2">Adding items to cart</Typography>
       <Text style = {{textAlign:'center'}} >
@@ -464,7 +460,6 @@ const App = () => {
   }
   else if(pageState === 'Cart')
   {
-    console.log("cart")
     return (
       <View style={styles.webView}>
         <Button
