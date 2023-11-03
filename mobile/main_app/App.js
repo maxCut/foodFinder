@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect,memo} from 'react';
 import {Button, Platform} from 'react-native';
 // import mealVals from './meals.json';
 import {WebView} from 'react-native-webview';
@@ -18,6 +18,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
 import CartScreen from './Screens/cartScreen';
@@ -51,6 +52,28 @@ const App = () => {
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
 
+  const [mealVals, setMealVals] = useState(require("./mealsCopy.json"))
+
+useEffect(() => {
+  fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
+    response.json().then((json)=>
+    {
+      setMealVals(json)
+    })
+  }).catch(()=>{})
+}, [setMealVals]);
+
+
+  const imageCache = new Map();
+  for(meal of mealVals)
+  {
+    imageCache.set(meal.Id, 
+      <Image
+        styles={styles.image}
+        source={{width: 150, height: 150, uri: meal.Image}}
+      />)
+  }
+
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
 
@@ -66,6 +89,8 @@ const App = () => {
       });
     }
   };
+  
+  
 
   const handleCartMeals = (event, meal, value) => {
     if (cartMeals.has(meal)) {
@@ -381,6 +406,8 @@ const App = () => {
               setViewRecipe={setViewRecipe}
               handleCartMeals={handleCartMeals}
               cartMeals={cartMeals}
+              mealVals = {mealVals}
+              imageCache = {imageCache}
             />
           )}
         />
@@ -393,6 +420,7 @@ const App = () => {
               cartMeals={cartMeals}
               oneTimes={oneTimes}
               tryToReachCheckout={tryToReachCheckout}
+              imageCache = {imageCache}
             />
           )}
         />
@@ -416,7 +444,7 @@ const App = () => {
         <Stack.Navigator>
           <Stack.Screen
             name="Main"
-            component={MainScreens}
+            component={memo(MainScreens)}
             options={{headerShown: false}}
           />
           <Stack.Screen

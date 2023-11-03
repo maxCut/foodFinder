@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, memo} from 'react';
 import {
   View,
   StyleSheet,
@@ -16,27 +16,17 @@ const RecipeLandingScreen = props => {
   const navigation = useNavigation();
   const scrollView = useRef();
   const [currentView, setCurrentView] = useState(0);
-  const [mealVals, setMealVals] = useState(require("../mealsCopy.json"))
-
-useEffect(() => {
-  fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
-    response.json().then((json)=>
-    {
-      setMealVals(json)
-    })
-  }).catch(()=>{})
-}, [setMealVals]);
 
 useEffect(() => {
   CATEGORIES = getCategories();
-},[mealVals]);
+},[props.mealVals]);
 
 
 function getCategories()
 {
 
   let categories = []
-  for(meal of mealVals)
+  for(meal of props.mealVals)
   {
     if(meal.category)
     {
@@ -89,7 +79,7 @@ function getCategories()
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scroll}>
         {CATEGORIES.map((category, index) => {
-          let categoryMeals = mealVals.filter(
+          let categoryMeals = props.mealVals.filter(
             meal => meal.category == category.name,
           );
 
@@ -111,6 +101,7 @@ function getCategories()
                     key={meal.Id}
                     handleCartMeals={props.handleCartMeals}
                     cartMeals={props.cartMeals}
+                    imageCache = {props.imageCache}
                   />
                 </TouchableOpacity>
               ))}
@@ -163,4 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeLandingScreen;
+export default memo(RecipeLandingScreen);

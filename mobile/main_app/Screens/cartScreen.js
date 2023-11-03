@@ -35,6 +35,7 @@ const CartScreen = props => {
             key={recipe.Id}
             handleCartMeals={handleCartMeals}
             cartMeals={cartMeals}
+            imageCache = {props.imageCache}
           />
         </View>
         <View style={styles.ingredientsList}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, Image, View, Text} from 'react-native';
 import AddToCartButton from './addToCartButton';
 import Typography from './typography';
@@ -12,11 +12,8 @@ const RecipeDetails = props => {
     inCart = true;
   }
   return (
-    <>
-      <Image
-        styles={styles.image}
-        source={{width: 150, height: 150, uri: recipe.Image}}
-      />
+    <>{
+    props.imageCache.get(recipe.Id)}
       <View style={{flex: 1, padding: 10}}>
         <View style={{flex: 1}}>
           <Typography variant="header2">{props.recipe.Name}</Typography>
@@ -72,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipeDetails;
+export default memo(RecipeDetails);
