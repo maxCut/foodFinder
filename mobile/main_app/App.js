@@ -30,10 +30,8 @@ import imageCacheUtils from './Utils/imageCacheUtils';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import analytics from '@react-native-firebase/analytics';
-import LoadingScreen from './Screens/loadingScreen';
-import AmazonWebView from './Screens/amazonWebView';
-import AmazonLogin from './Screens/amazonLogin';
 import CookieManager from '@react-native-cookies/cookies';
+import AmazonCheckoutFlow from './Screens/amazonCheckoutFlow';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -47,7 +45,7 @@ const App = () => {
   const [pageState, setPageState] = useState('Main');
   const [pageUrl, setPageUrl] = useState('');
   let emptyCart = new Map();
-  const [cartMeals, setCartMeals] = useState(emptyCart);
+  const cartMealsGlobal = new Map();
   const [viewRecipe, setViewRecipe] = useState(null);
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
@@ -89,29 +87,25 @@ CookieManager.clearAll()
   };
   
   
-
-  const handleCartMeals = (event, meal, value) => {
-    if (cartMeals.has(meal)) {
-      if (value == 'increment') {
-        setCartMeals(prev => new Map(prev.set(meal, prev.get(meal) + 1)));
-      } else {
-        setCartMeals(prev => {
-          let quantity = prev.get(meal);
-          if (quantity == 1) {
-            prev.delete(meal);
-            return new Map(prev);
-          } else {
-            return new Map(prev.set(meal, quantity - 1));
-          }
-        });
-      }
+const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) => {
+  console.log("here ", cartMealsGlobal)
+  if (cartMealsGlobal.has(meal)) {
+    if (value == 'increment') {
+      cartMealsGlobal.set(meal,cartMealsGlobal.get(meal)+1)
     } else {
-      if (value == 'increment') {
-        setCartMeals(prev => new Map(prev.set(meal, 1)));
+      if (cartMealsGlobal.get(meal) == 1) {
+        cartMealsGlobal.delete(meal);
+      } else {
+        cartMealsGlobal.set(meal,cartMealsGlobal.get(meal)-1)
       }
     }
-  };
-
+  } else {
+    if (value == 'increment') {
+      cartMealsGlobal.set(meal, 1);
+    }
+  }
+  setCartMealsLocal(new Map(cartMealsGlobal));
+};
   var webPageState = null;
   async function checkIfUserLoggedIn() {
     var loggedIn = await amazonUtils.checkLoggedIn();
@@ -165,7 +159,7 @@ CookieManager.clearAll()
 
 async function checkout() {
 
-  const ingredientDatas = amazonUtils.getIngredientsForPurchase(cartMeals,oneTimes);
+  const ingredientDatas = amazonUtils.getIngredientsForPurchase(cartMealsGlobal,oneTimes);
   let cart = [];
   for(const element of ingredientDatas.keys() )
   {
@@ -176,14 +170,15 @@ async function checkout() {
   })
   
   setPageState("Loading")
+  console.log("here")
   setItemsToAdd(cart.length)
   await amazonUtils.sendToCart(cart,(itemsAdded)=>{setItemsAdded(itemsAdded)});
-  setCartMeals(emptyCart) //empty the cart after added to amazon
+  cartMealsGlobal = emptyCart //empty the cart after added to amazon
   setPageState("Cart")
 }
+  const MainScreens = props => {
 
-
-  const MainScreens = () => {
+  const [refreshTrigger, setRefreshTrigger] = useState(false)
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
@@ -202,78 +197,78 @@ async function checkout() {
           },
           tabBarActiveTintColor: '#E56A25',
           tabBarInactiveTintColor: 'gray',
-        })}>
+        })}
+        screenListeners={{tabPress:()=>{
+          setRefreshTrigger(!refreshTrigger)
+          console.log("i am in tab press")}}}>
         <Tab.Screen
           name="Home"
           children={() => (
             <RecipeLandingScreen
+            handleCartMeals={handleCartMeals}
               setViewRecipe={setViewRecipe}
-              handleCartMeals={handleCartMeals}
-              cartMeals={cartMeals}
+              cartMealsGlobal={cartMealsGlobal}
               mealVals = {mealVals}
               imageCache = {imageCache}
+              refreshTrigger = {props.refreshTrigger}
+
             />
           )}
         />
         <Tab.Screen
           name="Cart"
-          children={() => (
+          children={
+            () => {
+              if(pageState==='Main')
+              {
+                
+              return (
             <CartScreen
-              handleCartMeals={handleCartMeals}
               handleOneTimes={handleOneTimes}
-              cartMeals={cartMeals}
+              cartMealsGlobal={cartMealsGlobal}
+              handleCartMeals={handleCartMeals}
               oneTimes={oneTimes}
               tryToReachCheckout={tryToReachCheckout}
               imageCache = {imageCache}
+              refreshTrigger = {props.refreshTrigger}
             />
-          )}
+          )
+        }
+        else{
+    return(<AmazonCheckoutFlow 
+      pageState = {pageState} 
+      setPageState = {setPageState} 
+      checkIfUserLoggedIn = {checkIfUserLoggedIn} 
+      pageUrl = {pageUrl} 
+      itemsToAdd = {itemsToAdd} 
+      itemsAdded= {itemsAdded}/>)
+        }
+      }}
         />
       </Tab.Navigator>
     );
   };
-
-  const RecipeScreenWithProps = () => {
     return (
-      <RecipeScreen
-        recipe={viewRecipe}
-        handleCartMeals={handleCartMeals}
-        cartMeals={cartMeals}
-      />
-    );
-  };
-
-  if (pageState === 'Main') {
-    return (
-      <NavigationContainer>
+      <NavigationContainer >
         <Stack.Navigator>
           <Stack.Screen
             name="Main"
-            component={memo(MainScreens)}
+            children={()=>{return (<MainScreens refreshTrigger = {refreshTrigger}/>)}}
             options={{headerShown: false}}
           />
           <Stack.Screen
             name="Recipe"
-            component={RecipeScreenWithProps}
             options={{headerShown: false}}
+            children={()=>{return (<RecipeScreen 
+              recipe={viewRecipe}
+              handleCartMeals={handleCartMeals}
+              cartMealsGlobal={cartMealsGlobal}/>)}}
+            
           />
-        </Stack.Navigator>
+        </Stack.Navigator>)
+        
       </NavigationContainer>
     );
-  } else if (pageState === 'Login') {
-    return (
-      <AmazonLogin setPageState = {setPageState} checkIfUserLoggedIn = {checkIfUserLoggedIn} pageUrl = {pageUrl}/>
-    );
-  }
-  else if(pageState === 'Loading')
-  {
-    return (<LoadingScreen itemsToAdd = {itemsToAdd} itemsAdded= {itemsAdded}/>);
-  }
-  else if(pageState === 'Cart')
-  {
-    return (
-      <AmazonWebView setPageState = {setPageState}/>
-    );
-  }
 };
 const styles = StyleSheet.create({
   background: {backgroundColor: '#1B2428', flex: 1},

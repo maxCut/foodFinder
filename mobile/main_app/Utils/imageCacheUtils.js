@@ -12,6 +12,7 @@ function loadImageCache(mealVals)
         <Image
           styles={styles.image}
           source={{width: 150, height: 150, uri: meal.Image}}
+          width={150}
         />)
     }
     return imageCache
@@ -36,6 +37,22 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  circleButton: {
+    backgroundColor: '#E56A25',
+    padding: 5,
+    borderRadius: 40,
+    alignItems: 'center',
+    width: 28,
+  },
+  inCartText: {color: '#fff', fontSize: 10},
+  image: {
+    flex: 1,
+    width: 150,
+    height:150
+  },
+  buttonText: {
+    color: '#fff',
   },
 });
 export default imageCacheUtils;

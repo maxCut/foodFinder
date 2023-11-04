@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Image,
@@ -16,11 +16,21 @@ import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const RecipeScreen = props => {
-  let {recipe, handleCartMeals, cartMeals} = props;
+  let {recipe} = props;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
+  const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
   const windowWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
+
+
+useEffect(()=>{
+  setCartMealsLocal(props.cartMealsGlobal)
+},[props.refreshTrigger])
+
+const handleCartMeals = (event, meal, value) => {
+  props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
+};
 
   let timeDetails;
   if (recipe) {
@@ -35,7 +45,7 @@ const RecipeScreen = props => {
   }
 
   let inCart = false;
-  if (props.cartMeals.has(recipe)) {
+  if (cartMealsLocal.has(recipe)) {
     inCart = true;
   }
 
@@ -92,7 +102,7 @@ const RecipeScreen = props => {
           inCart={inCart}
           recipe={recipe}
           handleCartMeals={handleCartMeals}
-          cartMeals={cartMeals}
+          cartMealsLocal={cartMealsLocal}
         />
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>

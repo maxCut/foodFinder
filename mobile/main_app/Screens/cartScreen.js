@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,9 +10,19 @@ import RecipeDetails from '../components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
-  let {cartMeals, oneTimes, handleCartMeals, tryToReachCheckout} = props;
+  let {cartMealsGlobal, oneTimes, tryToReachCheckout} = props;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
+  const [cartMealsLocal, setCartMealsLocal] = useState(cartMealsGlobal);
+
+
+const handleCartMeals = (event, meal, value) => {
+  props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
+};
+
+useEffect(()=>{
+  setCartMealsLocal(props.cartMealsGlobal)
+},[props.refreshTrigger])
 
   const oneTimeButton = key => {
     let value = oneTimes.includes(key);
@@ -34,7 +44,7 @@ const CartScreen = props => {
             recipe={recipe}
             key={recipe.Id}
             handleCartMeals={handleCartMeals}
-            cartMeals={cartMeals}
+            cartMeals={cartMealsLocal}
             imageCache = {props.imageCache}
           />
         </View>
@@ -76,7 +86,7 @@ const CartScreen = props => {
   };
   return (
     <View style={styles.background}>
-      {cartMeals.size > 0 ? (
+      {cartMealsLocal.size > 0 ? (
         <View style={styles.checkoutFooter}>
           <TouchableOpacity
             onPress={async () => {
@@ -94,9 +104,9 @@ const CartScreen = props => {
         contentContainerStyle={styles.scroll}>
         <View style={styles.cartHeader}>
           <Typography variant="header1">Cart</Typography>
-          <Typography>{cartMeals.size} recipes selected</Typography>
+          <Typography>{cartMealsLocal.size} recipes selected</Typography>
         </View>
-        {cartMeals.size == 0 ? (
+        {cartMealsLocal.size == 0 ? (
           <View
             style={{
               ...styles.card,
@@ -108,7 +118,7 @@ const CartScreen = props => {
           </View>
         ) : (
           <View>
-            {Array.from(cartMeals).map(([key, value]) => {
+            {Array.from(cartMealsLocal).map(([key, value]) => {
               return cartCard(key);
             })}
           </View>

@@ -17,26 +17,26 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 import {WebView} from 'react-native-webview';
+import LoadingScreen from './loadingScreen';
+import AmazonWebView from './amazonWebView';
+import AmazonLogin from './amazonLogin';
 
 const AmazonCheckoutFlow = props => {
-  return(
-    <View style={styles.webView}>
-      <Button
-        title="Back"
-        onPress={async () => {
-          props.setPageState('Main');
-        }}
-      />
-      <WebView
-      originWhitelist={['*']}
-      thirdPartyCookiesEnabled={true}
-      sharedCookiesEnabled={true}
-        source={{uri: props.pageUrl}}
-        onNavigationStateChange={({url, _}) => {
-          props.checkIfUserLoggedIn();
-        }}
-      />
-    </View>)
+    if (props.pageState === 'Login') {
+    return (
+      <AmazonLogin setPageState = {props.setPageState} checkIfUserLoggedIn = {props.checkIfUserLoggedIn} pageUrl = {props.pageUrl}/>
+    );
+  }
+  else if(props.pageState === 'Loading')
+  {
+    return (<LoadingScreen itemsToAdd = {props.itemsToAdd} itemsAdded= {props.itemsAdded}/>);
+  }
+  else if(props.pageState === 'Cart')
+  {
+    return (
+      <AmazonWebView setPageState = {props.setPageState}/>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

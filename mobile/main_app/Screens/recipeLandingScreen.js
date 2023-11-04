@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect, memo} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,22 +9,30 @@ import {
 } from 'react-native';
 import RecipeDetails from '../components/recipeDetails';
 import Typography from '../components/typography';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation,useFocusEffect} from '@react-navigation/native';
 
 const RecipeLandingScreen = props => {
   const setViewRecipe = props.setViewRecipe;
   const navigation = useNavigation();
   const scrollView = useRef();
   const [currentView, setCurrentView] = useState(0);
+  const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
 
 useEffect(() => {
   CATEGORIES = getCategories();
 },[props.mealVals]);
 
+useEffect(()=>{
+  setCartMealsLocal(props.cartMealsGlobal)
+},[props.refreshTrigger])
+
+const handleCartMeals = (event, meal, value) => {
+  props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
+};
+
 
 function getCategories()
 {
-
   let categories = []
   for(meal of props.mealVals)
   {
@@ -99,8 +107,8 @@ function getCategories()
                   <RecipeDetails
                     recipe={meal}
                     key={meal.Id}
-                    handleCartMeals={props.handleCartMeals}
-                    cartMeals={props.cartMeals}
+                    handleCartMeals={handleCartMeals}
+                    cartMeals={cartMealsLocal}
                     imageCache = {props.imageCache}
                   />
                 </TouchableOpacity>
@@ -154,4 +162,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(RecipeLandingScreen);
+export default RecipeLandingScreen;
