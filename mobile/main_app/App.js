@@ -199,8 +199,7 @@ async function checkout() {
           tabBarInactiveTintColor: 'gray',
         })}
         screenListeners={{tabPress:()=>{
-          setRefreshTrigger(!refreshTrigger)
-          console.log("i am in tab press")}}}>
+          setRefreshTrigger(!refreshTrigger)}}}>
         <Tab.Screen
           name="Home"
           children={() => (
@@ -210,7 +209,7 @@ async function checkout() {
               cartMealsGlobal={cartMealsGlobal}
               mealVals = {mealVals}
               imageCache = {imageCache}
-              refreshTrigger = {props.refreshTrigger}
+              refreshTrigger = {refreshTrigger}
 
             />
           )}
@@ -230,7 +229,7 @@ async function checkout() {
               oneTimes={oneTimes}
               tryToReachCheckout={tryToReachCheckout}
               imageCache = {imageCache}
-              refreshTrigger = {props.refreshTrigger}
+              refreshTrigger = {refreshTrigger}
             />
           )
         }
@@ -253,7 +252,7 @@ async function checkout() {
         <Stack.Navigator>
           <Stack.Screen
             name="Main"
-            children={()=>{return (<MainScreens/>)}}
+            component={MainScreens}
             options={{headerShown: false}}
           />
           <Stack.Screen
@@ -265,7 +264,7 @@ async function checkout() {
               cartMealsGlobal={cartMealsGlobal}/>)}}
             
           />
-        </Stack.Navigator>)
+        </Stack.Navigator>
         
       </NavigationContainer>
     );
