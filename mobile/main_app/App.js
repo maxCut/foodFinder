@@ -52,6 +52,7 @@ const App = () => {
 
   const [mealVals, setMealVals] = useState(require("./mealsCopy.json"))
   const [imageCache, setImageCache] = useState(new Map())
+  const [refreshTrigger, setRefreshTrigger] = useState(false)
 useEffect(() => {
   fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
     response.json().then((json)=>
@@ -88,7 +89,6 @@ CookieManager.clearAll()
   
   
 const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) => {
-  console.log("here ", cartMealsGlobal)
   if (cartMealsGlobal.has(meal)) {
     if (value == 'increment') {
       cartMealsGlobal.set(meal,cartMealsGlobal.get(meal)+1)
@@ -170,7 +170,6 @@ async function checkout() {
   })
   
   setPageState("Loading")
-  console.log("here")
   setItemsToAdd(cart.length)
   await amazonUtils.sendToCart(cart,(itemsAdded)=>{setItemsAdded(itemsAdded)});
   cartMealsGlobal = emptyCart //empty the cart after added to amazon
@@ -178,7 +177,6 @@ async function checkout() {
 }
   const MainScreens = props => {
 
-  const [refreshTrigger, setRefreshTrigger] = useState(false)
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
@@ -262,6 +260,7 @@ async function checkout() {
               recipe={viewRecipe}
               handleCartMeals={handleCartMeals}
               cartMealsGlobal={cartMealsGlobal}/>)}}
+              refreshTrigger = {refreshTrigger}
             
           />
         </Stack.Navigator>

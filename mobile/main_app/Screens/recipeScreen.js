@@ -97,6 +97,14 @@ const handleCartMeals = (event, meal, value) => {
           <Icons name="arrow-back" size={25} color="#1B2428" />
         </TouchableOpacity>
       </View>
+      <View style={styles.addToCartFooter}>
+        <AddToCartButton
+          inCart={inCart}
+          recipe={recipe}
+          handleCartMeals={handleCartMeals}
+          cartMeals={cartMealsLocal}
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Image
           styles={styles.image}
