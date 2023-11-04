@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import {
   View,
   Image,
@@ -97,14 +97,6 @@ const handleCartMeals = (event, meal, value) => {
           <Icons name="arrow-back" size={25} color="#1B2428" />
         </TouchableOpacity>
       </View>
-      <View style={styles.addToCartFooter}>
-        <AddToCartButton
-          inCart={inCart}
-          recipe={recipe}
-          handleCartMeals={handleCartMeals}
-          cartMealsLocal={cartMealsLocal}
-        />
-      </View>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Image
           styles={styles.image}
@@ -172,7 +164,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     left: 10,
-    ...Platform.select({ios: {top: 20}, android: {top: 10}}),
+    ...Platform.select({ios: {top: 40}, android: {top: 20}}),
   },
   backButton: {
     backgroundColor: '#fff',
