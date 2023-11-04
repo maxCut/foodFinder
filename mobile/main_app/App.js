@@ -36,6 +36,7 @@ import AmazonCheckoutFlow from './Screens/amazonCheckoutFlow';
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 
+const cartMealsGlobal = new Map();
 const App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
   // const backgroundStyle = {
@@ -45,7 +46,6 @@ const App = () => {
   const [pageState, setPageState] = useState('Main');
   const [pageUrl, setPageUrl] = useState('');
   let emptyCart = new Map();
-  const cartMealsGlobal = new Map();
   const [viewRecipe, setViewRecipe] = useState(null);
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
