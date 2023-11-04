@@ -253,7 +253,7 @@ async function checkout() {
         <Stack.Navigator>
           <Stack.Screen
             name="Main"
-            children={()=>{return (<MainScreens refreshTrigger = {refreshTrigger}/>)}}
+            children={()=>{return (<MainScreens/>)}}
             options={{headerShown: false}}
           />
           <Stack.Screen
