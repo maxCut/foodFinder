@@ -68,7 +68,8 @@ useEffect(()=>{
 
 useEffect(()=>{
 // clear cookies
-CookieManager.clearAll()
+//CookieManager.clearAll()
+console.log("cookie clear")
 })
 
   const Tab = createBottomTabNavigator();
@@ -169,11 +170,13 @@ async function checkout() {
    "cart": cart
   })
   
+  console.log("setting page sate loading here ")
+
   setPageState("Loading")
   setItemsToAdd(cart.length)
   await amazonUtils.sendToCart(cart,(itemsAdded)=>{setItemsAdded(itemsAdded)});
-  cartMealsGlobal = emptyCart //empty the cart after added to amazon
   setPageState("Cart")
+  cartMealsGlobal.clear() //empty the cart after added to amazon
 }
   const MainScreens = props => {
 

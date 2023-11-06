@@ -62,8 +62,8 @@ async function fetchOffer(element){
     let addToCart = JSON.parse(formatedString);
 
     if (addToCart.asin == element.asin) {
-        token = addToCart.csrfToken;
-        offer = addToCart.offerListingID;
+        const token = addToCart.csrfToken;
+        const offer = addToCart.offerListingID;
         return [offer, token];
     }
 }
@@ -76,11 +76,14 @@ async function addFirstListedItemToCart(element) {
   for (const option of element) {
     try{
 
-    [offer, token] = await fetchOffer(option);
+      console.log("trying here")
+      const res = await fetchOffer(option);
+    offer = res[0];
+    token = res[1];
     }
     catch(exception)
     {
-      console.log("exception adding item " + exception)
+      console.log("exception getting item " + exception)
     }
     if (offer === '') {
       continue;
@@ -101,7 +104,8 @@ async function addFirstListedItemToCart(element) {
         },
         body: JSON.stringify(body),
       });
-    } catch {
+    } catch(exception) {
+      console.log("exception adding item " + exception)
       continue;
     }
     return;
