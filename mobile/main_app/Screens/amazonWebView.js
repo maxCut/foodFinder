@@ -22,12 +22,14 @@ import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 import {WebView} from 'react-native-webview';
 
+import CookieManager from '@react-native-cookies/cookies';
 const AmazonWebView = props => {
   return(
     <View style={styles.webView}>
       <Button
         title="Back"
         onPress={async () => {
+          await CookieManager.clearAll();
           props.setPageState('Main');
         }}
       />

@@ -36,6 +36,7 @@ useEffect(()=>{
   };
 
   const cartCard = recipe => {
+    console.log("one times", recipe.OneTimes)
     return (
       <View key = {recipe} style={styles.card}>
         <View style={styles.cardHeader}>
@@ -51,35 +52,39 @@ useEffect(()=>{
         <View style={styles.ingredientsList}>
           <Typography variant="header3">Ingredients</Typography>
           <View
-            style={{paddingBottom: 15, paddingLeft: 10}}
-            data={Array.from(getIngredients(recipe))}
-            renderItem={({item}) => {
-              let [key, value] = item;
-              return (
-                <View style={styles.listItem}>
-                  <Typography>{`\u2022 ${key.Name}`}</Typography>
-                  <Typography>
-                    {value} {key.Options[0].Unit}
-                  </Typography>
-                </View>
-              );
-            }}
-          />
+            style={{paddingBottom: 15, paddingLeft: 10}}>
+            {Array.from(getIngredients(recipe)).map((item)=>{
+            let [key, value] = item;
+            return (
+            <View style={styles.listItem}>
+            <Typography>{`\u2022 ${key.Name}`}</Typography>
+            <Typography>
+              {value} {key.Options[0].Unit}
+            </Typography>
+          </View>
+          );
+            })}
+          </View>
           <Typography variant="header3">Pantry Ingredients</Typography>
           <Typography>Ingredients you might already have</Typography>
+
           <View
             style={{paddingLeft: 10}}
-            data={recipe.OneTimes}
-            renderItem={({item}) => {
-              let oneTimeDetails = getOneTime(item);
-              return (
-                <View style={styles.listItem}>
-                  <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
-                  {oneTimeButton(item)}
-                </View>
-              );
-            }}
-          />
+          >
+            
+            {
+              recipe.OneTimes.map((item) => {
+                let oneTimeDetails = getOneTime(item);
+                return (
+                  <View style={styles.listItem}>
+                    <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
+                    {oneTimeButton(item)}
+                  </View>
+                );
+              })
+            }
+
+          </View>
         </View>
       </View>
     );

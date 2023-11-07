@@ -1,6 +1,7 @@
 
 import DOMParser from 'react-native-html-parser';
 import ingredientHandler from './ingredientHandler';
+import analytics from '@react-native-firebase/analytics';
 const getIngredient = ingredientHandler.getOneTime;
 
 function getFirstGreaterThanTarget(target, arr) {
@@ -84,6 +85,12 @@ async function addFirstListedItemToCart(element) {
     catch(exception)
     {
       console.log("exception getting item " + exception)
+
+analytics().logEvent('error', {
+  "error": exception,
+  "detail" : "getting item failed"
+ })
+
     }
     if (offer === '') {
       continue;
@@ -106,6 +113,12 @@ async function addFirstListedItemToCart(element) {
       });
     } catch(exception) {
       console.log("exception adding item " + exception)
+
+analytics().logEvent('error', {
+  "error": exception,
+  "detail" : "adding item failed",
+  "asin": option.asin,
+ })
       continue;
     }
     return;

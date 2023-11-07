@@ -30,7 +30,6 @@ import imageCacheUtils from './Utils/imageCacheUtils';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import analytics from '@react-native-firebase/analytics';
-import CookieManager from '@react-native-cookies/cookies';
 import AmazonCheckoutFlow from './Screens/amazonCheckoutFlow';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
@@ -66,11 +65,6 @@ useEffect(()=>{
   setImageCache(imageCacheUtils.loadImageCache(mealVals))
 },[mealVals])
 
-useEffect(()=>{
-// clear cookies
-//CookieManager.clearAll()
-console.log("cookie clear")
-})
 
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
@@ -154,6 +148,10 @@ const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) 
     } catch(error) {
       
       console.log('error loading url may be web error : ', error)
+      analytics().logEvent('error', {
+       "error": error,
+       "detail" : "loading url failed"
+      })
     }
   }
 
@@ -169,8 +167,6 @@ async function checkout() {
   analytics().logEvent('checkout', {
    "cart": cart
   })
-  
-  console.log("setting page sate loading here ")
 
   setPageState("Loading")
   setItemsToAdd(cart.length)
