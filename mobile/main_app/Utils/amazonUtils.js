@@ -88,7 +88,9 @@ async function addFirstListedItemToCart(element) {
 
 analytics().logEvent('error', {
   "error": exception,
-  "detail" : "getting item failed"
+  "detail" : "getting item failed",
+
+  "asin": option.asin,
  })
 
     }

@@ -36,15 +36,14 @@ import AmazonCheckoutFlow from './Screens/amazonCheckoutFlow';
  * LTI update could not be added via codemod */
 
 const cartMealsGlobal = new Map();
+const oneTimesGlobal = [];
 const App = () => {
   // const isDarkMode = useColorScheme() === 'dark';
   // const backgroundStyle = {
   //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   // };
-  const [oneTimes, setOneTimes] = useState([]);
   const [pageState, setPageState] = useState('Main');
   const [pageUrl, setPageUrl] = useState('');
-  let emptyCart = new Map();
   const [viewRecipe, setViewRecipe] = useState(null);
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
@@ -69,17 +68,15 @@ useEffect(()=>{
   const Tab = createBottomTabNavigator();
   const Stack = createStackNavigator();
 
-  const handleOneTimes = (key, value) => {
-    if (oneTimes.includes(key)) {
-      let tmp = oneTimes;
-      tmp.splice(tmp.indexOf(key), 1);
-      setOneTimes(Array.from(tmp));
+  const handleOneTimes = (key, setOneTimes) => {
+    console.log("hereee")
+    if (oneTimesGlobal.includes(key)) {
+      oneTimesGlobal.splice(oneTimesGlobal.indexOf(key), 1);
     } else {
-      setOneTimes(prev => {
-        prev.push(key);
-        return Array.from(prev);
-      });
+      oneTimesGlobal.push(key);
     }
+    console.log(oneTimesGlobal)
+    setOneTimes([...oneTimesGlobal])
   };
   
   
@@ -158,7 +155,7 @@ const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) 
 
 async function checkout() {
 
-  const ingredientDatas = amazonUtils.getIngredientsForPurchase(cartMealsGlobal,oneTimes);
+  const ingredientDatas = amazonUtils.getIngredientsForPurchase(cartMealsGlobal,oneTimesGlobal);
   let cart = [];
   for(const element of ingredientDatas.keys() )
   {
@@ -222,8 +219,9 @@ async function checkout() {
             <CartScreen
               handleOneTimes={handleOneTimes}
               cartMealsGlobal={cartMealsGlobal}
+              oneTimesGlobal={oneTimesGlobal}
               handleCartMeals={handleCartMeals}
-              oneTimes={oneTimes}
+              oneTimes={oneTimesGlobal}
               tryToReachCheckout={tryToReachCheckout}
               imageCache = {imageCache}
               refreshTrigger = {refreshTrigger}

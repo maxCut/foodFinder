@@ -10,26 +10,35 @@ import RecipeDetails from '../components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 const CartScreen = props => {
-  let {cartMealsGlobal, oneTimes, tryToReachCheckout} = props;
+  let {cartMealsGlobal, tryToReachCheckout} = props;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
   const [cartMealsLocal, setCartMealsLocal] = useState(cartMealsGlobal);
+  const [oneTimes, setOneTimes] = useState(props.oneTimesGlobal);
 
 
-const handleCartMeals = (event, meal, value) => {
-  props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
-};
+  const handleCartMeals = (event, meal, value) => {
+    props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
+  };
+  const handleOneTimes = (key) => {
+    props.handleOneTimes(key,setOneTimes)
+  };
 
+  useEffect(()=>{
+    setCartMealsLocal(props.cartMealsGlobal)
+  },[props.refreshTrigger])
+  
 useEffect(()=>{
-  setCartMealsLocal(props.cartMealsGlobal)
-},[props.refreshTrigger])
+  console.log("in one times")
+},[oneTimes])
 
   const oneTimeButton = key => {
     let value = oneTimes.includes(key);
+    console.log(value)
     return (
       <TouchableOpacity
         style={value ? styles.oneTimeRemove : styles.oneTimeAdd}
-        onPress={() => props.handleOneTimes(key)}>
+        onPress={() => handleOneTimes(key)}>
         <Typography>{value ? '1 in your cart' : '+'}</Typography>
       </TouchableOpacity>
     );
