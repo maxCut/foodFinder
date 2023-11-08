@@ -145,7 +145,7 @@ const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) 
     } catch(error) {
       
       console.log('error loading url may be web error : ', error)
-      analytics().logEvent('error', {
+      analytics().logEvent('fail', {
        "error": error,
        "detail" : "loading url failed"
       })

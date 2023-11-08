@@ -76,8 +76,6 @@ async function addFirstListedItemToCart(element) {
   let token = '';
   for (const option of element) {
     try{
-
-      console.log("trying here")
       const res = await fetchOffer(option);
     offer = res[0];
     token = res[1];
@@ -85,11 +83,9 @@ async function addFirstListedItemToCart(element) {
     catch(exception)
     {
       console.log("exception getting item " + exception)
-
-analytics().logEvent('error', {
+analytics().logEvent('fail', {
   "error": exception,
   "detail" : "getting item failed",
-
   "asin": option.asin,
  })
 
@@ -116,7 +112,7 @@ analytics().logEvent('error', {
     } catch(exception) {
       console.log("exception adding item " + exception)
 
-analytics().logEvent('error', {
+analytics().logEvent('fail', {
   "error": exception,
   "detail" : "adding item failed",
   "asin": option.asin,
@@ -211,7 +207,6 @@ async function checkLoggedIn() {
       .toString()
       .includes('nav_youraccount_btn');
   } catch(error) {
-    console.log("error checking if logged in" +error)
   }
   return false;
 }
