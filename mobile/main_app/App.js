@@ -183,7 +183,7 @@ async function checkout() {
             let iconColor;
             if (route.name === 'Home') {
               iconName = 'home';
-            } else if (route.name === 'Cart') {
+            } else if (route.name === 'Pre-Cart') {
               iconName = 'shopping-cart';
             }
             iconColor = focused ? '#E56A25' : '#C8D0D4';
@@ -209,7 +209,7 @@ async function checkout() {
           )}
         />
         <Tab.Screen
-          name="Cart"
+          name="Pre-Cart"
           children={
             () => {
               if(pageState==='Main')

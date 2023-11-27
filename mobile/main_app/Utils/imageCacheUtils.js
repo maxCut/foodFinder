@@ -2,17 +2,19 @@
 import 
 {Image,StyleSheet,
 } from 'react-native';
+import FastImage from 'react-native-fast-image'
 
 function loadImageCache(mealVals)
 {
+  console.log("here")
     const imageCache = new Map();
     for(meal of mealVals)
     {
       imageCache.set(meal.Id, 
-        <Image
+        <FastImage
+        style={{ width:150, height: 150 }}
           styles={styles.image}
-          source={{width: 150, height: 150, uri: meal.Image}}
-          width={150}
+          source={{uri: meal.Image}}
         />)
     }
     return imageCache

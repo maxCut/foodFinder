@@ -27,7 +27,8 @@ target 'main_app' do
   )
   use_frameworks! :linkage => :static
   $RNFirebaseAsStaticFramework = true
-
+  $RNFirebaseAnalyticsWithoutAdIdSupport=true
+  
   target 'main_appTests' do
     inherit! :complete
     # Pods for testing

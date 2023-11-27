@@ -15,6 +15,8 @@ import Icons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 
+import FastImage from 'react-native-fast-image'
+
 const RecipeScreen = props => {
   let {recipe} = props;
   const getIngredients = ingredientHandler.getIngredients;
@@ -106,7 +108,8 @@ const handleCartMeals = (event, meal, value) => {
         />
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Image
+        <FastImage
+          style = {{height:350,width: windowWidth}}
           styles={styles.image}
           source={{width: windowWidth, height: 350, uri: recipe.Image}}
         />

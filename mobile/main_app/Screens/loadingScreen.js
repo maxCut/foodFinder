@@ -3,19 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  Dimensions,
-  Platform,
-  TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
 import Typography from '../components/typography';
-import timeHandler from '../Utils/timeHandler';
-import AddToCartButton from '../components/addToCartButton.js';
-import Icons from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-import ingredientHandler from '../Utils/ingredientHandler';
-
 const LoadingScreen = props => {
   return(<View style={{...styles.background, padding:80}}>
     <Typography style = {{textAlign:'center', margin: 30}} variant="header2">Adding items to cart</Typography>

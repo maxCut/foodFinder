@@ -50,33 +50,6 @@ function getCategories()
 
   return (
     <View style={styles.background}>
-      <FlatList
-        style={styles.navigationList}
-        horizontal
-        data={CATEGORIES}
-        renderItem={({item, index}) => {
-          let isCurrentCategory = false;
-          if (
-            (index === 0 && currentView < 150) ||
-            (currentView >= 150 * index && currentView < 150 * (index + 1))
-          ) {
-            isCurrentCategory = true;
-          }
-          return (
-            <View style={styles.categoryContainer}>
-              <TouchableOpacity
-                style={
-                  isCurrentCategory ? styles.currentCategory : styles.category
-                }
-                onPress={() => {
-                  scrollView.current.scrollTo({x: 0, y: 150 * index}); //height of card multiplied by index
-                }}>
-                <Typography style={{padding: 10}}>{item.name}</Typography>
-              </TouchableOpacity>
-            </View>
-          );
-        }}
-      />
       <ScrollView
         ref={scrollView}
         onScroll={e => {

@@ -27,10 +27,6 @@ const CartScreen = props => {
   useEffect(()=>{
     setCartMealsLocal(props.cartMealsGlobal)
   },[props.refreshTrigger])
-  
-useEffect(()=>{
-  console.log("in one times")
-},[oneTimes])
 
   const oneTimeButton = key => {
     let value = oneTimes.includes(key);
@@ -39,7 +35,7 @@ useEffect(()=>{
       <TouchableOpacity
         style={value ? styles.oneTimeRemove : styles.oneTimeAdd}
         onPress={() => handleOneTimes(key)}>
-        <Typography>{value ? '1 in your cart' : '+'}</Typography>
+        <Typography>{value ? '1 in your pre-cart' : '+'}</Typography>
       </TouchableOpacity>
     );
   };
@@ -107,7 +103,7 @@ useEffect(()=>{
               tryToReachCheckout();
             }}
             style={styles.checkoutButton}>
-            <Typography>Proceed to Checkout</Typography>
+            <Typography>Add to Amazon Cart</Typography>
           </TouchableOpacity>
         </View>
       ) : null}
@@ -117,7 +113,7 @@ useEffect(()=>{
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={styles.scroll}>
         <View style={styles.cartHeader}>
-          <Typography variant="header1">Cart</Typography>
+          <Typography variant="header1">Pre-Cart</Typography>
           <Typography>{cartMealsLocal.size} recipes selected</Typography>
         </View>
         {cartMealsLocal.size == 0 ? (
@@ -127,7 +123,7 @@ useEffect(()=>{
               padding: 15,
             }}>
             <Typography style={{textAlign: 'center'}}>
-              Your cart is empty!
+              Your pre-cart is empty!
             </Typography>
           </View>
         ) : (
