@@ -48,11 +48,11 @@ const App = () => {
   const [itemsToAdd,setItemsToAdd] = useState(1);
   const [itemsAdded,setItemsAdded] = useState(0);
 
-  const [mealVals, setMealVals] = useState(require("./mealsCopy.json"))
+  const [mealVals, setMealVals] = useState(require("./meals.json"))
   const [imageCache, setImageCache] = useState(new Map())
   const [refreshTrigger, setRefreshTrigger] = useState(false)
 useEffect(() => {
-  fetch('https://www.chefbop.com/shared/mealsCopy.json').then((response)=>{
+  fetch('https://www.chefbop.com/shared/meals.json').then((response)=>{
     response.json().then((json)=>
     {
       setMealVals(json)

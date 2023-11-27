@@ -1,6 +1,6 @@
-let allIngredients = require("../ingredientsCopy.json")
+let allIngredients = require("../ingredients.json")
 
-fetch('https://www.chefbop.com/shared/ingredientsCopy.json').then((response)=>{
+fetch('https://www.chefbop.com/shared/ingredients.json').then((response)=>{
   response.json().then((json)=>
   {
     allIngredients = json
