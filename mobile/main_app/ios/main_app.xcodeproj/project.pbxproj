@@ -953,6 +953,7 @@
 				DEVELOPMENT_TEAM = 3T2RB2L96A;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = main_app/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HungryEx;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -982,6 +983,7 @@
 				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = 3T2RB2L96A;
 				INFOPLIST_FILE = main_app/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = HungryEx;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

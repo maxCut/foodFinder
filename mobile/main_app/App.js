@@ -193,6 +193,7 @@ async function checkout() {
           tabBarInactiveTintColor: 'gray',
         })}
         screenListeners={{tabPress:()=>{
+          setPageState("Main")
           setRefreshTrigger(!refreshTrigger)}}}>
         <Tab.Screen
           name="Home"

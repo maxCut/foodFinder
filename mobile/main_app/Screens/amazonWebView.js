@@ -29,7 +29,6 @@ const AmazonWebView = props => {
       <Button
         title="Back"
         onPress={async () => {
-          await CookieManager.clearAll();
           props.setPageState('Main');
         }}
       />
@@ -37,6 +36,14 @@ const AmazonWebView = props => {
         thirdPartyCookiesEnabled={true}
         sharedCookiesEnabled={true}
         source={{uri: webPages.checkout}}
+        onNavigationStateChange={
+          (url)=>{
+            if(url.url.includes("signin"))
+            {
+              CookieManager.clearAll();
+            }
+          }
+        }
       />
     </View>)
 }

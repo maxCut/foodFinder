@@ -33,7 +33,7 @@ const AddToCartButton = props => {
           style={styles.button}
           onPress={event => props.handleCartMeals(event, recipe, 'increment')}>
           <Text style={{...styles.buttonText, fontWeight: 'bold'}}>
-            Add to Cart
+            Add to Pre-Cart
           </Text>
           <Text style={{...styles.buttonText, fontSize: 10}}>
             {props.recipe.IncrementAmount} servings
