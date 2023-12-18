@@ -342,8 +342,8 @@
             {
                 "Unit": "oz",
                 "Unit_Size": "24",
-                "Link": "https://amzn.to/3sWzz5K",
-                "ASIN": "B0BV3WBV93"
+                "Link": "https://amzn.to/3ZKMRhG",
+                "ASIN": "B08KT4HCWK"
             }
         ]
     },
@@ -355,7 +355,7 @@
                 "Unit": "units",
                 "Unit_Size": "20",
                 "Link": "https://amzn.to/3Q9JKwS",
-                "ASIN": "B00KTIQRHI"
+                "ASIN": "B08KT4HCWK"
             }
         ]
     },
@@ -368,6 +368,30 @@
                 "Unit_Size": "6",
                 "Link": "https://amzn.to/3tAnSli",
                 "ASIN": "B00AR0ZZX0"
+            }
+        ]
+    },
+    {
+        "Key": "f28",
+        "Name": "Tomato",
+        "Options": [
+            {
+                "Unit": "Units",
+                "Unit_Size": "4",
+                "Link": "https://amzn.to/3NvYGn9",
+                "ASIN": "B086WX15TH"
+            }
+        ]
+    },
+    {
+        "Key": "f29",
+        "Name": "Lettuce",
+        "Options": [
+            {
+                "Unit": "lbs",
+                "Unit_Size": "1.5",
+                "Link": "https://amzn.to/41pmHSs",
+                "ASIN": "B07FXYLSMB"
             }
         ]
     },

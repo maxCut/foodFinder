@@ -91,6 +91,14 @@
             [
                 "f9",
                 1.0
+            ],
+            [
+                "f28",
+                0.2
+            ],
+            [
+                "f29",
+                0.1
             ]
         ],
         "OneTimes": [
@@ -153,7 +161,7 @@
         
         ,"Bake in preheated oven for 10-15 minutes."
 
-        ,"Remove sheet pan from oven, mix and push the vegetables to the sides of the pan. Add steak strips in a single layer to the center of the pan, making sure not to overcrowd the pan. Broil on high for 3 minutes or until desired doneness."
+        ,"Remove sheet pan from oven, mix and push the vegetables to the sides of the pan. Add steak strips in a single layer to the center of the pan, making sure not to overcrowd the pan. Broil on high for 5 minutes or until desired doneness."
         
         ,"Serve with tortillas, cheese, and sour cream."
         ],

@@ -372,6 +372,30 @@
         ]
     },
     {
+        "Key": "f28",
+        "Name": "Tomato",
+        "Options": [
+            {
+                "Unit": "Units",
+                "Unit_Size": "4",
+                "Link": "https://amzn.to/3NvYGn9",
+                "ASIN": "B086WX15TH"
+            }
+        ]
+    },
+    {
+        "Key": "f29",
+        "Name": "Lettuce",
+        "Options": [
+            {
+                "Unit": "lbs",
+                "Unit_Size": "1.5",
+                "Link": "https://amzn.to/41pmHSs",
+                "ASIN": "B07FXYLSMB"
+            }
+        ]
+    },
+    {
         "Key": "p1",
         "Name": "Balsamic Vinegar",
         "Options": [
