@@ -56,8 +56,20 @@
         "Name": "Sweet Potato",
         "Options": [
             {
-                "Unit": "Units",
-                "Unit_Size": "9.0",
+                "Unit": "Ounces",
+                "Unit_Size": "18",
+                "Link": "https://amzn.to/3vbQPok",
+                "ASIN": "B09SVVCF2W"
+            },
+            {
+                "Unit": "Ounces",
+                "Unit_Size": "16",
+                "Link": "https://amzn.to/3RP86wo",
+                "ASIN": "B01LY3GF6G"
+            },
+            {
+                "Unit": "Ounces",
+                "Unit_Size": "48",
                 "Link": "https://amzn.to/3NRc82E",
                 "ASIN": "B079M54HW4",
                 "Requires": ["s3"]

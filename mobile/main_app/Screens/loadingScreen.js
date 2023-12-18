@@ -8,11 +8,12 @@ import {
 import Typography from '../components/typography';
 const LoadingScreen = props => {
   return(<View style={{...styles.background, padding:80}}>
-    <Typography style = {{textAlign:'center', margin: 30}} variant="header2">Adding items to cart</Typography>
-    <Text style = {{textAlign:'center'}} >
-    <ActivityIndicator size={"large"}/>
-    </Text>
-    <Typography style = {{textAlign:'center', margin: 10}} variant="header2">{100*props.itemsAdded/props.itemsToAdd}%</Typography>
+    <View style={{top:"25%"}}>
+    <Typography style = {{textAlign:'center', margin: 10}} variant="header2">Adding items to cart</Typography>
+    <ActivityIndicator style = {{textAlign:'center'}} size={"large"}/>
+    <Typography style = {{textAlign:'center', margin: 10}} variant="header2">{(100*props.itemsAdded/props.itemsToAdd).toPrecision(3)}%</Typography>
+    <Text style = {{textAlign:'center',left:'50%', marginTop: 40}} >
+    </Text></View>
   </View>)
 }
 
