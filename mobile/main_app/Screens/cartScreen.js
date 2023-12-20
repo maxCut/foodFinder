@@ -30,7 +30,6 @@ const CartScreen = props => {
 
   const oneTimeButton = key => {
     let value = oneTimes.includes(key);
-    console.log(value)
     return (
       <TouchableOpacity
         style={value ? styles.oneTimeRemove : styles.oneTimeAdd}
@@ -41,7 +40,6 @@ const CartScreen = props => {
   };
 
   const cartCard = recipe => {
-    console.log("one times", recipe.OneTimes)
     return (
       <View key = {recipe} style={styles.card}>
         <View style={styles.cardHeader}>

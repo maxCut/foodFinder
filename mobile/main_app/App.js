@@ -69,13 +69,11 @@ useEffect(()=>{
   const Stack = createStackNavigator();
 
   const handleOneTimes = (key, setOneTimes) => {
-    console.log("hereee")
     if (oneTimesGlobal.includes(key)) {
       oneTimesGlobal.splice(oneTimesGlobal.indexOf(key), 1);
     } else {
       oneTimesGlobal.push(key);
     }
-    console.log(oneTimesGlobal)
     setOneTimes([...oneTimesGlobal])
   };
   

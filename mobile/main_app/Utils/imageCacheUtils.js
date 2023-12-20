@@ -6,7 +6,6 @@ import FastImage from 'react-native-fast-image'
 
 function loadImageCache(mealVals)
 {
-  console.log("here")
     const imageCache = new Map();
     for(meal of mealVals)
     {
