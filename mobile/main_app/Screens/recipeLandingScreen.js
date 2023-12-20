@@ -6,6 +6,8 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
+  Text,
+  Button,
 } from 'react-native';
 import RecipeDetails from '../components/recipeDetails';
 import Typography from '../components/typography';
@@ -70,13 +72,9 @@ function getCategories()
                 {category.name}
               </Typography>
               {categoryMeals.map(meal => (
-                <TouchableOpacity
+                <View
                   key={meal.Id}
-                  style={styles.recipeCard}
-                  onPress={() => {
-                    setViewRecipe(meal);
-                    navigation.navigate('Recipe');
-                  }}>
+                  style={styles.recipeCard}>
                   <RecipeDetails
                     recipe={meal}
                     key={meal.Id}
@@ -84,7 +82,14 @@ function getCategories()
                     cartMeals={cartMealsLocal}
                     imageCache = {props.imageCache}
                   />
-                </TouchableOpacity>
+                  <TouchableOpacity 
+                    style = {styles.info} 
+                    onPress = {()=>{
+                      setViewRecipe(meal);
+                      navigation.navigate('Recipe');}}>
+                    <Text style = {styles.infoText}>i</Text>
+                  </TouchableOpacity>
+                </View>
               ))}
             </View>
           );
@@ -133,6 +138,28 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingBottom: 80,
   },
+  info:{
+    borderWidth:1,
+    borderColor:'rgba(0,0,0,0.2)',
+    alignItems:'center',
+    justifyContent:'center',
+    width:40,
+    height:40,
+    backgroundColor:'#fff',
+    borderRadius:100,
+    boxShadow:'rgb(47, 79, 79)',
+    fontSize: 31,
+    opacity:.75,
+    position: 'absolute',
+    bottom: 5,
+  },
+  infoText:{
+    fontStyle: 'italic',
+    fontSize: 25,
+    opacity:.75,
+    color:'#222',
+  },
+
 });
 
 export default RecipeLandingScreen;
