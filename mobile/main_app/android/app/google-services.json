@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "623848295091",
+    "project_id": "chefbop-c01be",
+    "storage_bucket": "chefbop-c01be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623848295091:android:c51a8e2d2cf5f2415bbec6",
+        "android_client_info": {
+          "package_name": "com.main_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBykwOkhs2IVK7G-20l5xEp8EIBvCqESZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
