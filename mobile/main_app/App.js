@@ -23,6 +23,8 @@ import {
 import RecipeLandingScreen from './Screens/recipeLandingScreen';
 import CartScreen from './Screens/cartScreen';
 import RecipeScreen from './Screens/recipeScreen';
+import EditRecipeScreen from './Screens/editRecipeScreen';
+import MyRecipeScreen from './Screens/myRecipeScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import amazonUtils from './Utils/amazonUtils';
@@ -150,7 +152,6 @@ const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) 
     }
   }
 
-
 async function checkout() {
 
   const ingredientDatas = amazonUtils.getIngredientsForPurchase(cartMealsGlobal,oneTimesGlobal);
@@ -179,11 +180,13 @@ async function checkout() {
           tabBarIcon: ({focused}) => {
             let iconName;
             let iconColor;
-            if (route.name === 'Home') {
-              iconName = 'home';
+            if (route.name === 'Featured Recipes') {
+              iconName = 'star';
             } else if (route.name === 'Pre-Cart') {
               iconName = 'shopping-cart';
-            }
+            } else if (route.name === 'My Recipes') {
+            iconName = 'list-alt';
+          }
             iconColor = focused ? '#E56A25' : '#C8D0D4';
             return <Icons name={iconName} size={25} color={iconColor} />;
           },
@@ -193,20 +196,35 @@ async function checkout() {
         screenListeners={{tabPress:()=>{
           setPageState("Main")
           setRefreshTrigger(!refreshTrigger)}}}>
-        <Tab.Screen
-          name="Home"
-          children={() => (
-            <RecipeLandingScreen
-            handleCartMeals={handleCartMeals}
-              setViewRecipe={setViewRecipe}
-              cartMealsGlobal={cartMealsGlobal}
-              mealVals = {mealVals}
-              imageCache = {imageCache}
-              refreshTrigger = {refreshTrigger}
-
-            />
-          )}
-        />
+          <Tab.Screen
+            name="Featured Recipes"
+            children={() => (
+              <RecipeLandingScreen
+              handleCartMeals={handleCartMeals}
+                setViewRecipe={setViewRecipe}
+                cartMealsGlobal={cartMealsGlobal}
+                mealVals = {mealVals}
+                imageCache = {imageCache}
+                refreshTrigger = {refreshTrigger}
+  
+              />
+            )}
+          />
+          <Tab.Screen
+            name="My Recipes"
+            children={() => (
+              <MyRecipeScreen
+                setPageState = {setPageState}
+              handleCartMeals={handleCartMeals}
+                setViewRecipe={setViewRecipe}
+                cartMealsGlobal={cartMealsGlobal}
+                mealVals = {mealVals}
+                imageCache = {imageCache}
+                refreshTrigger = {refreshTrigger}
+  
+              />
+            )}
+          />
         <Tab.Screen
           name="Pre-Cart"
           children={
@@ -258,6 +276,11 @@ async function checkout() {
               cartMealsGlobal={cartMealsGlobal}/>)}}
               refreshTrigger = {refreshTrigger}
             
+          />
+          <Stack.Screen
+            name="EditRecipe"
+            options={{headerShown: false}}
+            children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}/>)}}
           />
         </Stack.Navigator>
         
