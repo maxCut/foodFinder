@@ -20,6 +20,8 @@ import CustomButton from '../components/customButton';
 import EditTextFieldButton from '../components/editTextFieldButton';
 
 const EditRecipeScreen = props => {
+  const recipeIndex = props.recipeIndex
+  const onSave = props.onSave
   const [recipe,setRecipe] = useState(props.recipe??{
     prepTime :0,
     cookTime :0, 
@@ -43,10 +45,6 @@ const EditRecipeScreen = props => {
 useEffect(()=>{
   setCartMealsLocal(props.cartMealsGlobal)
 },[props.refreshTrigger])
-
-const handleCartMeals = (event, meal, value) => {
-  props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
-};
 
   let timeDetails;
   if (recipe) {
@@ -110,7 +108,10 @@ const handleCartMeals = (event, meal, value) => {
         </TouchableOpacity>
       </View>
       <View style={styles.addToCartFooter}>
-        <CustomButton title = {"Save"} onClick={()=>{}}/>
+        <CustomButton title = {"Save"} onClick={()=>{
+          onSave(recipe)
+          navigation.goBack(null)
+        }}/>
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
         <FastImage

@@ -20,11 +20,15 @@ const MyRecipeScreen = props => {
   const scrollView = useRef();
   const [currentView, setCurrentView] = useState(0);
   const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
-  const [savedRecipes, setSavedRecipes] = useState(new Map())
+  const userMealVals = props.userMealVals;
+  const setUserMealVals = props.setUserMealVals;
 
-useEffect(() => {
-  CATEGORIES = getCategories();
-},[props.mealVals]);
+  useEffect(() => {
+    CATEGORIES = getCategories();
+  },[props.mealVals]);
+  useEffect(() => {
+    console.log("userMealVals ", userMealVals)
+  },[userMealVals]);
 
 useEffect(()=>{
   setCartMealsLocal(props.cartMealsGlobal)
@@ -34,13 +38,12 @@ const handleCartMeals = (event, meal, value) => {
   props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
 };
 
-
 function getCategories()
 {
   let categories = []
-  for(meal of props.mealVals)
+  for(meal of userMealVals)
   {
-    if(meal.category && savedRecipes.has(meal.key))
+    if(meal.category)
     {
       categories.push(meal.category)
     }
@@ -65,9 +68,9 @@ function getCategories()
 
     <View style={styles.cartHeader}>
       <Typography variant="header1">My Recipes</Typography>
-      <Typography>{cartMealsLocal.size} recipes saved</Typography>
+      <Typography>{userMealVals.length} recipes saved</Typography>
     </View>
-      {props.mealVals.filter(meal => savedRecipes.has(meal.key)).length==0?
+      {userMealVals.length==0?
           (<View
             style={{
               ...styles.card,
@@ -79,18 +82,7 @@ function getCategories()
           </View>
         ):
         <>
-
-{CATEGORIES.map((category, index) => {
-  let categoryMeals = props.mealVals.filter(
-    meal => meal.category == category.name && savedRecipes.has(meal.key),
-  );
-
-  return (
-    <View key={category.name}>
-      <Typography variant="header1" style={{marginBottom: 5}}>
-        {category.name}
-      </Typography>
-      {categoryMeals.map(meal => (
+        {userMealVals.map(meal => (
         <View
           key={meal.Id}
           style={styles.recipeCard}>
@@ -100,6 +92,7 @@ function getCategories()
             handleCartMeals={handleCartMeals}
             cartMeals={cartMealsLocal}
             imageCache = {props.imageCache}
+            isCart = {false}
           />
           <TouchableOpacity 
             style = {styles.info} 
@@ -110,9 +103,8 @@ function getCategories()
           </TouchableOpacity>
         </View>
       ))}
-    </View>
-  );
-})}</>
+
+</>
       }
       </ScrollView>
       <AddRecipeButton

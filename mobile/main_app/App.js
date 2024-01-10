@@ -33,6 +33,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import analytics from '@react-native-firebase/analytics';
 import AmazonCheckoutFlow from './Screens/amazonCheckoutFlow';
+import storage from './components/storage';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -51,6 +52,7 @@ const App = () => {
   const [itemsAdded,setItemsAdded] = useState(0);
 
   const [mealVals, setMealVals] = useState(require("./meals.json"))
+  const [userMealVals, setUserMealVals] = useState([])
   const [imageCache, setImageCache] = useState(new Map())
   const [refreshTrigger, setRefreshTrigger] = useState(false)
 useEffect(() => {
@@ -62,9 +64,21 @@ useEffect(() => {
   }).catch(()=>{})
 }, [setMealVals]);
 
+useEffect(() => {
+  storage
+  .load({
+    key: 'recipes',
+  })
+  .then(ret => {
+    console.log(ret);
+    setUserMealVals(ret.recipeList)
+  })
+
+}, [setUserMealVals]);
+
 useEffect(()=>{
-  setImageCache(imageCacheUtils.loadImageCache(mealVals))
-},[mealVals])
+  setImageCache(imageCacheUtils.loadImageCache([...mealVals,userMealVals]))
+},[mealVals,userMealVals])
 
 
   const Tab = createBottomTabNavigator();
@@ -170,8 +184,18 @@ async function checkout() {
   setPageState("Cart")
   cartMealsGlobal.clear() //empty the cart after added to amazon
 }
-  const MainScreens = props => {
 
+function addNewMealVal(meal)
+{
+  setUserMealVals([...userMealVals,meal])
+}
+function updateMealVal(meal,index)
+{
+  //TODO
+}
+
+
+  const MainScreens = props => {
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
@@ -221,6 +245,8 @@ async function checkout() {
                 mealVals = {mealVals}
                 imageCache = {imageCache}
                 refreshTrigger = {refreshTrigger}
+                userMealVals = {userMealVals}
+                setUserMealVals = {setUserMealVals}
   
               />
             )}
@@ -280,7 +306,8 @@ async function checkout() {
           <Stack.Screen
             name="EditRecipe"
             options={{headerShown: false}}
-            children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}/>)}}
+            children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}
+            onSave = {(result)=>{addNewMealVal(result)}}/>)}}
           />
         </Stack.Navigator>
         
