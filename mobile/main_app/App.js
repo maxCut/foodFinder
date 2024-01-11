@@ -70,8 +70,7 @@ useEffect(() => {
     key: 'recipes',
   })
   .then(ret => {
-    console.log(ret);
-    setUserMealVals(ret.recipeList)
+    setUserMealVals(ret)
   })
 
 }, [setUserMealVals]);
@@ -185,15 +184,34 @@ async function checkout() {
   cartMealsGlobal.clear() //empty the cart after added to amazon
 }
 
-function addNewMealVal(meal)
+function saveMealVal(meal)
 {
-  setUserMealVals([...userMealVals,meal])
+  let index = -1
+  let newMealVals = [...userMealVals]
+  if(viewRecipe)
+  {
+    index = userMealVals.indexOf(viewRecipe)
+  }
+  if(index>-1)
+  {
+    newMealVals[index]= meal
+    setViewRecipe(newMealVals[index])
+  }
+  else
+  {
+    newMealVals = [...userMealVals,meal]
+  }
+  setUserMealVals(newMealVals)
+  storage.save({key:"recipes", data:newMealVals})
 }
-function updateMealVal(meal,index)
+function removeMealVal(index)
 {
-  //TODO
+  let newUserMealVals = userMealVals
+  cartMealsGlobal.delete(userMealVals[index])
+  newUserMealVals.splice(index,1)
+  setUserMealVals(newUserMealVals)
+  storage.save({key:"recipes", data:userMealVals})
 }
-
 
   const MainScreens = props => {
     return (
@@ -221,20 +239,6 @@ function updateMealVal(meal,index)
           setPageState("Main")
           setRefreshTrigger(!refreshTrigger)}}}>
           <Tab.Screen
-            name="Featured Recipes"
-            children={() => (
-              <RecipeLandingScreen
-              handleCartMeals={handleCartMeals}
-                setViewRecipe={setViewRecipe}
-                cartMealsGlobal={cartMealsGlobal}
-                mealVals = {mealVals}
-                imageCache = {imageCache}
-                refreshTrigger = {refreshTrigger}
-  
-              />
-            )}
-          />
-          <Tab.Screen
             name="My Recipes"
             children={() => (
               <MyRecipeScreen
@@ -246,7 +250,21 @@ function updateMealVal(meal,index)
                 imageCache = {imageCache}
                 refreshTrigger = {refreshTrigger}
                 userMealVals = {userMealVals}
-                setUserMealVals = {setUserMealVals}
+                removeMealVal = {removeMealVal}
+  
+              />
+            )}
+          />
+          <Tab.Screen
+            name="Featured Recipes"
+            children={() => (
+              <RecipeLandingScreen
+              handleCartMeals={handleCartMeals}
+                setViewRecipe={setViewRecipe}
+                cartMealsGlobal={cartMealsGlobal}
+                mealVals = {mealVals}
+                imageCache = {imageCache}
+                refreshTrigger = {refreshTrigger}
   
               />
             )}
@@ -299,15 +317,17 @@ function updateMealVal(meal,index)
             children={()=>{return (<RecipeScreen 
               recipe={viewRecipe}
               handleCartMeals={handleCartMeals}
-              cartMealsGlobal={cartMealsGlobal}/>)}}
+              cartMealsGlobal={cartMealsGlobal}
               refreshTrigger = {refreshTrigger}
-            
+              setViewRecipe = {setViewRecipe}
+              />)
+            }}
           />
           <Stack.Screen
             name="EditRecipe"
             options={{headerShown: false}}
             children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}
-            onSave = {(result)=>{addNewMealVal(result)}}/>)}}
+            onSave = {(result)=>{saveMealVal(result)}}/>)}}
           />
         </Stack.Navigator>
         

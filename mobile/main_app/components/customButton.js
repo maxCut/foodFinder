@@ -5,8 +5,9 @@ import {useNavigation} from '@react-navigation/native';
 const CustomButton = props => {
   const onClick = props.onClick;
   const title = props.title;
+  const styleOverride= props.style
   return (
-    <View style={{display: 'flex', justifyContent: 'center', height: 40}}>
+    <View style={{display: 'flex', justifyContent: 'center', height: 40, ...styleOverride}}>
     <TouchableOpacity
       style={styles.button}
       onPress={event => {

@@ -12,18 +12,22 @@ import Typography from '../components/typography';
 import timeHandler from '../Utils/timeHandler';
 import AddToCartButton from '../components/addToCartButton.js';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
+import iconWrapper from '../Utils/iconWrapper';
 
 import FastImage from 'react-native-fast-image'
 
 const RecipeScreen = props => {
   let {recipe} = props;
+  const setViewRecipe = props.setViewRecipe;
   const getIngredients = ingredientHandler.getIngredients;
   const getOneTime = ingredientHandler.getOneTime;
   const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
   const windowWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
+  const MealFontIcon = iconWrapper.getIconFont(recipe.IconFamily)
 
 
 useEffect(()=>{
@@ -108,11 +112,31 @@ const handleCartMeals = (event, meal, value) => {
         />
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
+      { recipe.Image? 
         <FastImage
           style = {{height:350,width: windowWidth}}
           styles={styles.image}
           source={{width: windowWidth, height: 350, uri: recipe.Image}}
-        />
+        />:
+        <View style = {styles.iconImageWrapper}>
+          <View  style = {styles.iconImageCircle}>
+            <MealFontIcon name={recipe.Icon} style = {styles.iconImage}/>
+          </View>
+        </View>}
+        <View style = {styles.editButtonWrapper}>
+        {recipe.customizable ?
+          <TouchableOpacity 
+            style = {styles.editButton} 
+            onPress = {()=>{
+                setViewRecipe(recipe)
+                navigation.navigate('EditRecipe')
+              }}>
+                <FontAwesomeIcons name="file-edit" size={25}/>
+          </TouchableOpacity>
+          :<></>
+          }
+
+        </View>
         <View style={{flex: 1}}>
           <View style={{padding: 15}}>
             <Typography variant="header1">{props.recipe.Name}</Typography>
@@ -133,23 +157,56 @@ const handleCartMeals = (event, meal, value) => {
           <View style={styles.list}>
             <Typography variant="header3">Ingredients</Typography>
             <Typography>{recipe.IncrementAmount} servings</Typography>
+            {
+              recipe.NamedIngredients?
             <View style={{...styles.list, paddingTop: 0}}>
-              {Array.from(getIngredients(recipe)).map((ingredient,index) => {
-                let [key, value] = ingredient;
+              {recipe.NamedIngredients.map((ingredient,index) => {
+                let [name, value] = ingredient;
                 return (
                   <View key = {index} style={styles.listItem}>
-                    <Typography>{`\u2022 ${key.Name}`}</Typography>
+                    <Typography>{`\u2022 ${name}`}
+                    </Typography>
+                    
                     <Typography>
-                      {value} {key.Options[0].Unit}
+                      {value} {"lbs"}
                     </Typography>
                   </View>
                 );
               })}
             </View>
+            :
+            <View style={{...styles.list, paddingTop: 0}}>
+            { 
+            Array.from(getIngredients(recipe)).map((ingredient,index) => {
+              let [key, value] = ingredient;
+              return (
+                <View key = {index} style={styles.listItem}>
+                  <Typography>{`\u2022 ${key.Name}`}</Typography>
+                  <Typography>
+                    {value} {key.Options[0].Unit}
+                  </Typography>
+                </View>
+              );
+            })}
+          </View>
+
+            }
+
+            
             <Typography variant="header3">Pantry Ingredients</Typography>
             <Typography>Ingredients you might already have</Typography>
             <View style={{...styles.list, paddingTop: 0}}>
-              {recipe.OneTimes.map((oneTime,index) => {
+              {
+            recipe.NamedPantryIngredients?
+            recipe.NamedPantryIngredients.map((ingredient,index) => {
+              return (
+                <View key = {index} style={styles.listItem}>
+                  <Typography>{`\u2022 ${ingredient}`}</Typography>
+                </View>
+              );
+            })
+            :
+              recipe.OneTimes.map((oneTime,index) => {
                 let oneTimeDetails = getOneTime(oneTime);
                 return (
                   <View key = {index} style={styles.listItem}>
@@ -223,6 +280,44 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  iconImageWrapper:
+  {
+    height:350,width: "100%",
+    alignItems:"center",
+    justifyContent: 'center',
+},
+  iconImageCircle:{
+
+    borderColor:"#E56A25",
+    borderWidth: 5,
+  padding: 10,
+   backgroundColor:"#34383F",
+     borderRadius:1000 
+    },
+  iconImage:{
+    color:"#fff",
+    padding: 30,
+   fontSize:200,
+  },
+  editButton:{
+    borderWidth:1,
+    borderColor:'rgba(0,0,0,0.2)',
+    alignItems:'center',
+    justifyContent:'center',
+    width:40,
+    height:40,
+    backgroundColor:'#fff',
+    borderRadius:100,
+    boxShadow:'rgb(47, 79, 79)',
+    fontSize: 31,
+    padding: 4,
+    margin: 5
+  },
+  editButtonWrapper:{
+    flexDirection: "row-reverse",
+    marginTop: -40,
+    flexDirection: "row-reverse"
   },
 });
 

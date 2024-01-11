@@ -44,7 +44,7 @@ const EditTextFieldButton = props => {
             defaultValue={fieldInputVal}
             onChangeText={(text)=>{fieldInputVal=text}}
           />
-            <CustomButton style = {styles.doneButton} title = {"Save"} onClick = {
+            <CustomButton title = {"Save"} onClick = {
               () => {
               recipeNew = {...recipe}
               let res = fieldInputVal

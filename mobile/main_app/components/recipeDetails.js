@@ -3,6 +3,7 @@ import {StyleSheet, Image, View, Text} from 'react-native';
 import AddToCartButton from './addToCartButton';
 import Typography from './typography';
 import timeHandler from '../Utils/timeHandler';
+import iconWrapper from '../Utils/iconWrapper';
 
 const RecipeDetails = props => {
   let {recipe, handleCartMeals, cartMeals, isCart} = props;
@@ -11,9 +12,19 @@ const RecipeDetails = props => {
   if (props.cartMeals.has(recipe)) {
     inCart = true;
   }
+  const MealFontIcon = iconWrapper.getIconFont(recipe.IconFamily)
   return (
     <>{
-    props.imageCache.get(recipe.Id)}
+      recipe.Image==null&&MealFontIcon?
+
+    <View style = {styles.iconImageWrapper}>
+    <View  style = {styles.iconImageCircle}>
+      <MealFontIcon name={recipe.Icon} style = {styles.iconImage}/>
+    </View>
+  </View>:
+    props.imageCache.get(recipe.Id)
+    }
+    
       <View style={{flex: 1, padding: 10}}>
         <View style={{flex: 1}}>
           <Typography variant="header2">{props.recipe.Name}</Typography>
@@ -67,6 +78,23 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
   },
+  iconImageWrapper:
+  {
+    height:150,width:150,
+    alignItems:"center",
+    justifyContent: 'center',
+},
+  iconImageCircle:{
+    borderColor:"#E56A25",
+    borderWidth: 5,
+  padding: 10,
+   backgroundColor:"#34383F",
+     borderRadius:1000 
+    },
+  iconImage:{
+    color:"#fff",
+   fontSize:80,
+  }
 });
 
 export default memo(RecipeDetails);

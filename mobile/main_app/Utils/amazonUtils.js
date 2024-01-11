@@ -71,6 +71,11 @@ async function fetchOffer(element){
   return [null,null]
 }
 
+async function findItem(name)
+{
+  
+}
+
 async function addFirstListedItemToCart(element) {
   let offer = '';
   let token = '';
@@ -122,12 +127,19 @@ analytics().logEvent('fail', {
     return;
   }
 }
-async function sendToCart(asin_set, onItemAdded) {
+async function sendToCart(ingredient_set, onItemAdded) {
   let count = 0;
-  for (const element of asin_set) {
+  for (const element of ingredient_set) {
     count+=1;
     onItemAdded(count)
-    await addFirstListedItemToCart(element);
+    if(element.named)
+    {
+      
+    }
+    else
+    {
+      await addFirstListedItemToCart(element.optionQuantities);
+    }
   }
 }
 
@@ -151,15 +163,23 @@ function getOptionQuantities(neededAmount,ingredientDatas, oneTime)
 function getIngredientsForPurchase(cartMeals,oneTimes)
 {
     const neededTotalIngredientsMap = getSelectedItems(cartMeals,oneTimes)
+    console.log("needed ingredient map ", neededTotalIngredientsMap)
     let ingredientPurchaseMap = new Map()
     
   for (const ingredient of neededTotalIngredientsMap.keys()) 
         {
-            const neededAmount = neededTotalIngredientsMap.get(ingredient)
-            //ingredientData = ingredients[ingredient].Options[0]
-            const isOneTime = ingredient[0]=='p'
-            const optionQuantities =  getOptionQuantities(neededAmount,getIngredient(ingredient).Options,isOneTime)
-            ingredientPurchaseMap.set(ingredient,optionQuantities)
+            if(getIngredient(ingredient.ingredient))
+            {
+              const neededAmount = neededTotalIngredientsMap.get(ingredient)
+              const isOneTime = ingredient["isOneTime"]
+              const optionQuantities =  getOptionQuantities(neededAmount,getIngredient(ingredient.ingredient).Options,isOneTime)
+              ingredientPurchaseMap.set(ingredient,{optionQuantities,named:false})
+            }
+            else
+            {
+              const neededAmount = neededTotalIngredientsMap.get(ingredient)
+              ingredientPurchaseMap.set(ingredient,{neededAmount,named:true,name:ingredient.ingredient})
+            }
         }
 
     return ingredientPurchaseMap
@@ -171,18 +191,17 @@ function getSelectedItems(cartMeals,oneTimes) {
     for (const [ingredient, amount] of meal.Ingredients) {
       if (ingredients.has(ingredient)) {
         ingredients.set(
-          ingredient,
-          ingredients.get(ingredient) + amount * quantity,
+          {ingredient,isOneTime:false},
+          ingredients.get({ingredient,isOneTime:false}) + amount * quantity,
         );
-        ingredients[ingredient] += amount * quantity;
       } else {
-        ingredients.set(ingredient, amount * quantity);
+        ingredients.set({ingredient,isOneTime:false}, amount * quantity)
       }
     }
   }
   for(const oneTime of oneTimes)
   {
-    ingredients.set(oneTime,1)
+    ingredients.set({ingredient:oneTime,isOneTime:true},1)
   }
   return ingredients
 }

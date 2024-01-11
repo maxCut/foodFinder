@@ -14,6 +14,10 @@ const styles = StyleSheet.create({
   bodyText: {
     color: '#fff',
   },
+  boldText: {
+    color: '#fff',
+    fontWeight: "bold"
+  },
   header1: {
     color: '#fff',
     fontFamily: 'Archivo-Bold',

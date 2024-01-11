@@ -39,9 +39,10 @@ const CartScreen = props => {
     );
   };
 
-  const cartCard = recipe => {
+  const cartCard = params => {
+    const {recipe,index} = params
     return (
-      <View key = {recipe} style={styles.card}>
+      <View key = {index} style={styles.card}>
         <View style={styles.cardHeader}>
           <RecipeDetails
             isCart={true}
@@ -56,17 +57,35 @@ const CartScreen = props => {
           <Typography variant="header3">Ingredients</Typography>
           <View
             style={{paddingBottom: 15, paddingLeft: 10}}>
-            {Array.from(getIngredients(recipe)).map((item)=>{
-            let [key, value] = item;
+            {
+            
+            recipe.NamedIngredients?
+            recipe.NamedIngredients.map((ingredient,index)=>{
+              let [name, value] = ingredient;
             return (
-            <View style={styles.listItem}>
-            <Typography>{`\u2022 ${key.Name}`}</Typography>
+            <View key={index} style={styles.listItem}>
+            <Typography>{`\u2022 ${name}`}</Typography>
             <Typography>
-              {value} {key.Options[0].Unit}
+              {value} {"lbs"}
             </Typography>
           </View>
           );
-            })}
+            }):
+
+
+            Array.from(getIngredients(recipe)).map((item,index)=>{
+              let [key, value] = item;
+              return (
+              <View key = {index} style={styles.listItem}>
+              <Typography>{`\u2022 ${key.Name}`}</Typography>
+              <Typography>
+                {value} {key.Options[0].Unit}
+              </Typography>
+            </View>
+            );
+              })
+            
+            }
           </View>
           <Typography variant="header3">Pantry Ingredients</Typography>
           <Typography>Ingredients you might already have</Typography>
@@ -76,15 +95,26 @@ const CartScreen = props => {
           >
             
             {
-              recipe.OneTimes.map((item) => {
+              recipe.NamedPantryIngredients?
+              recipe.NamedPantryIngredients.map((item,index) => {
+                return (
+                  <View key = {index} style={styles.listItem}>
+                    <Typography>{`\u2022 ${item}`}</Typography>
+                    {oneTimeButton(item)}
+                  </View>
+                );
+              }):
+
+              recipe.OneTimes.map((item,index) => {
                 let oneTimeDetails = getOneTime(item);
                 return (
-                  <View style={styles.listItem}>
+                  <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${oneTimeDetails.Name}`}</Typography>
                     {oneTimeButton(item)}
                   </View>
                 );
               })
+              
             }
 
           </View>
@@ -126,8 +156,8 @@ const CartScreen = props => {
           </View>
         ) : (
           <View>
-            {Array.from(cartMealsLocal).map(([key, value]) => {
-              return cartCard(key);
+            {Array.from(cartMealsLocal).map(([recipe, value],index) => {
+              return cartCard({recipe,index});
             })}
           </View>
         )}

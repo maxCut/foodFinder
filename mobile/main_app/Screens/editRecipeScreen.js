@@ -18,6 +18,8 @@ import ingredientHandler from '../Utils/ingredientHandler';
 import FastImage from 'react-native-fast-image'
 import CustomButton from '../components/customButton';
 import EditTextFieldButton from '../components/editTextFieldButton';
+import EditMealIconButton from '../components/editMealIconButton';
+import iconWrapper from '../Utils/iconWrapper';
 
 const EditRecipeScreen = props => {
   const recipeIndex = props.recipeIndex
@@ -26,6 +28,8 @@ const EditRecipeScreen = props => {
     prepTime :0,
     cookTime :0, 
     Image: null,
+    Icon: "local-dining",
+    IconFamily: "MaterialIcons",
     Name: "New Recipe",
     description: "description",
     IncrementAmount: 1,
@@ -34,13 +38,13 @@ const EditRecipeScreen = props => {
     NamedIngredients:[],
     NamedPantryIngredients:[],
     OneTimes: [],
+    customizable: true,
+    uid: Date.now()
   })
-  const getIngredients = ingredientHandler.getIngredients;
-  const getOneTime = ingredientHandler.getOneTime;
   const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
   const windowWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
-
+  const MealFontIcon = iconWrapper.getIconFont(recipe.IconFamily)
 
 useEffect(()=>{
   setCartMealsLocal(props.cartMealsGlobal)
@@ -114,11 +118,18 @@ useEffect(()=>{
         }}/>
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
+        { recipe.Image? 
         <FastImage
           style = {{height:350,width: windowWidth}}
           styles={styles.image}
           source={{width: windowWidth, height: 350, uri: recipe.Image}}
-        />
+        />:
+        <View style = {styles.iconImageWrapper}>
+          <View  style = {styles.iconImageCircle}>
+            <MealFontIcon name={recipe.Icon} style = {styles.iconImage}/>
+          </View>
+        </View>}
+        <EditMealIconButton setRecipe ={setRecipe} recipe = {recipe} />
         <View style={{flex: 1}}>
           <View style={{padding: 15}}>
             <Typography variant="header1">{recipe.Name}<EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} fieldName = {"Name"}/></Typography>
@@ -251,6 +262,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  iconImageWrapper:
+  {
+    height:350,width: "100%",
+    alignItems:"center",
+    justifyContent: 'center',
+},
+  iconImageCircle:{
+
+    borderColor:"#E56A25",
+    borderWidth: 5,
+  padding: 10,
+   backgroundColor:"#34383F",
+     borderRadius:1000 
+    },
+  iconImage:{
+    color:"#fff",
+    padding: 30,
+   fontSize:200,
+  }
 });
 
 export default EditRecipeScreen;
