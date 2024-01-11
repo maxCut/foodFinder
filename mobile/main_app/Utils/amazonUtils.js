@@ -71,9 +71,32 @@ async function fetchOffer(element){
   return [null,null]
 }
 
-async function findItem(name)
+async function findItem(searchTerm)
 {
+  const URL = "https://www.amazon.com/s?k="+searchTerm+"&rh=p_n_alm_brand_id%3A18075438011"
   
+  const response = await fetch(URL, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    }
+  })
+
+  const html2 = await response.text();
+
+  results = parseHtmlForTagsThatContainSubString(html2,"s-result-item s-asin")
+  optionQuantities = []
+  for(i = 0; i<Math.min(results.length,3); i++)
+  {
+    const tag = results[i]
+    const start = results[i].indexOf("data-asin=")+"data-asin=".length
+    const partial = tag.substring(start+1)
+    const end = partial.indexOf('\"')
+    const result = partial.substring(0,end)
+    optionQuantities.push({asin:result,quantity:1}) //TODO in the future this should be a calculated value not just 1
+  }
+  return optionQuantities
+        
 }
 
 async function addFirstListedItemToCart(element) {
@@ -134,7 +157,9 @@ async function sendToCart(ingredient_set, onItemAdded) {
     onItemAdded(count)
     if(element.named)
     {
-      
+      const optionQuantities = await findItem(element.name)
+      console.log(optionQuantities)
+      await addFirstListedItemToCart(optionQuantities);
     }
     else
     {
