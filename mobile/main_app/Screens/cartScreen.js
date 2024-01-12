@@ -8,6 +8,7 @@ import {
 import Typography from '../components/typography';
 import RecipeDetails from '../components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
+import NetInfo from "@react-native-community/netinfo";
 
 const CartScreen = props => {
   let {cartMealsGlobal, tryToReachCheckout} = props;
@@ -15,7 +16,19 @@ const CartScreen = props => {
   const getOneTime = ingredientHandler.getOneTime;
   const [cartMealsLocal, setCartMealsLocal] = useState(cartMealsGlobal);
   const [oneTimes, setOneTimes] = useState(props.oneTimesGlobal);
+  const [isConnected, setIsConnected] = useState(true);
 
+  useEffect(() => {
+		const unsubscribe = NetInfo.addEventListener(state => {
+			if (state.isInternetReachable === false) {
+				setIsConnected(false);
+			} else {
+				setIsConnected(true);
+			}
+		});
+
+		return () => unsubscribe();
+	}, []);
 
   const handleCartMeals = (event, meal, value) => {
     props.handleCartMeals(event,meal,value,setCartMealsLocal, cartMealsLocal)
@@ -127,12 +140,18 @@ const CartScreen = props => {
       {cartMealsLocal.size > 0 ? (
         <View style={styles.checkoutFooter}>
           <TouchableOpacity
+          disabled={!isConnected}
             onPress={async () => {
               tryToReachCheckout();
             }}
-            style={styles.checkoutButton}>
+            style={isConnected?styles.checkoutButton:styles.checkoutButtonDisabled}>
             <Typography>Add to Amazon Cart</Typography>
           </TouchableOpacity>
+          {
+          isConnected?
+          <></>:
+          <Typography  style={{textAlign: 'center', marginTop:10,}}>No Internet</Typography>
+          }
         </View>
       ) : null}
 
@@ -182,6 +201,13 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 40,
     alignItems: 'center',
+  },
+  checkoutButtonDisabled: {
+    backgroundColor: '#E56A25',
+    padding: 10,
+    borderRadius: 40,
+    alignItems: 'center',
+    opacity: .2,
   },
   scroll: {
     flexGrow: 1,

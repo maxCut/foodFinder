@@ -73,7 +73,8 @@ async function fetchOffer(element){
 
 async function findItem(searchTerm)
 {
-  const URL = "https://www.amazon.com/s?k="+searchTerm+"&rh=p_n_alm_brand_id%3A18075438011"
+  const sanitizedSearchTerm = searchTerm.replace(" ","_").replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"").trim()
+  const URL = "https://www.amazon.com/s?k="+sanitizedSearchTerm+"&rh=p_n_alm_brand_id%3A18075438011"
   
   const response = await fetch(URL, {
     method: 'GET',
@@ -158,7 +159,6 @@ async function sendToCart(ingredient_set, onItemAdded) {
     if(element.named)
     {
       const optionQuantities = await findItem(element.name)
-      console.log(optionQuantities)
       await addFirstListedItemToCart(optionQuantities);
     }
     else
@@ -188,7 +188,6 @@ function getOptionQuantities(neededAmount,ingredientDatas, oneTime)
 function getIngredientsForPurchase(cartMeals,oneTimes)
 {
     const neededTotalIngredientsMap = getSelectedItems(cartMeals,oneTimes)
-    console.log("needed ingredient map ", neededTotalIngredientsMap)
     let ingredientPurchaseMap = new Map()
     
   for (const ingredient of neededTotalIngredientsMap.keys()) 
@@ -213,7 +212,7 @@ function getIngredientsForPurchase(cartMeals,oneTimes)
 function getSelectedItems(cartMeals,oneTimes) {
   let ingredients = new Map();
   for (const [meal, quantity] of cartMeals.entries()) { //ingredients
-    for (const [ingredient, amount] of meal.Ingredients) {
+    for (const [ingredient, amount] of [...meal.Ingredients,...(meal.NamedIngredients??[])]) {
       if (ingredients.has(ingredient)) {
         ingredients.set(
           {ingredient,isOneTime:false},

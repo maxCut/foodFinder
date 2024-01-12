@@ -196,6 +196,9 @@ function saveMealVal(meal)
   {
     newMealVals[index]= meal
     setViewRecipe(newMealVals[index])
+    const currentVal = cartMealsGlobal.get(userMealVals[index])
+    cartMealsGlobal.delete(userMealVals[index])
+    cartMealsGlobal.set(newMealVals[index],currentVal)
   }
   else
   {
@@ -327,7 +330,7 @@ function removeMealVal(index)
             name="EditRecipe"
             options={{headerShown: false}}
             children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}
-            onSave = {(result)=>{saveMealVal(result)}}/>)}}
+            onSave = {(result)=>{console.log(result);saveMealVal(result)}}/>)}}
           />
         </Stack.Navigator>
         

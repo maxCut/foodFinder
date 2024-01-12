@@ -113,6 +113,7 @@ useEffect(()=>{
       </View>
       <View style={styles.addToCartFooter}>
         <CustomButton title = {"Save"} onClick={()=>{
+          console.log(recipe.NamedIngredients)
           onSave(recipe)
           navigation.goBack(null)
         }}/>
@@ -172,7 +173,7 @@ useEffect(()=>{
             <CustomButton title = {"New Ingredient"} onClick= {()=>{
               let ingredientList = recipe.NamedIngredients
               ingredientList.push(["Placeholder",0])
-              setRecipe({...recipe,Ingredients:ingredientList})
+              setRecipe({...recipe,NamedIngredients:ingredientList})
             }}></CustomButton>
             <Typography variant="header3">Pantry Ingredients</Typography>
             <Typography>Ingredients you might already have</Typography>

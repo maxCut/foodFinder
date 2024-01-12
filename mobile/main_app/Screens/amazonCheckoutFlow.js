@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -20,8 +20,10 @@ import {WebView} from 'react-native-webview';
 import LoadingScreen from './loadingScreen';
 import AmazonWebView from './amazonWebView';
 import AmazonLogin from './amazonLogin';
+import NetInfo from "@react-native-community/netinfo";
 
 const AmazonCheckoutFlow = props => {
+  
     if (props.pageState === 'Login') {
     return (
       <AmazonLogin setPageState = {props.setPageState} checkIfUserLoggedIn = {props.checkIfUserLoggedIn} pageUrl = {props.pageUrl}/>
