@@ -34,7 +34,7 @@ const RecipeDetails = props => {
             </Text>
           )}
           <Text style={{fontSize: 10, color: '#fff'}}>
-            {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)} min |{' '}
+            {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)} |{' '}
             {recipe.IncrementAmount} servings
           </Text>
         </View>

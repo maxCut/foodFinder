@@ -74,12 +74,12 @@ const CartScreen = props => {
             
             recipe.NamedIngredients?
             recipe.NamedIngredients.map((ingredient,index)=>{
-              let [name, value] = ingredient;
+              let [name, value, unitName] = ingredient;
             return (
             <View key={index} style={styles.listItem}>
             <Typography>{`\u2022 ${name}`}</Typography>
             <Typography>
-              {value} {"lbs"}
+              {value} {unitName}
             </Typography>
           </View>
           );

@@ -96,9 +96,9 @@ useEffect(()=>{
 const handleCartMeals = (event, meal, value, setCartMealsLocal, cartMealsLocal) => {
   if (cartMealsGlobal.has(meal)) {
     if (value == 'increment') {
-      cartMealsGlobal.set(meal,cartMealsGlobal.get(meal)+1)
+      cartMealsGlobal.set(meal,(cartMealsGlobal.get(meal)??0)+1)
     } else {
-      if (cartMealsGlobal.get(meal) == 1) {
+      if ((cartMealsGlobal.get(meal)??0) <= 1) {
         cartMealsGlobal.delete(meal);
       } else {
         cartMealsGlobal.set(meal,cartMealsGlobal.get(meal)-1)
@@ -196,9 +196,12 @@ function saveMealVal(meal)
   {
     newMealVals[index]= meal
     setViewRecipe(newMealVals[index])
-    const currentVal = cartMealsGlobal.get(userMealVals[index])
+    const currentVal = cartMealsGlobal.get((userMealVals[index]))??0
     cartMealsGlobal.delete(userMealVals[index])
-    cartMealsGlobal.set(newMealVals[index],currentVal)
+    if(currentVal>0)
+    {
+      cartMealsGlobal.set(newMealVals[index],currentVal)
+    }
   }
   else
   {
@@ -323,6 +326,7 @@ function removeMealVal(index)
               cartMealsGlobal={cartMealsGlobal}
               refreshTrigger = {refreshTrigger}
               setViewRecipe = {setViewRecipe}
+              setRefreshTrigger = {setRefreshTrigger}
               />)
             }}
           />
@@ -330,7 +334,7 @@ function removeMealVal(index)
             name="EditRecipe"
             options={{headerShown: false}}
             children={()=>{return (<EditRecipeScreen recipe = {viewRecipe}
-            onSave = {(result)=>{console.log(result);saveMealVal(result)}}/>)}}
+            onSave = {(result)=>{saveMealVal(result)}}/>)}}
           />
         </Stack.Navigator>
         

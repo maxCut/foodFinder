@@ -27,6 +27,7 @@ const RecipeScreen = props => {
   const [cartMealsLocal, setCartMealsLocal] = useState(props.cartMealsGlobal);
   const windowWidth = Dimensions.get('window').width;
   const navigation = useNavigation();
+  const setRefreshTrigger = props.setRefreshTrigger
   const MealFontIcon = iconWrapper.getIconFont(recipe.IconFamily)
 
 
@@ -98,7 +99,7 @@ const handleCartMeals = (event, meal, value) => {
     <View style={styles.background}>
       <View style={styles.backButtonContainer}>
         <TouchableOpacity
-          onPress={() => navigation.goBack(null)}
+          onPress={() => {navigation.goBack(null); setRefreshTrigger(!props.refreshTrigger)}}
           style={styles.backButton}>
           <Icons name="arrow-back" size={25} color="#1B2428" />
         </TouchableOpacity>
@@ -161,14 +162,14 @@ const handleCartMeals = (event, meal, value) => {
               recipe.NamedIngredients?
             <View style={{...styles.list, paddingTop: 0}}>
               {recipe.NamedIngredients.map((ingredient,index) => {
-                let [name, value] = ingredient;
+                let [name, value,unitName] = ingredient;
                 return (
                   <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${name}`}
                     </Typography>
                     
                     <Typography>
-                      {value} {"lbs"}
+                      {value} {unitName}
                     </Typography>
                   </View>
                 );

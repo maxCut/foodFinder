@@ -4,6 +4,7 @@ import ingredientHandler from './ingredientHandler';
 import analytics from '@react-native-firebase/analytics';
 const getIngredient = ingredientHandler.getOneTime;
 
+
 function getFirstGreaterThanTarget(target, arr) {
   lowerBound = 0;
   upperBound = arr.length;
@@ -28,16 +29,80 @@ function getFirstGreaterThanTarget(target, arr) {
   }
 }
 
+function getClosingTagFromTag(html,target,type)
+{
+  const arr = [
+      ...html.matchAll(new RegExp("<[^<>]*" +type + "[^<>]*>", "gi")),
+  ].map((a) => a.index);
+
+  const allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
+    (a) => a.index
+);
+
+  lowerBound = 0;
+  upperBound = arr.length;
+  if (arr[lowerBound] > target) {
+      return arr[lowerBound];
+  }
+  let retIndex = 0;
+  while (lowerBound < upperBound) {
+      pivot = Math.floor((lowerBound + upperBound) / 2);
+      if (arr[pivot] == target) {
+        retIndex = pivot;
+        break;
+      } else if (arr[pivot] < target) {
+          lowerBound = pivot;
+      } else {
+          upperBound = pivot;
+      }
+      if (upperBound == lowerBound) {
+          retIndex = upperBound;
+          break
+      }
+      if (upperBound - lowerBound == 1) {
+        retIndex = lowerBound;
+        break
+      }
+  }
+  let diff = 1
+  let guessIndex = retIndex +1
+  let tagStart = -1
+  let tagEnd = -1
+  let tagValue = ""
+  while(diff>0&&guessIndex<arr.length)
+  {
+    tagStart = arr[guessIndex]
+    tagEnd = getFirstGreaterThanTarget(tagStart,allTags)
+    tagValue = html.substring(tagStart,tagEnd)
+    if(tagValue.includes('</')||tagValue.includes('/>'))
+    {
+      diff-=1
+    }
+    else
+    {
+      diff+=1
+    }
+    guessIndex+=1
+  }
+  return tagEnd
+}
+
 function parseHtmlForTagsThatContainSubString(html, searchword) {
   allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
       (a) => a.index
   );
   searchwordTags = [
       ...html.matchAll(new RegExp("<[^<>]*" + searchword + "[^<>]*>", "gi")),
-  ].map((a) => a.index);
+  ].map((a) => {return a.index});
   retTags = [];
   searchwordTags.forEach((index) => {
       closeIndex = getFirstGreaterThanTarget(index, allTags);
+      const tag = html.substring(index,closeIndex);
+      const type = tag.substring(1,tag.indexOf(" "))
+      //console.log(html.substring(index,getInnerHtmlFromTag(html, index,type)))
+
+      //const innerTagSearch = html.substring(index,getClosingTagFromTag(html, index,type))
+      
       retTags.push(html.substring(index, closeIndex));
   });
   return retTags;
@@ -73,6 +138,10 @@ async function fetchOffer(element){
 
 async function findItem(searchTerm)
 {
+  if(searchTerm.length<=0)
+  {
+    return []
+  }
   const sanitizedSearchTerm = searchTerm.replace(" ","_").replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"").trim()
   const URL = "https://www.amazon.com/s?k="+sanitizedSearchTerm+"&rh=p_n_alm_brand_id%3A18075438011"
   

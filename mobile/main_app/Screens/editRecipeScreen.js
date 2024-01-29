@@ -12,12 +12,14 @@ import Typography from '../components/typography';
 import timeHandler from '../Utils/timeHandler';
 import AddToCartButton from '../components/addToCartButton.js';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 
 import FastImage from 'react-native-fast-image'
 import CustomButton from '../components/customButton';
 import EditTextFieldButton from '../components/editTextFieldButton';
+import EditIngredientQuantityButton from '../components/editIngredientQuantityButton';
 import EditMealIconButton from '../components/editMealIconButton';
 import iconWrapper from '../Utils/iconWrapper';
 
@@ -155,24 +157,38 @@ useEffect(()=>{
             <Typography>{recipe.IncrementAmount} servings<EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} fieldName = {"IncrementAmount"} numeric = {true}/></Typography>
             <View style={{...styles.list, paddingTop: 0}}>
               {recipe.NamedIngredients.map((ingredient,index) => {
-                let [name, value] = ingredient;
+                let [name, value, unitName] = ingredient;
                 return (
+
+                  <View key = {index} style={{flexDirection:"row"}}>
+                    
+                  <TouchableOpacity 
+                  style = {styles.deleteButton} 
+                  onPress = {()=>{
+                    const newNamedIngredients = recipe.NamedIngredients
+                    newNamedIngredients.splice(index,1)
+                    recipe.NamedIngredients
+                    setRecipe({...recipe,NamedIngredients:newNamedIngredients})
+                  }}>
+                  <MaterialCommunityIcons name="trash-can" size={21}/>
+                  </TouchableOpacity>
                   <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${name}`}
                     <EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} fieldName = {"NamedIngredients"} fieldIndex = {index} fieldSubIndex = {0}/>
                     </Typography>
                     
                     <Typography>
-                      {value} {"lbs"}
-                    <EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} numeric = {true} fieldName = {"NamedIngredients"} fieldIndex = {index} fieldSubIndex = {1}/>
+                      {value} {unitName??"Units"}
+                    <EditIngredientQuantityButton setRecipe ={setRecipe} recipe = {recipe} numeric = {true} fieldName = {"NamedIngredients"} fieldIndex = {index} fieldSubIndex = {1}/>
                     </Typography>
+                  </View>
                   </View>
                 );
               })}
             </View>
             <CustomButton title = {"New Ingredient"} onClick= {()=>{
               let ingredientList = recipe.NamedIngredients
-              ingredientList.push(["Placeholder",0])
+              ingredientList.push(["Placeholder",1, "Units"])
               setRecipe({...recipe,NamedIngredients:ingredientList})
             }}></CustomButton>
             <Typography variant="header3">Pantry Ingredients</Typography>
@@ -180,9 +196,20 @@ useEffect(()=>{
             <View style={{...styles.list, paddingTop: 0}}>
               {recipe.NamedPantryIngredients.map((ingredient,index) => {
                 return (
+                  <View key = {index} style={{flexDirection:"row"}}>
+                  <TouchableOpacity 
+                  style = {styles.deleteButton} 
+                  onPress = {()=>{
+                    const newNamedPantryIngredients = recipe.NamedPantryIngredients
+                    newNamedPantryIngredients.splice(index,1)
+                    setRecipe({...recipe,NamedPantryIngredients:newNamedPantryIngredients})
+                  }}>
+                  <MaterialCommunityIcons name="trash-can" size={21}/>
+                  </TouchableOpacity>
                   <View key = {index} style={styles.listItem}>
                     <Typography>{`\u2022 ${ingredient}`}
                   <EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} fieldName = {"NamedPantryIngredients"} fieldIndex = {index}/></Typography>
+                  </View>
                   </View>
                 );
               })}
@@ -262,6 +289,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    verticalAlign:"middle",
+    width: "90%",
+    verticalAlign:"center",textAlign:"center", marginTop:5, marginBottom:15
   },
   iconImageWrapper:
   {
@@ -281,7 +311,24 @@ const styles = StyleSheet.create({
     color:"#fff",
     padding: 30,
    fontSize:200,
-  }
+  },
+  deleteButton:{
+    verticalAlign:"middle",
+    borderWidth:1,
+    borderColor:'rgba(0,0,0,0.2)',
+    alignItems:'center',
+    justifyContent:'center',
+    width:30,
+    height:30,
+    backgroundColor:'#fff',
+    borderRadius:100,
+    boxShadow:'rgb(47, 79, 79)',
+    fontSize: 31,
+    opacity:.75,
+    marginRight: 15,
+    marginTop: 15,
+    marginBottom: 15
+  },
 });
 
 export default EditRecipeScreen;
