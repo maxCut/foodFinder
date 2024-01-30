@@ -7,6 +7,8 @@ import {
   Dimensions,
   Platform,
   TouchableOpacity,
+  Modal,
+  TextInput,
 } from 'react-native';
 import Typography from '../components/typography';
 import timeHandler from '../Utils/timeHandler';
@@ -22,10 +24,14 @@ import EditTextFieldButton from '../components/editTextFieldButton';
 import EditIngredientQuantityButton from '../components/editIngredientQuantityButton';
 import EditMealIconButton from '../components/editMealIconButton';
 import iconWrapper from '../Utils/iconWrapper';
+import parseUtils from '../Utils/parseUtils';
+
 
 const EditRecipeScreen = props => {
   const recipeIndex = props.recipeIndex
   const onSave = props.onSave
+  const [showImportURLModalOption,setShowImportURLModalOption] = useState(props.recipe==null)
+  const [showImportURLModal,setShowImportURLModal] = useState(false)
   const [recipe,setRecipe] = useState(props.recipe??{
     prepTime :0,
     cookTime :0, 
@@ -103,9 +109,65 @@ useEffect(()=>{
       return <InstructionListItems steps={recipe.instructions} />;
     }
   };
-
+  let urlInputVal = ""
+  const [isValidURL, setIsValidURL] = useState(true)
   return (
     <View style={styles.background}>
+
+  <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showImportURLModal}>
+          <View style= {styles.centeredView}>
+            <View style = {styles.modalView}>
+              <Typography>Enter Recipe Link</Typography>
+              {isValidURL?
+              <></>:
+              <Typography style = {{color:"#F00"}}>Must Be a Valid URL</Typography>
+              }
+          <TextInput
+            style={styles.input}
+            placeholder= {"www.example.com"}
+            keyboardType="text"
+            onChangeText={(text)=>{urlInputVal=text}}
+          />
+                <CustomButton style = {styles.modalOptionButton} title = "Done"
+                onClick = {()=>{
+                  if(parseUtils.checkURLIsValid(urlInputVal))
+                  {
+                    setShowImportURLModal(false)
+                  }
+                  else
+                  {
+                    setIsValidURL(false)
+                  }
+                }}/>
+              </View>
+              </View>
+        </Modal>
+
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showImportURLModalOption}>
+          <View style= {styles.centeredView}>
+            <View style = {styles.modalView}>
+              <Typography>Import from a URL?</Typography>
+              <View style = {styles.modalOptionWrapper}>
+                <CustomButton style = {styles.modalOptionButton} title = "Yes"
+                onClick = {()=>{
+                  setShowImportURLModalOption(false)
+                  setShowImportURLModal(true)
+                }}/>
+                <CustomButton style = {styles.modalOptionButton} title = "No"
+                onClick = {()=>{
+                  setShowImportURLModalOption(false)
+                }}/>
+              </View>
+              </View>
+              </View>
+        </Modal>
+
       <View style={styles.backButtonContainer}>
         <TouchableOpacity
           onPress={() => navigation.goBack(null)}
@@ -328,6 +390,40 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 15,
     marginBottom: 15
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: '#34383F' ,
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  modalOptionWrapper: {
+    flexDirection: 'row'
+  },
+  modalOptionButton: {
+    margin : 5,
+    marginTop: 10,
+    width: 80
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    width: 350,
   },
 });
 
