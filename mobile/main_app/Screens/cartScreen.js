@@ -76,12 +76,18 @@ const CartScreen = props => {
             recipe.NamedIngredients.map((ingredient,index)=>{
               let [name, value, unitName] = ingredient;
             return (
-            <View key={index} style={styles.listItem}>
-            <Typography>{`\u2022 ${name}`}</Typography>
-            <Typography>
-              {value} {unitName}
-            </Typography>
-          </View>
+              <View key = {index} style={styles.listItem}>
+                <View style = {styles.itemName}>
+                <Typography>{`\u2022 ${name}`}
+                </Typography>
+                </View>
+                
+                <View style = {styles.itemQuantity}>
+                <Typography>
+                  {value} {unitName??"Units"}
+                </Typography>
+                </View>
+              </View>
           );
             }):
 
@@ -112,7 +118,10 @@ const CartScreen = props => {
               recipe.NamedPantryIngredients.map((item,index) => {
                 return (
                   <View key = {index} style={styles.listItem}>
+
+                <View style = {styles.itemName}>
                     <Typography>{`\u2022 ${item}`}</Typography>
+                </View>
                     {oneTimeButton(item)}
                   </View>
                 );
@@ -235,11 +244,24 @@ const styles = StyleSheet.create({
   ingredientsList: {
     padding: 15,
   },
+
   listItem: {
-    paddingTop: 10,
     flexDirection: 'row',
+    flexWrap:'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+    verticalAlign:"center",
+    textAlign:"center", 
+    marginTop:10,
+    width:"100%"
+  },
+  itemName:{
+    maxWidth:"60%",
+  },
+  itemQuantity:{
+    flexDirection: 'row-reverse',
+    right: 5,
+
   },
   oneTimeAdd: {
     backgroundColor: '#E56A25',

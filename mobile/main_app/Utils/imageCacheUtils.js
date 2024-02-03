@@ -18,7 +18,17 @@ function loadImageCache(mealVals)
     }
     return imageCache
 }
-const imageCacheUtils = {loadImageCache}
+
+function getImageNoCache(url)
+{
+  return <FastImage
+  style={{ width:150, height: 150 }}
+    styles={styles.image}
+    source={{uri: url}}
+  />
+}
+
+const imageCacheUtils = {loadImageCache, getImageNoCache}
 
 const styles = StyleSheet.create({
   background: {backgroundColor: '#1B2428', flex: 1},

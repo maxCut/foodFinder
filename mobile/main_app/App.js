@@ -76,7 +76,8 @@ useEffect(() => {
 }, [setUserMealVals]);
 
 useEffect(()=>{
-  setImageCache(imageCacheUtils.loadImageCache([...mealVals,userMealVals]))
+  setImageCache(imageCacheUtils.loadImageCache([...mealVals,...userMealVals]))
+  
 },[mealVals,userMealVals])
 
 

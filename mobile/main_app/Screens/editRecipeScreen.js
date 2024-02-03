@@ -111,11 +111,12 @@ useEffect(()=>{
   };
   let urlInputVal = ""
   const [isValidURL, setIsValidURL] = useState(true)
+  const [errorText, setErrorText] = useState("Must Be a Valid URL")
   return (
     <View style={styles.background}>
 
   <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={showImportURLModal}>
           <View style= {styles.centeredView}>
@@ -123,7 +124,7 @@ useEffect(()=>{
               <Typography>Enter Recipe Link</Typography>
               {isValidURL?
               <></>:
-              <Typography style = {{color:"#F00"}}>Must Be a Valid URL</Typography>
+              <Typography style = {{color:"#F00"}}>{errorText}</Typography>
               }
           <TextInput
             style={styles.input}
@@ -131,17 +132,38 @@ useEffect(()=>{
             keyboardType="text"
             onChangeText={(text)=>{urlInputVal=text}}
           />
+                <View style = {styles.modalOptionWrapper}>
                 <CustomButton style = {styles.modalOptionButton} title = "Done"
                 onClick = {()=>{
                   if(parseUtils.checkURLIsValid(urlInputVal))
                   {
-                    setShowImportURLModal(false)
+                    parseUtils.parseURLForRecipe(urlInputVal).then((recipeNew)=>
+                    {
+                      setRecipe(recipeNew)
+                      setShowImportURLModal(false)
+                    }).catch(e=>{
+                      {
+                        console.log("error ", e)
+                        if(e.message === "This URL is not a Recipe")
+                        {
+                          setErrorText("We can't parse any recipes on from page, try a different link")
+                        }
+                        else
+                        {
+                          setErrorText("Oops, something went wrong")
+                        }
+                        setIsValidURL(false)
+                      }})
                   }
                   else
                   {
+                    setErrorText("Must Be a Valid URL")
                     setIsValidURL(false)
                   }
                 }}/>
+                <CustomButton style = {styles.modalOptionButton} title = "Cancel"
+                onClick = {()=>{setShowImportURLModal(false)}}/>
+                </View>
               </View>
               </View>
         </Modal>
@@ -156,8 +178,8 @@ useEffect(()=>{
               <View style = {styles.modalOptionWrapper}>
                 <CustomButton style = {styles.modalOptionButton} title = "Yes"
                 onClick = {()=>{
-                  setShowImportURLModalOption(false)
                   setShowImportURLModal(true)
+                  setShowImportURLModalOption(false)
                 }}/>
                 <CustomButton style = {styles.modalOptionButton} title = "No"
                 onClick = {()=>{
@@ -177,7 +199,6 @@ useEffect(()=>{
       </View>
       <View style={styles.addToCartFooter}>
         <CustomButton title = {"Save"} onClick={()=>{
-          console.log(recipe.NamedIngredients)
           onSave(recipe)
           navigation.goBack(null)
         }}/>
@@ -235,14 +256,18 @@ useEffect(()=>{
                   <MaterialCommunityIcons name="trash-can" size={21}/>
                   </TouchableOpacity>
                   <View key = {index} style={styles.listItem}>
+                    <View style = {styles.itemName}>
                     <Typography>{`\u2022 ${name}`}
                     <EditTextFieldButton setRecipe ={setRecipe} recipe = {recipe} fieldName = {"NamedIngredients"} fieldIndex = {index} fieldSubIndex = {0}/>
                     </Typography>
+                    </View>
                     
+                    <View style = {styles.itemQuantity}>
                     <Typography>
                       {value} {unitName??"Units"}
                     <EditIngredientQuantityButton setRecipe ={setRecipe} recipe = {recipe} numeric = {true} fieldName = {"NamedIngredients"} fieldIndex = {index} fieldSubIndex = {1}/>
                     </Typography>
+                    </View>
                   </View>
                   </View>
                 );
@@ -345,15 +370,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  list: {padding: 15},
+  list: {padding: 5},
   listItem: {
-    paddingTop: 10,
     flexDirection: 'row',
+    flexWrap:'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-    verticalAlign:"middle",
-    width: "90%",
-    verticalAlign:"center",textAlign:"center", marginTop:5, marginBottom:15
+    verticalAlign:"center",
+    textAlign:"center", 
+    marginTop:10,
+    width:"90%"
+  },
+  itemName:{
+    maxWidth:"60%",
+  },
+  itemQuantity:{
+    flexDirection: 'row-reverse',
+    right: 5,
+
   },
   iconImageWrapper:
   {
@@ -388,8 +422,8 @@ const styles = StyleSheet.create({
     fontSize: 31,
     opacity:.75,
     marginRight: 15,
-    marginTop: 15,
-    marginBottom: 15
+    marginTop: 5,
+    marginBottom: 5
   },
   centeredView: {
     flex: 1,

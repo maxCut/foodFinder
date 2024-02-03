@@ -4,6 +4,7 @@ import AddToCartButton from './addToCartButton';
 import Typography from './typography';
 import timeHandler from '../Utils/timeHandler';
 import iconWrapper from '../Utils/iconWrapper';
+import FastImage from 'react-native-fast-image'
 
 const RecipeDetails = props => {
   let {recipe, handleCartMeals, cartMeals, isCart} = props;
@@ -22,7 +23,10 @@ const RecipeDetails = props => {
       <MealFontIcon name={recipe.Icon} style = {styles.iconImage}/>
     </View>
   </View>:
-    props.imageCache.get(recipe.Id)
+  <FastImage
+  style={{ width:150, height: 150 }}
+    styles={styles.image}
+    source={{uri: recipe.Image}}/>
     }
     
       <View style={{flex: 1, padding: 10}}>

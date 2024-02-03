@@ -2,117 +2,16 @@
 import DOMParser from 'react-native-html-parser';
 import ingredientHandler from './ingredientHandler';
 import analytics from '@react-native-firebase/analytics';
+import htmlParser from './htmlParser'
+import nlp from "compromise";
 const getIngredient = ingredientHandler.getOneTime;
 
-
-function getFirstGreaterThanTarget(target, arr) {
-  lowerBound = 0;
-  upperBound = arr.length;
-  if (arr[lowerBound] > target) {
-      return arr[lowerBound];
-  }
-  while (lowerBound < upperBound) {
-      pivot = Math.floor((lowerBound + upperBound) / 2);
-      if (arr[pivot] == target) {
-          return arr[pivot + 1];
-      } else if (arr[pivot] < target) {
-          lowerBound = pivot;
-      } else {
-          upperBound = pivot;
-      }
-      if (upperBound == lowerBound) {
-          return arr[upperBound + 1];
-      }
-      if (upperBound - lowerBound == 1) {
-          return arr[upperBound];
-      }
-  }
-}
-
-function getClosingTagFromTag(html,target,type)
-{
-  const arr = [
-      ...html.matchAll(new RegExp("<[^<>]*" +type + "[^<>]*>", "gi")),
-  ].map((a) => a.index);
-
-  const allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
-    (a) => a.index
-);
-
-  lowerBound = 0;
-  upperBound = arr.length;
-  if (arr[lowerBound] > target) {
-      return arr[lowerBound];
-  }
-  let retIndex = 0;
-  while (lowerBound < upperBound) {
-      pivot = Math.floor((lowerBound + upperBound) / 2);
-      if (arr[pivot] == target) {
-        retIndex = pivot;
-        break;
-      } else if (arr[pivot] < target) {
-          lowerBound = pivot;
-      } else {
-          upperBound = pivot;
-      }
-      if (upperBound == lowerBound) {
-          retIndex = upperBound;
-          break
-      }
-      if (upperBound - lowerBound == 1) {
-        retIndex = lowerBound;
-        break
-      }
-  }
-  let diff = 1
-  let guessIndex = retIndex +1
-  let tagStart = -1
-  let tagEnd = -1
-  let tagValue = ""
-  while(diff>0&&guessIndex<arr.length)
-  {
-    tagStart = arr[guessIndex]
-    tagEnd = getFirstGreaterThanTarget(tagStart,allTags)
-    tagValue = html.substring(tagStart,tagEnd)
-    if(tagValue.includes('</')||tagValue.includes('/>'))
-    {
-      diff-=1
-    }
-    else
-    {
-      diff+=1
-    }
-    guessIndex+=1
-  }
-  return tagEnd
-}
-
-function parseHtmlForTagsThatContainSubString(html, searchword) {
-  allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
-      (a) => a.index
-  );
-  searchwordTags = [
-      ...html.matchAll(new RegExp("<[^<>]*" + searchword + "[^<>]*>", "gi")),
-  ].map((a) => {return a.index});
-  retTags = [];
-  searchwordTags.forEach((index) => {
-      closeIndex = getFirstGreaterThanTarget(index, allTags);
-      const tag = html.substring(index,closeIndex);
-      const type = tag.substring(1,tag.indexOf(" "))
-      //console.log(html.substring(index,getInnerHtmlFromTag(html, index,type)))
-
-      //const innerTagSearch = html.substring(index,getClosingTagFromTag(html, index,type))
-      
-      retTags.push(html.substring(index, closeIndex));
-  });
-  return retTags;
-}
 async function fetchOffer(element){
   const response = await fetch(
     `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20`,
   );
   const html2 = await response.text();
-  let tags = parseHtmlForTagsThatContainSubString(
+  let tags = htmlParser.parseHtmlForTagsThatContainSubString(
     html2,
     "data-fresh-add-to-cart"
 )
@@ -142,7 +41,7 @@ async function findItem(searchTerm)
   {
     return []
   }
-  const sanitizedSearchTerm = searchTerm.replace(" ","_").replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"").trim()
+  const sanitizedSearchTerm = searchTerm.replaceAll(" ","_").replaceAll(",","").replaceAll(/[^a-z0-9áéíóúñü \.,_-]/gim,"").trim()
   const URL = "https://www.amazon.com/s?k="+sanitizedSearchTerm+"&rh=p_n_alm_brand_id%3A18075438011"
   
   const response = await fetch(URL, {
@@ -154,7 +53,7 @@ async function findItem(searchTerm)
 
   const html2 = await response.text();
 
-  results = parseHtmlForTagsThatContainSubString(html2,"s-result-item s-asin")
+  results = htmlParser.parseHtmlForTagsThatContainSubString(html2,"s-result-item s-asin")
   optionQuantities = []
   for(i = 0; i<Math.min(results.length,3); i++)
   {
@@ -254,6 +153,18 @@ function getOptionQuantities(neededAmount,ingredientDatas, oneTime)
     return optionArray
 }
 
+function cleanIngredientText(ingredientName)
+{
+  const nlpName = nlp(ingredientName)
+  try{
+    const cleaned = nlpName.sentences().json()[0]["sentence"]["subject"]??ingredientName
+    return cleaned
+  }catch
+  {
+    return ingredientName
+  }
+}
+
 function getIngredientsForPurchase(cartMeals,oneTimes)
 {
     const neededTotalIngredientsMap = getSelectedItems(cartMeals,oneTimes)
@@ -271,12 +182,13 @@ function getIngredientsForPurchase(cartMeals,oneTimes)
             else
             {
               const neededAmount = neededTotalIngredientsMap.get(ingredient)
-              ingredientPurchaseMap.set(ingredient,{neededAmount,named:true,name:ingredient.ingredient})
+              ingredientPurchaseMap.set(ingredient,{neededAmount,named:true,name:cleanIngredientText(ingredient.ingredient)})
             }
         }
 
     return ingredientPurchaseMap
 }
+
 
 function getSelectedItems(cartMeals,oneTimes) {
   let ingredients = new Map();

@@ -165,12 +165,16 @@ const handleCartMeals = (event, meal, value) => {
                 let [name, value,unitName] = ingredient;
                 return (
                   <View key = {index} style={styles.listItem}>
+                    <View style = {styles.itemName}>
                     <Typography>{`\u2022 ${name}`}
                     </Typography>
+                    </View>
                     
+                    <View style = {styles.itemQuantity}>
                     <Typography>
-                      {value} {unitName}
+                      {value} {unitName??"Units"}
                     </Typography>
+                    </View>
                   </View>
                 );
               })}
@@ -277,10 +281,22 @@ const styles = StyleSheet.create({
   },
   list: {padding: 15},
   listItem: {
-    paddingTop: 10,
     flexDirection: 'row',
+    flexWrap:'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+    verticalAlign:"center",
+    textAlign:"center", 
+    marginTop:10,
+    width:"100%"
+  },
+  itemName:{
+    maxWidth:"70%",
+  },
+  itemQuantity:{
+    flexDirection: 'row-reverse',
+    right: 5,
+
   },
   iconImageWrapper:
   {

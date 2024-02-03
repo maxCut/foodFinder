@@ -1,7 +1,7 @@
 const formatTime = minutes => {
   if (minutes > 60) {
-    let hours = minutes / 60;
-    let remainder = minutes - hours;
+    let hours = Math.round(minutes / 60);
+    let remainder = minutes % 60;
     return `${hours} hrs ${remainder} min`;
   } else {
     return `${minutes} min`;
