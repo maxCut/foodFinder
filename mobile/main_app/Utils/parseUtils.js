@@ -96,7 +96,7 @@ function isPantryIngredient(ingredientObj)
     }
     for(let i = 0; i<KNOWNPANTRYINGREDIENTSEXACT.length; i++)
     {
-        const knownIngredient = KNOWNPANTRYINGREDIENTS[i]
+        const knownIngredient = KNOWNPANTRYINGREDIENTSEXACT[i]
         if(ingredientObj.ingredient.toLowerCase()===(knownIngredient))
         {
             return true
@@ -178,10 +178,14 @@ function cleanIngredientName(name)
 
 function parseIngredient(ingredient)
 {
+    try{
     let ingredientObj =  parse(ingredient, 'eng')
     ingredientObj.ingredient = cleanIngredientName(ingredientObj.ingredient)
-
     return ingredientObj
+    }
+    catch{
+        return {quantity:1,ingredient:ingredient,unit:"unit"}
+    }
 }
 
 const checkURLIsValid = urlString=> {
