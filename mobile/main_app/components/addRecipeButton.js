@@ -31,24 +31,19 @@ const styles = StyleSheet.create({
     width: 350,
   },
   button: {
-    backgroundColor: '#E56A25',
+    borderColor: '#040435',
+    borderWidth: 1,
+    backgroundColor: '#fff',
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',
-  },
-  circleButton: {
-    backgroundColor: '#E56A25',
-    padding: 5,
-    borderRadius: 40,
-    alignItems: 'center',
-    width: 28,
   },
   inCartText: {color: '#fff', fontSize: 10},
   image: {
     flex: 1,
   },
   buttonText: {
-    color: '#fff',
+    color: '#040435',
   },
 });
 

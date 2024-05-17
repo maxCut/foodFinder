@@ -692,6 +692,11 @@ react-loader-spinner@^5.4.5:
     styled-components "^5.3.5"
     styled-tools "^1.7.2"
 
+react-native-drop-shadow@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-drop-shadow/-/react-native-drop-shadow-1.0.0.tgz#a77b206424603eb87eaaf7aa215d1ebb2d4cac2d"
+  integrity sha512-om6oMDDn90ClFa+tEGMsFcACKlea5TO4jYur8PJKRpzfz+SnDIJlddhzp2kbOLpRTe7lleq6Md5QqC3u7RfOow==
+
 react-router-dom@^6.8.2:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.22.0.tgz#177c8bd27146decbb991eafb5df159f7a9f70035"

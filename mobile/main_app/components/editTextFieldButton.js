@@ -3,6 +3,7 @@ import {View, TouchableOpacity, Text, StyleSheet, Modal, TextInput} from 'react-
 import {useNavigation} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import CustomButton from './customButton';
+import DropShadow from 'react-native-drop-shadow';
 
 const EditTextFieldButton = props => {
   const setRecipe = props.setRecipe;
@@ -25,7 +26,7 @@ const EditTextFieldButton = props => {
     <View style = {styles.buttonEditIcon}>
       <TouchableOpacity
         onPress={() => {setModalVisible(true)}}>
-        <Icons name="edit" size={15} color="#fff" />
+        <Icons name="edit" size={15} color="#030436" />
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -36,6 +37,18 @@ const EditTextFieldButton = props => {
         }}>
 
 <View style={styles.centeredView}>
+
+<DropShadow
+style={{
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0,
+  },
+  shadowOpacity: 1,
+  shadowRadius: 3,
+}}
+>
           <View style={styles.modalView}>
           <TextInput
             style={styles.input}
@@ -67,6 +80,7 @@ const EditTextFieldButton = props => {
               setModalVisible(!modalVisible)}
             }/>
           </View>
+          </DropShadow>
         </View>
         </Modal>
     </View>
@@ -85,18 +99,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: '#34383F' ,
+    backgroundColor: '#fff' ,
     borderRadius: 10,
     padding: 35,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
     width: 365,
   },
   doneButton: {

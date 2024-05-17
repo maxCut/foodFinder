@@ -18,7 +18,7 @@ const LoadingScreen = props => {
 }
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1},
+  background: {backgroundColor: '#fff', flex: 1},
 });
 
 export default LoadingScreen;

@@ -49,7 +49,7 @@ const AmazonWebView = props => {
 }
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1},
+  background: {backgroundColor: '#030436', flex: 1},
   webView: {flex: 1, ...Platform.select({ios: {marginTop: 40}})},
 });
 

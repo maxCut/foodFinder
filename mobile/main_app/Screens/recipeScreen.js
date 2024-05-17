@@ -16,6 +16,7 @@ import FontAwesomeIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import ingredientHandler from '../Utils/ingredientHandler';
 import iconWrapper from '../Utils/iconWrapper';
+import DropShadow from "react-native-drop-shadow";
 
 import FastImage from 'react-native-fast-image'
 
@@ -110,6 +111,7 @@ const handleCartMeals = (event, meal, value) => {
           recipe={recipe}
           handleCartMeals={handleCartMeals}
           cartMeals={cartMealsLocal}
+          displayView={true}
         />
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -138,9 +140,21 @@ const handleCartMeals = (event, meal, value) => {
           }
 
         </View>
-        <View style={{flex: 1}}>
-          <View style={{padding: 15}}>
-            <Typography variant="header1">{props.recipe.Name}</Typography>
+
+        <DropShadow
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
+                  },
+                  shadowOpacity: 1,
+                  shadowRadius: 3,
+                }}
+                >
+        <View style={{borderRadius:20, backgroundColor:'#fff'}} >
+          <View style={{paddingTop: 20, alignItems:'center'}}>
+            <Typography variant="header2" style={{fontSize:30}} >{props.recipe.Name} </Typography>
             <Typography>{props.recipe.description}</Typography>
           </View>
           <View style={styles.timeDetailList}>
@@ -226,13 +240,14 @@ const handleCartMeals = (event, meal, value) => {
             {instructions()}
           </View>
         </View>
+    </DropShadow>
       </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1, paddingBottom: 50},
+  background: {backgroundColor: '#fff', flex: 1, paddingBottom: 50},
   backButtonContainer: {
     position: 'absolute',
     zIndex: 1,
@@ -252,7 +267,7 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 20,
     zIndex: 1,
-    backgroundColor: '#34383F',
+    backgroundColor: '#030436',
     ...Platform.select({ios: {paddingBottom: 20}, android: {paddingBottom: 0}}),
   },
   scroll: {
@@ -265,7 +280,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   timeDetailList: {
-    backgroundColor: '#34383F',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
@@ -306,10 +320,10 @@ const styles = StyleSheet.create({
 },
   iconImageCircle:{
 
-    borderColor:"#E56A25",
+    borderColor:"#7bffda",
     borderWidth: 5,
   padding: 10,
-   backgroundColor:"#34383F",
+   backgroundColor:"#030436",
      borderRadius:1000 
     },
   iconImage:{

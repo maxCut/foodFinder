@@ -9,6 +9,7 @@ import Typography from '../components/typography';
 import RecipeDetails from '../components/recipeDetails';
 import ingredientHandler from '../Utils/ingredientHandler';
 import NetInfo from "@react-native-community/netinfo";
+import DropShadow from "react-native-drop-shadow";
 
 const CartScreen = props => {
   let {cartMealsGlobal, tryToReachCheckout} = props;
@@ -55,6 +56,17 @@ const CartScreen = props => {
   const cartCard = params => {
     const {recipe,index} = params
     return (
+      <DropShadow
+      style={{
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: .5,
+        shadowRadius: 3,
+      }}
+      >
       <View key = {index} style={styles.card}>
         <View style={styles.cardHeader}>
           <RecipeDetails
@@ -141,7 +153,7 @@ const CartScreen = props => {
 
           </View>
         </View>
-      </View>
+      </View></DropShadow>
     );
   };
   return (
@@ -195,24 +207,30 @@ const CartScreen = props => {
 };
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1},
+  background: {backgroundColor: '#fff', flex: 1},
   checkoutFooter: {
+    backgroundColor: '#fff',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 1,
     padding: 20,
-    backgroundColor: '#34383F',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
   checkoutButton: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#fff',
+    borderWidth:1,
+    borderColor: '#030436',
     padding: 10,
     borderRadius: 40,
     alignItems: 'center',
   },
   checkoutButtonDisabled: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#fff',
+    borderWidth:1,
+    borderColor: '#030436',
     padding: 10,
     borderRadius: 40,
     alignItems: 'center',
@@ -229,7 +247,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   card: {
-    backgroundColor: '#34383F',
+    backgroundColor: '#fff',
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 20,
@@ -264,16 +282,18 @@ const styles = StyleSheet.create({
 
   },
   oneTimeAdd: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#fff',
+    borderWidth:1,
+    borderColor: '#030436',
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',
     width: 28,
   },
   oneTimeRemove: {
-    // backgroundColor: '#E56A25',
+    // backgroundColor: '#7bffda',
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#030436',
     padding: 5,
     paddingLeft: 10,
     paddingRight: 10,
@@ -282,7 +302,9 @@ const styles = StyleSheet.create({
     // width: 28,
   },
   circleButton: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#fff',
+    borderWidth:1,
+    borderColor: '#030436',
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',

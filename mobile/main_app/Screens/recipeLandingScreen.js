@@ -12,6 +12,7 @@ import {
 import RecipeDetails from '../components/recipeDetails';
 import Typography from '../components/typography';
 import {useNavigation,useFocusEffect} from '@react-navigation/native';
+import DropShadow from "react-native-drop-shadow";
 
 const RecipeLandingScreen = props => {
   const setViewRecipe = props.setViewRecipe;
@@ -72,6 +73,17 @@ function getCategories()
                 {category.name}
               </Typography>
               {categoryMeals.map(meal => (
+                <DropShadow
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
+                  },
+                  shadowOpacity: .5,
+                  shadowRadius: 3,
+                }}
+                >
                 <View
                   key={meal.Id}
                   style={styles.recipeCard}>
@@ -83,13 +95,18 @@ function getCategories()
                     imageCache = {props.imageCache}
                   />
                   <TouchableOpacity 
-                    style = {styles.info} 
+                    style = {styles.infoWrapper}
                     onPress = {()=>{
                       setViewRecipe(meal);
                       navigation.navigate('Recipe');}}>
-                    <Text style = {styles.infoText}>i</Text>
+                      <View
+                        style = {styles.info} >
+                        <Text style = {styles.infoText}>i</Text>
+                      </View>
                   </TouchableOpacity>
                 </View>
+
+                </DropShadow>
               ))}
             </View>
           );
@@ -100,7 +117,7 @@ function getCategories()
 };
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1},
+  background: {backgroundColor: '#fff', flex: 1},
   navigationList: {
     padding: 10,
     borderBottomColor: '#fff',
@@ -109,24 +126,25 @@ const styles = StyleSheet.create({
   },
   recipeCard: {
     flexDirection: 'row',
-    backgroundColor: '#34383F',
+    backgroundColor: '#fff',
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 10,
     width: 365,
     alignSelf: 'center',
+    shadowColor: 'black',
   },
   categoryContainer: {height: 50, marginRight: 10},
   currentCategory: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#7bffda',
     borderWidth: 1,
-    borderColor: '#E56A25',
+    borderColor: '#7bffda',
     borderRadius: 40,
     alignItems: 'center',
   },
   category: {
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: '#040435',
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -138,24 +156,32 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingBottom: 80,
   },
+  infoWrapper:
+  { 
+    alignItems:'center',
+    justifyContent:'center',
+    width:40,
+    height:40,
+    borderRadius:100,
+    fontSize: 31,
+    position: 'absolute',
+    bottom: 5,
+  },
   info:{
     borderWidth:1,
     borderColor:'rgba(0,0,0,0.2)',
     alignItems:'center',
     justifyContent:'center',
-    width:40,
-    height:40,
+    width:30,
+    height:30,
     backgroundColor:'#fff',
     borderRadius:100,
     boxShadow:'rgb(47, 79, 79)',
-    fontSize: 31,
     opacity:.75,
-    position: 'absolute',
-    bottom: 5,
   },
   infoText:{
     fontStyle: 'italic',
-    fontSize: 25,
+    fontSize: 17,
     opacity:.75,
     color:'#222',
   },

@@ -15,6 +15,8 @@ import {useNavigation,useFocusEffect} from '@react-navigation/native';
 import AddRecipeButton from '../components/addRecipeButton';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CustomButton from '../components/customButton';
+import DropShadow from "react-native-drop-shadow";
+
 
 const MyRecipeScreen = props => {
   const setViewRecipe = props.setViewRecipe;
@@ -46,6 +48,19 @@ const handleCartMeals = (event, meal, value) => {
         visible={AreYouSureModalVisible}>
           
           <View style= {styles.centeredView}>
+
+
+    <DropShadow
+style={{
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0,
+  },
+  shadowOpacity: 1,
+  shadowRadius: 3,
+}}
+>
             <View style = {styles.modalView}>
               <Typography>Are you sure you want to delete <Typography variant = {"boldText"}>{targeDeleteIndex>-1?userMealVals[targeDeleteIndex].Name: ""}</Typography>?</Typography>
               <View style = {styles.deleteModalOptionWrapper}>
@@ -61,7 +76,7 @@ const handleCartMeals = (event, meal, value) => {
                   SetAreYouSureModalVisible(false)
                 }}/>
               </View>
-              </View>
+              </View></DropShadow>
               </View>
         </Modal>
     <ScrollView
@@ -91,6 +106,17 @@ const handleCartMeals = (event, meal, value) => {
         ):
         <>
         {userMealVals.map((meal,index) => (
+                <DropShadow
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 0,
+                  },
+                  shadowOpacity: .5,
+                  shadowRadius: 3,
+                }}
+                >
         <View
           style={styles.recipeCard}
           key={index}>
@@ -116,7 +142,7 @@ const handleCartMeals = (event, meal, value) => {
               }}>
                 <Icons name="trash-can" size={31}/>
           </TouchableOpacity>
-        </View>
+        </View></DropShadow>
       ))}
 
 </>
@@ -129,7 +155,7 @@ const handleCartMeals = (event, meal, value) => {
 };
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1},
+  background: {backgroundColor: '#fff', flex: 1},
   navigationList: {
     padding: 10,
     borderBottomColor: '#fff',
@@ -138,12 +164,13 @@ const styles = StyleSheet.create({
   },
   recipeCard: {
     flexDirection: 'row',
-    backgroundColor: '#34383F',
+    backgroundColor: '#fff',
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 10,
     width: 365,
     alignSelf: 'center',
+    boxShadow: "1px 3px 1px #9E9E9E"
   },
   scroll: {
     flexGrow: 1,
@@ -190,7 +217,6 @@ const styles = StyleSheet.create({
     color:'#222',
   },
   card: {
-    backgroundColor: '#34383F',
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 20,
@@ -213,7 +239,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
-    backgroundColor: '#34383F' ,
+    backgroundColor: '#fff' ,
     borderRadius: 10,
     padding: 35,
     alignItems: 'center',

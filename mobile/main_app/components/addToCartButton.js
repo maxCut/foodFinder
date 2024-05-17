@@ -3,7 +3,8 @@ import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 
 const AddToCartButton = props => {
   let inCart = props.inCart;
-  let recipe = props.recipe
+  let recipe = props.recipe;
+  let displayView = props.displayView;
 
   return (
     <View style={{display: 'flex', justifyContent: 'center', height: 40}}>
@@ -12,20 +13,20 @@ const AddToCartButton = props => {
           <TouchableOpacity
             style={styles.circleButton}
             onPress={event => props.handleCartMeals(event, recipe, 'decrement')}>
-            <Text style={{...styles.buttonText, fontWeight: 'bold'}}>-</Text>
+            <Text style={{...styles.circleButtonText, fontWeight: 'bold'}}>-</Text>
           </TouchableOpacity>
           <View style={{alignItems: 'center', flex: 1}}>
-            <Text style={{...styles.inCartText, fontWeight: 'bold'}}>
+            <Text style={displayView?{...styles.inCartDisplayViewText, fontWeight:'bold'}:{...styles.inCartText, fontWeight: 'bold'}}>
               {props.cartMeals.get(recipe)} in your cart
             </Text>
-            <Text style={styles.inCartText}>
+            <Text style={displayView?{...styles.inCartDisplayViewText}:{...styles.inCartText}}>
               {props.recipe.IncrementAmount * props.cartMeals.get(recipe)} servings
             </Text>
           </View>
           <TouchableOpacity
             style={styles.circleButton}
             onPress={event => props.handleCartMeals(event, recipe, 'increment')}>
-            <Text style={{...styles.buttonText, fontWeight: 'bold'}}>+</Text>
+            <Text style={{...styles.circleButtonText, fontWeight: 'bold'}}>+</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -54,25 +55,39 @@ const styles = StyleSheet.create({
     width: 350,
   },
   button: {
-    backgroundColor: '#E56A25',
+    backgroundColor: '#fff',
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',
+    borderColor: '#030234',
+    borderWidth: 1,
   },
   circleButton: {
-    backgroundColor: '#E56A25',
-    padding: 5,
+    backgroundColor: '#030234',
+
+    borderColor: '#fff',
+    borderWidth: 1,
+    padding: 4.5,
     borderRadius: 40,
     alignItems: 'center',
     width: 28,
+    height: 28,
   },
-  inCartText: {color: '#fff', fontSize: 10},
+  inCartText: {color: '#030234', fontSize: 10},
+  image: {
+    flex: 1,
+  },
+  inCartDisplayViewText: {color: '#fff', fontSize: 13},
   image: {
     flex: 1,
   },
   buttonText: {
+    color: '#030234',
+  },
+  circleButtonText: {
     color: '#fff',
   },
+
 });
 
 export default AddToCartButton;

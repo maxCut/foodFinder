@@ -225,7 +225,7 @@ function removeMealVal(index)
       <Tab.Navigator
         screenOptions={({route}) => ({
           headerShown: false,
-          tabBarStyle: {backgroundColor: '#34383F'},
+          tabBarStyle: {backgroundColor: '#040435'},
           tabBarIcon: ({focused}) => {
             let iconName;
             let iconColor;
@@ -236,10 +236,10 @@ function removeMealVal(index)
             } else if (route.name === 'My Recipes') {
             iconName = 'list-alt';
           }
-            iconColor = focused ? '#E56A25' : '#C8D0D4';
+            iconColor = focused ? '#7cfadf' : '#C8D0D4';
             return <Icons name={iconName} size={25} color={iconColor} />;
           },
-          tabBarActiveTintColor: '#E56A25',
+          tabBarActiveTintColor: '#7cfadf',
           tabBarInactiveTintColor: 'gray',
         })}
         screenListeners={{tabPress:()=>{

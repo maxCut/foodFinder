@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
     width: 350,
   },
   button: {
-    backgroundColor: '#E56A25',
+    borderWidth: 1,
+    borderColor:'#030436',
+    backgroundColor: '#fff',
     padding: 5,
     borderRadius: 40,
     alignItems: 'center',
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonText: {
-    color: '#fff',
+    color: '#030436',
     padding: 5
   },
 });

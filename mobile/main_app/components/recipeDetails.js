@@ -33,11 +33,11 @@ const RecipeDetails = props => {
         <View style={{flex: 1}}>
           <Typography variant="header2">{props.recipe.Name}</Typography>
           {isCart ? null : (
-            <Text style={{fontSize: 10, color: '#fff'}}>
+            <Text style={{fontSize: 10, color: '#030234'}}>
               {props.recipe.description}
             </Text>
           )}
-          <Text style={{fontSize: 10, color: '#fff'}}>
+          <Text style={{fontSize: 10, color: '#030234'}}>
             {timeHandler.getTotalTime(recipe.prepTime, recipe.cookTime)} |{' '}
             {recipe.IncrementAmount} servings
           </Text>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 },
   iconImageCircle:{
-    borderColor:"#E56A25",
+    borderColor:"#7bffda",
     borderWidth: 5,
   padding: 10,
    backgroundColor:"#34383F",

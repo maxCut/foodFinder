@@ -12,25 +12,25 @@ const Typography = props => {
 };
 const styles = StyleSheet.create({
   bodyText: {
-    color: '#fff',
+    color: '#040435',
   },
   boldText: {
-    color: '#fff',
+    color: '#040435',
     fontWeight: "bold"
   },
   header1: {
-    color: '#fff',
+    color: '#040435',
     fontFamily: 'Archivo-Bold',
     fontSize: 30,
     alignSelf: 'flex-start',
   },
   header2: {
-    color: '#fff',
+    color: '#040435',
     fontFamily: 'Archivo-Bold',
     fontSize: 20,
   },
   header3: {
-    color: '#fff',
+    color: '#040435',
     fontFamily: 'Archivo-Bold',
     fontSize: 18,
   },

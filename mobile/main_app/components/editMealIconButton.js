@@ -5,6 +5,7 @@ import iconWrapper from '../Utils/iconWrapper';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import CustomButton from './customButton';
 
+import DropShadow from 'react-native-drop-shadow';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
@@ -16,7 +17,7 @@ const EditMealIconButton = props => {
     <View style = {styles.buttonEditIcon}>
       <TouchableOpacity
         onPress={() => {setModalVisible(true)}}>
-        <Icons name="edit" size={25} color="#fff" />
+        <Icons name="edit" size={25} color="#030436" />
       </TouchableOpacity>
       <Modal
         animationType="slide"
@@ -26,6 +27,18 @@ const EditMealIconButton = props => {
           setModalVisible(false);
         }}>
           <View style= {styles.centeredView}>
+
+    <DropShadow
+style={{
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0,
+  },
+  shadowOpacity: 1,
+  shadowRadius: 3,
+}}
+>
             <View style = {styles.modalView}>
               
               {
@@ -45,6 +58,7 @@ const EditMealIconButton = props => {
                 })
               }
           </View>
+          </DropShadow>
             </View>
         </Modal>
     </View>
@@ -61,18 +75,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
-    backgroundColor: '#34383F' ,
+    backgroundColor: '#fff' ,
     borderRadius: 10,
     padding: 35,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
     width: 370,
     flexWrap: 'wrap',
     alignItems: "flex-start",
@@ -94,10 +100,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
 },
   iconImageCircle:{
-    borderColor:"#E56A25",
+    borderColor:"#7bffda",
     borderWidth: 5,
   padding: 10,
-   backgroundColor:"#34383F",
+   backgroundColor:"#030436",
      borderRadius:1000 
     },
   iconImage:{

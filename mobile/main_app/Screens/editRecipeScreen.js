@@ -25,6 +25,7 @@ import EditIngredientQuantityButton from '../components/editIngredientQuantityBu
 import EditMealIconButton from '../components/editMealIconButton';
 import iconWrapper from '../Utils/iconWrapper';
 import parseUtils from '../Utils/parseUtils';
+import DropShadow from 'react-native-drop-shadow';
 
 
 const EditRecipeScreen = props => {
@@ -120,6 +121,18 @@ useEffect(()=>{
         transparent={true}
         visible={showImportURLModal}>
           <View style= {styles.centeredView}>
+
+    <DropShadow
+style={{
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0,
+  },
+  shadowOpacity: 1,
+  shadowRadius: 3,
+}}
+>
             <View style = {styles.modalView}>
               <Typography>Enter Recipe Link</Typography>
               {isValidURL?
@@ -165,14 +178,28 @@ useEffect(()=>{
                 onClick = {()=>{setShowImportURLModal(false)}}/>
                 </View>
               </View>
+              </DropShadow>
               </View>
         </Modal>
 
     <Modal
+    
         animationType="slide"
         transparent={true}
         visible={showImportURLModalOption}>
+
           <View style= {styles.centeredView}>
+    <DropShadow
+style={{
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 0,
+  },
+  shadowOpacity: 1,
+  shadowRadius: 3,
+}}
+>
             <View style = {styles.modalView}>
               <Typography>Import from a URL?</Typography>
               <View style = {styles.modalOptionWrapper}>
@@ -187,6 +214,7 @@ useEffect(()=>{
                 }}/>
               </View>
               </View>
+</DropShadow>
               </View>
         </Modal>
 
@@ -323,7 +351,7 @@ useEffect(()=>{
 };
 
 const styles = StyleSheet.create({
-  background: {backgroundColor: '#1B2428', flex: 1, paddingBottom: 50},
+  background: {backgroundColor: '#fff', flex: 1, paddingBottom: 50},
   backButtonContainer: {
     position: 'absolute',
     zIndex: 1,
@@ -343,7 +371,7 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 20,
     zIndex: 1,
-    backgroundColor: '#34383F',
+    backgroundColor: '#030436',
     ...Platform.select({ios: {paddingBottom: 20}, android: {paddingBottom: 0}}),
   },
   scroll: {
@@ -356,7 +384,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   timeDetailList: {
-    backgroundColor: '#34383F',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
@@ -397,10 +424,10 @@ const styles = StyleSheet.create({
 },
   iconImageCircle:{
 
-    borderColor:"#E56A25",
+    borderColor:"#7bffda",
     borderWidth: 5,
   padding: 10,
-   backgroundColor:"#34383F",
+   backgroundColor:"#030436",
      borderRadius:1000 
     },
   iconImage:{
@@ -433,7 +460,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
-    backgroundColor: '#34383F' ,
+    backgroundColor: '#fff' ,
     borderRadius: 10,
     padding: 35,
     alignItems: 'center',
