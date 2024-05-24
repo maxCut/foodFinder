@@ -7,6 +7,7 @@ import nlp from "compromise";
 const getIngredient = ingredientHandler.getOneTime;
 
 async function fetchOffer(element){
+  console.log("attempting ",`https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20` )
   const response = await fetch(
     `https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20`,
   );
@@ -15,6 +16,8 @@ async function fetchOffer(element){
     html2,
     "data-fresh-add-to-cart"
 )
+const innerHTML =  htmlParser.parseURLForTagsThatContainSubstringAndReturnInnerHTML(`https://www.amazon.com/gp/product/${element.asin}?almBrandId=QW1hem9uIEZyZXNo&fpw=alm&linkCode=ll1&tag=chefbop-20`,"data-fresh-add-to-cart")
+console.log(innerHTML);
   for (let i = 0; i < tags.length; i++) {
     let tag = tags[i];
     let addToCartStartIndex = tag.search("{&quot;");
@@ -24,13 +27,26 @@ async function fetchOffer(element){
         addToCartStopIndex
     );
     let formatedString = unformatedString.replaceAll("&quot;", '"');
+    console.log("herer 3.5, ", formatedString);
+    try
+    {
     let addToCart = JSON.parse(formatedString);
-
     if (addToCart.asin == element.asin) {
+      console.log("here4 ", addToCart.asin,element.asin)
         const token = addToCart.csrfToken;
         const offer = addToCart.offerListingID;
-        return [offer, token];
+        if(offer!=null)
+        {
+          return [offer, token];
+        }
+        continue;
     }
+    }
+    catch
+    {
+      continue;
+    }
+
 }
   return [null,null]
 }
@@ -76,6 +92,7 @@ async function addFirstListedItemToCart(element) {
       const res = await fetchOffer(option);
     offer = res[0];
     token = res[1];
+    console.log("here2",res);
     }
     catch(exception)
     {
@@ -87,7 +104,8 @@ analytics().logEvent('fail', {
  })
 
     }
-    if (offer === '') {
+    if (offer === '' ||offer===null) {
+      console.log("skipping");
       continue;
     }
     let body = {
@@ -120,6 +138,7 @@ analytics().logEvent('fail', {
   }
 }
 async function sendToCart(ingredient_set, onItemAdded) {
+  console.log("here1")
   let count = 0;
   for (const element of ingredient_set) {
     count+=1;

@@ -84,10 +84,14 @@
     allTags = [...html.matchAll(new RegExp("<[^<>]+>", "gi"))].map(
         (a) => a.index
     );
+    console.log("alltags ", allTags.length)
+    console.log("searchword",searchword)
+    console.log("?:",html.includes(`data-fresh`))
     searchwordTags = [
         ...html.matchAll(new RegExp("<[^<>]*" + searchword + "[^<>]*>", "gi")),
-    ].map((a) => {return a.index});
+    ].map((a) => {console.log("here"); return a.index;});
     retTags = [];
+    console.log("searchwords ", searchwordTags.length)
     searchwordTags.forEach((index) => {
         closeIndex = getFirstGreaterThanTarget(index, allTags);
         retTags.push(html.substring(index, closeIndex));
@@ -120,6 +124,9 @@
         console.log("cant find")
         return ""
     }
+    else{
+        console.log("here??")
+    }
 
     retTags = [];
     for(i = 0; i<searchwordTags.length;i++)
@@ -129,7 +136,6 @@
         const tag = html.substring(searchwordTag,closeIndex);
         const type = tag.substring(1,tag.indexOf(" "))
         retTags.push(html.substring(searchwordTag,getClosingTagFromTag(html, searchwordTag,type)))
-
     }
     return retTags
   }

@@ -161,7 +161,6 @@ const CartScreen = props => {
       {cartMealsLocal.size > 0 ? (
         <View style={styles.checkoutFooter}>
           <TouchableOpacity
-          disabled={!isConnected}
             onPress={async () => {
               tryToReachCheckout();
             }}
